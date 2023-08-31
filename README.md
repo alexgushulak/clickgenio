@@ -13,7 +13,7 @@ Run this command inside the client directory:
 To open the local instance of the website, enter:
 - -o
 
-Links to librariers:
+Links to libraries:
 - https://mui.com/material-ui/getting-started/
 - https://react.dev/
 
