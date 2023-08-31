@@ -1,6 +1,6 @@
 # clickbaiter.ai
 
-
+Production Link (Hosted on Netlify): https://rainbow-truffle-c99caf.netlify.app/
 
 
 ## To run the client:
