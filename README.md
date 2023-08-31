@@ -10,8 +10,12 @@ Run this command inside the client directory:
     - If there is an error with the esbuild package, talk to Alex
 - npm run dev
 
-To open the local instance of the website, type:
+To open the local instance of the website, enter:
 - -o
+
+Links to librariers:
+- https://mui.com/material-ui/getting-started/
+- https://react.dev/
 
 
 ## To run the server:
