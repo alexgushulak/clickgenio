@@ -1,4 +1,4 @@
-# clickbaiterai
+# clickbaiter.ai
 
 
 
