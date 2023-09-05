@@ -1,4 +1,4 @@
-# clickbaiter.ai
+# clickgen.io
 
 Production Link (Hosted on Netlify): https://rainbow-truffle-c99caf.netlify.app/
 
