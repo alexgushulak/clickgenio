@@ -1,4 +1,5 @@
 # clickgen.io
+[![Netlify Status](https://api.netlify.com/api/v1/badges/6be37397-cb90-46fb-b792-26e7ec26009c/deploy-status)](https://app.netlify.com/sites/rainbow-truffle-c99caf/deploys)
 
 Production Link (Hosted on Netlify): https://rainbow-truffle-c99caf.netlify.app/
 
