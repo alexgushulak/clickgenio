@@ -9,7 +9,7 @@ import {
   Box,
 } from "@mui/material";
 import { Routes, Route } from "react-router-dom";
-import { submitData, generateImage } from "./services/apiLayer";
+import generateImage from "./services/apiLayer";
 import RainbowTesla from "./assets/rainbow_tesla.png";
 import Tsunami from "./assets/tsunami.png";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -28,9 +28,8 @@ export default function App() {
     setThumbnailText(value);
   };
 
-  const trackClick = async () => {
+  const onGenerateThumbnail = async () => {
     setIsLoading(true);
-    await submitData(thumbnailText);
     await generateImage(thumbnailText, apiHost, engineId, apiKey, setImageUrl);
     setIsLoading(false);
   };
@@ -74,7 +73,7 @@ export default function App() {
             mt: 1,
           }}
           variant="contained"
-          onClick={trackClick}
+          onClick={onGenerateThumbnail}
         >
           GENERATE THUMBNAIL
         </Button>

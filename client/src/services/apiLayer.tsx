@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 const decodeImage = (image_object: any) => {
-    const base64_decoded_image = atob(image_object.artifacts[0].base64)
+    const base64_decoded_image = atob(image_object)
       const byteNumbers = new Array(base64_decoded_image.length);
       for (let i = 0; i < base64_decoded_image.length; i++) {
           byteNumbers[i] = base64_decoded_image.charCodeAt(i);
@@ -13,39 +13,17 @@ const decodeImage = (image_object: any) => {
       return decoded_jpeg_image
 };
 
-const submitData = async (thumbnailText: string) => {
-  try {
-    await axios.post('https://alex-portfolio-production.up.railway.app/submit', {
-      message: thumbnailText
-    });
-    console.log("Submit Successful");
-  } catch (error) {
-    console.error("Submit Error:", error);
-  }
-};
-
 const generateImage = async (thumbnailText: string, apiHost: string, engineId: string, apiKey: string, setImageUrl: (url: string) => void) => {
   try {
-    const response = await axios.post(`${apiHost}/v1/generation/${engineId}/text-to-image`, {
-      text_prompts: [
-        {
-          text: thumbnailText,
-        },
-      ],
-      cfg_scale: 7,
-      height: 832,
-      width: 1216,
-      steps: 10,
-      samples: 1,
+    const response = await axios.post(`${import.meta.env.VITE_APISERVER}/generate`, {
+      message: thumbnailText
     }, {
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',
-        Authorization: `Bearer ${apiKey}`,
       }
     });
-
-    const image = decodeImage(response.data);
+    const image = decodeImage(response.data.raw_data);
     setImageUrl(URL.createObjectURL(image));
     console.log("Generate Image Successful");
   } catch (error) {
@@ -53,4 +31,4 @@ const generateImage = async (thumbnailText: string, apiHost: string, engineId: s
   }
 };
 
-export { submitData, generateImage };
+export default generateImage;
