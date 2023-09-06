@@ -15,9 +15,9 @@ import Tsunami from "./assets/tsunami.png";
 import CircularProgress from "@mui/material/CircularProgress";
 
 export default function App() {
-  const engineId = "stable-diffusion-xl-1024-v1-0";
-  const apiHost = "https://api.stability.ai";
-  const apiKey = "sk-36jFn0ywSl2ktMvPnqdMdcbJRdI1x3bNLL8Hydd81XrmxWT9";
+  const engineId = import.meta.env.VITE_ENGINEID
+  const apiHost = import.meta.env.VITE_APIHOST
+  const apiKey = import.meta.env.VITE_APIKEY
   const [thumbnailText, setThumbnailText] = useState("");
   const [imageUrl, setImageUrl] = useState("");
 
