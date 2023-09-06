@@ -16,16 +16,7 @@ import {
 } from "react-router-dom";
 
 export default function App() {
-  const navigate = useNavigate();
-  // const engineId = 'stable-diffusion-xl-1024-v1-0'
-  // const apiHost = 'https://api.stability.ai'
-  // const apiKey = "sk-36jFn0ywSl2ktMvPnqdMdcbJRdI1x3bNLL8Hydd81XrmxWT9"
-  const engineId = import.meta.env.VITE_engineId;
-  const apiHost = import.meta.env.VITE_apiHost;
-  const apiKey = import.meta.env.VITE_apiKey;
-  debugger;
-
-
+  const navigate = useNavigate()
   const [thumbnailText, setThumbnailText] = useState('');
   const [imageUrl, setImageUrl] = useState('');
 
@@ -51,8 +42,10 @@ export default function App() {
     ).then((res) => {
       // do nothing
     });
-
-    const image = axios.post(`${apiHost}/v1/generation/${engineId}/text-to-image`, {
+    console.log(process.env.NODE_ENV);
+    console.log(import.meta.env.VITE_APIHOST)
+    debugger;
+    const image = axios.post(`${import.meta.env.VITE_APIHOST}/v1/generation/${import.meta.env.VITE_ENGINEID}/text-to-image`, {
       text_prompts: [
         {
           text: `${thumbnailText}`,
@@ -68,7 +61,7 @@ export default function App() {
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',
-        Authorization: `Bearer ${apiKey}`,
+        Authorization: `Bearer ${import.meta.env.VITE_APIKEY}`,
       }
     }).then((response) => {
       let image = decodeImage(response.data)
