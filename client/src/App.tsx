@@ -1,101 +1,60 @@
-import Container from '@mui/material/Container';
-import { Button, Typography } from '@mui/material';
-import CssBaseline from '@mui/material/CssBaseline';
-import axios from 'axios';
-import React, { useState } from 'react';
-import TextField from '@mui/material/TextField';
-import RainbowTesla from './assets/rainbow_tesla.png'
-import Tsunami from './assets/tsunami.png'
-import Box from '@mui/material/Box';
+// App.tsx
+import React, { useState } from "react";
 import {
-  createBrowserRouter,
-  RouterProvider,
-  Routes,
-  Route,
-  useNavigate,
-} from "react-router-dom";
+  CssBaseline,
+  Container,
+  Typography,
+  TextField,
+  Button,
+  Box,
+} from "@mui/material";
+import { Routes, Route } from "react-router-dom";
+import { submitData, generateImage } from "./services/apiLayer";
+import RainbowTesla from "./assets/rainbow_tesla.png";
+import Tsunami from "./assets/tsunami.png";
+import CircularProgress from "@mui/material/CircularProgress";
 
 export default function App() {
-  const navigate = useNavigate()
-  const [thumbnailText, setThumbnailText] = useState('');
-  const [imageUrl, setImageUrl] = useState('');
+  const engineId = "stable-diffusion-xl-1024-v1-0";
+  const apiHost = "https://api.stability.ai";
+  const apiKey = "sk-36jFn0ywSl2ktMvPnqdMdcbJRdI1x3bNLL8Hydd81XrmxWT9";
+  const [thumbnailText, setThumbnailText] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
 
-  /** Input is one base64 encoded image
-   *  Returns the image decoded in jpeg format"
-   * */
-  const decodeImage = (image_object: any) => {
-    const base64_decoded_image = atob(image_object.artifacts[0].base64)
-    const byteNumbers = new Array(base64_decoded_image.length);
-    for (let i = 0; i < base64_decoded_image.length; i++) {
-      byteNumbers[i] = base64_decoded_image.charCodeAt(i);
-    }
-    const byteArray = new Uint8Array(byteNumbers);
+  const handleTextbarChange = (event: {
+    target: { name: any; value: any };
+  }) => {
+    const { name, value } = event.target;
+    setThumbnailText(value);
+  };
 
-    let decoded_jpeg_image = new Blob([byteArray], { type: 'image/jpeg' });
-    return decoded_jpeg_image
-  }
+  const trackClick = async () => {
+    setIsLoading(true);
+    await submitData(thumbnailText);
+    await generateImage(thumbnailText, apiHost, engineId, apiKey, setImageUrl);
+    setIsLoading(false);
+  };
 
-  /** tracks clicks on the generate thumbnail button" */
-  const trackClick = () => {
-    axios.post('https://alex-portfolio-production.up.railway.app/submit',
-      { message: thumbnailText }
-    ).then((res) => {
-      // do nothing
-    });
-    console.log(process.env.NODE_ENV);
-    console.log(import.meta.env.VITE_APIHOST)
-    debugger;
-    const image = axios.post(`${import.meta.env.VITE_APIHOST}/v1/generation/${import.meta.env.VITE_ENGINEID}/text-to-image`, {
-      text_prompts: [
-        {
-          text: `${thumbnailText}`,
-        },
-      ],
-      cfg_scale: 7,
-      height: 832,
-      width: 1216,
-      steps: 10,
-      samples: 1,
-
-    }, {
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-        Authorization: `Bearer ${import.meta.env.VITE_APIKEY}`,
-      }
-    }).then((response) => {
-      let image = decodeImage(response.data)
-      setImageUrl(URL.createObjectURL(image))
-    }).catch((error) => {
-      console.log(error)
-    })
-
-    console.log("Ending Post")
-
-    navigate("/submit")
-  }
-
-  const handleTextbarChange = (event: { target: { name: any; value: any; }; }) => {
-    const { name, value } = event.target
-    setThumbnailText(value)
-  }
-
-  React.useEffect(() => {
-  }, []);
+  const [isLoading, setIsLoading] = useState(false);
 
   return (
     <div>
       <CssBaseline />
       <Routes>
-        <Route path="/submit" element={<p>Loading</p>} />
-        <Route path="/" element={''} />
+        <Route path="/" element={""} />
       </Routes>
       <Container sx={{ mb: 5, mt: 15 }}>
         <img src={imageUrl} />
         <Typography
           variant="h3"
           component="h3"
-          sx={{ display: 'block', 'text-align': 'center', margin: '0 auto', mt: 1 }}>
+          sx={{
+            display: "block",
+            "text-align": "center",
+            margin: "0 auto",
+            mt: 1,
+          }}
+        >
           AI Thumbnail Generator
         </Typography>
         <TextField
@@ -108,13 +67,26 @@ export default function App() {
           maxRows={1}
         />
         <Button
-          sx={{ display: 'block', 'text-align': 'center', margin: '0 auto', mt: 1 }}
+          sx={{
+            display: isLoading ? "none" : "block",
+            "text-align": "center",
+            margin: "0 auto",
+            mt: 1,
+          }}
           variant="contained"
-          onClick={trackClick}>
+          onClick={trackClick}
+        >
           GENERATE THUMBNAIL
         </Button>
+        {isLoading && (
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <CircularProgress />
+        </div>
+        )}
       </Container>
-      <Container sx={{ display: 'block', margin: '25px auto', 'text-align': 'center' }}>
+      <Container
+        sx={{ display: "block", margin: "25px auto", "text-align": "center" }}
+      >
         <Box
           component="img"
           sx={{
@@ -141,5 +113,5 @@ export default function App() {
         />
       </Container>
     </div>
-  )
+  );
 }
