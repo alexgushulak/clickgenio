@@ -8,7 +8,7 @@ import {
   Button,
   Box,
 } from "@mui/material";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { submitData, generateImage } from "./services/apiLayer";
 import RainbowTesla from "./assets/rainbow_tesla.png";
 import Tsunami from "./assets/tsunami.png";
@@ -20,7 +20,6 @@ export default function App() {
   const apiKey = "sk-36jFn0ywSl2ktMvPnqdMdcbJRdI1x3bNLL8Hydd81XrmxWT9";
   const [thumbnailText, setThumbnailText] = useState("");
   const [imageUrl, setImageUrl] = useState("");
-  const navigate = useNavigate();
 
   const handleTextbarChange = (event: {
     target: { name: any; value: any };
@@ -34,7 +33,6 @@ export default function App() {
     await submitData(thumbnailText);
     await generateImage(thumbnailText, apiHost, engineId, apiKey, setImageUrl);
     setIsLoading(false);
-    navigate("/submit");
   };
 
   const [isLoading, setIsLoading] = useState(false);
@@ -43,7 +41,6 @@ export default function App() {
     <div>
       <CssBaseline />
       <Routes>
-        <Route path="/submit" element={<p>Loading</p>} />
         <Route path="/" element={""} />
       </Routes>
       <Container sx={{ mb: 5, mt: 15 }}>
