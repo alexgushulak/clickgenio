@@ -15,7 +15,7 @@ const decodeImage = (image_object: any) => {
 
 const generateImage = async (thumbnailText: string, apiHost: string, engineId: string, apiKey: string, setImageUrl: (url: string) => void) => {
   try {
-    const response = await axios.post(`${import.meta.env.VITE_APISERVER}/generate`, {
+    const response = await axios.post(`${import.meta.env.VITE_APISERVER}/submit`, {
       message: thumbnailText
     }, {
       headers: {
@@ -23,7 +23,7 @@ const generateImage = async (thumbnailText: string, apiHost: string, engineId: s
         Accept: 'application/json',
       }
     });
-    const image = decodeImage(response.data.raw_data);
+    const image = decodeImage(response.data.imageBase64);
     setImageUrl(URL.createObjectURL(image));
     console.log("Generate Image Successful");
   } catch (error) {
@@ -31,4 +31,20 @@ const generateImage = async (thumbnailText: string, apiHost: string, engineId: s
   }
 };
 
-export default generateImage;
+const submitIPData = async (thumbnailText: string) => {
+  try {
+    await axios.post(`${import.meta.env.VITE_APISERVER}/metadata`, {
+      message: thumbnailText
+    }, {
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      }
+    });
+    console.log("metadata successful")
+  } catch (error) {
+    console.error("metadata error")
+  }
+}
+
+export { generateImage, submitIPData };

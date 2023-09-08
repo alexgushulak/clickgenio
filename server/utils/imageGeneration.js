@@ -1,37 +1,63 @@
 import axios from 'axios';
 import watermark from 'jimp-watermark';
-// import watermark from 'watermarkjs';
 import * as fs from 'node:fs';
-import { Blob, Buffer } from 'buffer';
-import { decode } from 'node:punycode';
+import { Buffer } from 'buffer';
 
-const writeBase64toPNG = (image_object) => {
+async function writeBase64toPNG(image_object) {
+    const date_string = Date.now().toString();
+    const full_image_path = `./generated-images/full_${date_string}.png`;
     var buf = new Buffer(image_object, 'base64');
-    fs.writeFile('./image.png', buf, (err) => {
-        if (err) throw err;
-        console.log('File saved!');
-    });
-
-    return 0
+    try {
+        await fs.promises.writeFile(full_image_path, buf)
+        console.log(`Full Image Succesfully Saved in ${full_image_path}!`);
+        return [ date_string, full_image_path ];
+    } catch(err) {
+        console.log(`Full Image Error: ${err}`);
+    }
 };
 
-const watermarkImage = (image_object, watermark_text) => {
-    writeBase64toPNG(image_object.artifacts[0].base64)
+async function encodePNGtoBase64(date_string) {
+    try {
+        const imagePath = `./generated-images/watermarked_${date_string}.png`;
+        // Delay Added because the file is not immediately available
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        const buf = await fs.promises.readFile(imagePath);
+        const base64_image = buf.toString('base64');
+        console.log(`Base64 Image Succesfully Generated!`);
+        return base64_image;
+    } catch(err) {
+        console.log(`Base64 Image Error: ${err}`);
+    }
+}
 
-    fs.promises.readFile('./image.png').then((data) => {
-        // watermark(['./image.png'])
-        //     .image(text.lowerLeft('clickgen.io', '48px Josefin Slab', '#fff', 0.5))
-        //     .then(function (img) {
-        //         document.getElementById('lower-left').appendChild(img);
-        // });
-        watermark.addTextWatermark('image.png', {
-            'text': watermark_text,
-            'textSize': 8,
-            'dstPath' : './watermark.jpg'
+async function watermarkImage(date_string, full_image_path) {
+    const watermarked_image_path = `./generated-images/watermarked_${date_string}.png`;
+    try {
+        await watermark.addWatermark(full_image_path, 'CLICKGENIO_watermark.png', {
+            'dstPath' : watermarked_image_path,
+            'opacity': 0.3,
         });
-    })
+        console.log(`Watermarked Image Succesfully Saved in ${watermarked_image_path}!`)
+    } catch(err) {
+        console.log(`Watermark Image Error: ${err}`);
+    }
+};
 
-    return 0
+/**
+ * createImageFiles takes in a Base64 image object and creates a watermarked
+ * png file and a full_size png file.
+ */
+const createImageFiles = async (stabilityAIResponse) => {
+
+    let date_string, full_image_path;
+
+    try {
+        [date_string, full_image_path] = await writeBase64toPNG(stabilityAIResponse.artifacts[0].base64)
+        await watermarkImage(date_string, full_image_path)
+        return await encodePNGtoBase64(date_string);
+    } catch (err) {
+        console.error("Create Image Files Error:", err);
+    }
 }
 
 const generateImage = async (thumbnailText, apiHost, engineId, apiKey) => {
@@ -54,11 +80,11 @@ const generateImage = async (thumbnailText, apiHost, engineId, apiKey) => {
                 Authorization: `Bearer ${apiKey}`,
             }
         });
-
         console.log("Generate Image Successful");
-        return response.data;
-    } catch (error) {
-        console.error("Generate Image Error:", error);
+        const base64image = await createImageFiles(response.data);
+        return base64image;
+    } catch (err) {
+        console.error("Generate Image Error:", err);
     }
 };
 

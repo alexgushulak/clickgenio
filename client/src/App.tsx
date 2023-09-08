@@ -9,7 +9,7 @@ import {
   Box,
 } from "@mui/material";
 import { Routes, Route } from "react-router-dom";
-import generateImage from "./services/apiLayer";
+import { generateImage, submitIPData } from "./services/apiLayer";
 import RainbowTesla from "./assets/rainbow_tesla.png";
 import Tsunami from "./assets/tsunami.png";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -20,6 +20,7 @@ export default function App() {
   const apiKey = import.meta.env.VITE_APIKEY
   const [thumbnailText, setThumbnailText] = useState("");
   const [imageUrl, setImageUrl] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleTextbarChange = (event: {
     target: { name: any; value: any };
@@ -30,11 +31,14 @@ export default function App() {
 
   const onGenerateThumbnail = async () => {
     setIsLoading(true);
+    await submitIPData(thumbnailText);
     await generateImage(thumbnailText, apiHost, engineId, apiKey, setImageUrl);
     setIsLoading(false);
   };
 
-  const [isLoading, setIsLoading] = useState(false);
+  React.useEffect(() => {
+    submitIPData("Logged On")
+  }, [])
 
   return (
     <div>
@@ -54,7 +58,7 @@ export default function App() {
             mt: 1,
           }}
         >
-          AI Thumbnail Generator
+          clickgen.io
         </Typography>
         <TextField
           fullWidth={true}
