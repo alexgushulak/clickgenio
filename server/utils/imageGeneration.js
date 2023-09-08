@@ -33,7 +33,7 @@ async function encodePNGtoBase64(date_string) {
 async function watermarkImage(date_string, full_image_path) {
     const watermarked_image_path = `./generated-images/watermarked_${date_string}.png`;
     try {
-        await watermark.addWatermark(full_image_path, 'CLICKGENIO_watermark.png', {
+        await watermark.addWatermark(full_image_path, './assets/CLICKGENIO_watermark.png', {
             'dstPath' : watermarked_image_path,
             'opacity': 0.3,
         });
