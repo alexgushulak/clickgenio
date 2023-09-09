@@ -9,10 +9,12 @@ import {
   Box,
 } from "@mui/material";
 import { Routes, Route } from "react-router-dom";
-import { submitData, generateImage } from "./services/apiLayer";
+import { generateImage, submitIPData } from "./services/apiLayer";
 import RainbowTesla from "./assets/rainbow_tesla.png";
 import Tsunami from "./assets/tsunami.png";
 import CircularProgress from "@mui/material/CircularProgress";
+import "./App.css";
+import { NoEncryption } from "@mui/icons-material";
 
 export default function App() {
   const engineId = import.meta.env.VITE_ENGINEID
@@ -20,6 +22,8 @@ export default function App() {
   const apiKey = import.meta.env.VITE_APIKEY
   const [thumbnailText, setThumbnailText] = useState("");
   const [imageUrl, setImageUrl] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [isClicked, setIsClicked] = useState(false);
 
   const handleTextbarChange = (event: {
     target: { name: any; value: any };
@@ -28,14 +32,17 @@ export default function App() {
     setThumbnailText(value);
   };
 
-  const trackClick = async () => {
+  const onGenerateThumbnail = async () => {
+    setIsClicked(true);
     setIsLoading(true);
-    await submitData(thumbnailText);
+    await submitIPData(thumbnailText);
     await generateImage(thumbnailText, apiHost, engineId, apiKey, setImageUrl);
     setIsLoading(false);
   };
 
-  const [isLoading, setIsLoading] = useState(false);
+  React.useEffect(() => {
+    submitIPData("Logged On")
+  }, [])
 
   return (
     <div>
@@ -44,7 +51,16 @@ export default function App() {
         <Route path="/" element={""} />
       </Routes>
       <Container sx={{ mb: 5, mt: 15 }}>
-        <img src={imageUrl} />
+        <Box
+          component="img"
+          sx={{
+            display: isClicked && !isLoading ? "inline-block" : "none",
+            height: 400,
+            width: 584,
+            margin: '0 auto',
+          }}
+          src={imageUrl}
+        />
         <Typography
           variant="h3"
           component="h3"
@@ -55,7 +71,7 @@ export default function App() {
             mt: 1,
           }}
         >
-          AI Thumbnail Generator
+          clickgen.io
         </Typography>
         <TextField
           fullWidth={true}
@@ -74,7 +90,7 @@ export default function App() {
             mt: 1,
           }}
           variant="contained"
-          onClick={trackClick}
+          onClick={onGenerateThumbnail}
         >
           GENERATE THUMBNAIL
         </Button>

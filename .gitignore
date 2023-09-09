@@ -24,3 +24,5 @@ dist-ssr
 *.sln
 *.sw?
 *.env
+**/generated-images/*.png
+**/generated-images/*.jpg
