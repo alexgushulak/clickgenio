@@ -18,11 +18,9 @@ app.post('/metadata', jsonParser, async (req, res) => {
     var ip = req.header('x-forwarded-for');
     var geo = geoip.lookup(ip);
     var thumbnailText = req.body.message;
-    console.log(`IP-Address: ${req.header('x-forwarded-for')}`);
-    console.log(`Location: ${geo}`);
-    console.log(`Thumbnail Text: ${thumbnailText}`);
+    console.log(`IP-Address: ${req.header('x-forwarded-for')}, Location: ${geo}, Thumbnail Text: ${thumbnailText}`);
     res.status(200).send({
-        message: "Successfully Received Metadata"
+        message: "Received Metadata"
     });
 })
 
@@ -33,7 +31,7 @@ app.post('/submit', jsonParser, async (req,res) => {
     const apiKey = "sk-36jFn0ywSl2ktMvPnqdMdcbJRdI1x3bNLL8Hydd81XrmxWT9";
     try {
         const base64_encoded_image = await generateImage(thumbnail_image_text, apiHost, engineId, apiKey);
-        console.log("Successfully Generated Image!")
+        console.log("Recieved image from stability.ai")
         res.status(200).send({
             imageBase64: base64_encoded_image
         });
