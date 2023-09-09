@@ -3,7 +3,8 @@ import cors from 'cors';
 import geoip from 'geoip-lite';
 import bodyParser from 'body-parser';
 import { generateImage, watermarkImage } from './utils/imageGeneration.js';
-import * as fs from 'node:fs/promises';
+import { uploadToS3, downloadFromS3 } from './utils/s3Handler.js';
+
 
 const app = express();
 app.use(cors());
@@ -40,6 +41,30 @@ app.post('/submit', jsonParser, async (req,res) => {
         res.status(500).send({
             message: "Internal Server Error"
         });
+    }
+});
+
+app.get('/download', jsonParser, async (req, res) => {
+    // needs auth
+    try {
+        let file_name = `full_${req.query.id}.png`;
+        let s3path = `full-images/${file_name}`;
+        let fileStream = await downloadFromS3(s3path);
+        res.attachment('thumbnail.png')
+        fileStream.pipe(res);
+    } catch (err) {
+        console.log(err)
+        res.status(500).send({
+            message: "Internal Server Error, Purchase could not be completed"
+        })
+    }
+});
+
+app.post('upload', jsonParser, async (req, res) => {
+    try {
+        return 0
+    } catch {
+
     }
 });
 

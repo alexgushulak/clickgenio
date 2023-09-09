@@ -47,4 +47,6 @@ const submitIPData = async (thumbnailText: string) => {
   }
 }
 
+const 
+
 export { generateImage, submitIPData };
