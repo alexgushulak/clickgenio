@@ -96,40 +96,44 @@ export default function App() {
         </Button>
         {isLoading && (
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <CircularProgress />
-        </div>
+            <CircularProgress />
+          </div>
         )}
       </Container>
       <Container
-        sx={{ display: "block", margin: "25px auto", "text-align": "center" }}
+        sx={{
+          display: "flex",
+          flexDirection: { xs: 'column', md: 'row' },
+          justifyContent: "center",
+          alignItems: "center",
+          margin: "25px auto",
+          "text-align": "center"
+        }}
       >
         <Box
           component="img"
           sx={{
-            // height: 225,
-            // width: 400,
             display: 'inline-block',
             margin: '0 auto',
             padding: '10px',
             height: { xs: 200, sm: 300, md: 400 },
             width: { xs: 292, sm: 438, md: 584 },
           }}
-          alt="The house from the offer."
           src={RainbowTesla}
         />
         <Box
           component="img"
           sx={{
+            display: 'inline-block',
             height: { xs: 200, sm: 300, md: 400 },
             width: { xs: 292, sm: 438, md: 584 },
-            display: 'inline-block',
             margin: '0 auto',
             padding: '10px'
           }}
-          alt="The house from the offer."
           src={Tsunami}
         />
       </Container>
+
     </div>
   );
 }
