@@ -24,19 +24,30 @@ export default function App() {
   const [imageUrl, setImageUrl] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
+  const [finalText, setFinalText] = useState('');
+  const [useFinalText, setUseFinalText] = useState(false);
 
-  const handleTextbarChange = (event: {
-    target: { name: any; value: any };
-  }) => {
-    const { name, value } = event.target;
-    setThumbnailText(value);
+  const handleTextbarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setThumbnailText(event.target.value);
+  };
+
+
+  const handleKeyPress = async (event: any) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      setFinalText(thumbnailText);
+      setUseFinalText(true);
+      await onGenerateThumbnail();
+      event.preventDefault();
+    }
   };
 
   const onGenerateThumbnail = async () => {
     setIsClicked(true);
     setIsLoading(true);
-    await submitIPData(thumbnailText);
-    await generateImage(thumbnailText, apiHost, engineId, apiKey, setImageUrl);
+    const textToUse = useFinalText && thumbnailText !== "" ? finalText : thumbnailText;
+    await submitIPData(textToUse);
+    await generateImage(textToUse, apiHost, engineId, apiKey, setImageUrl);
     setIsLoading(false);
   };
 
@@ -77,10 +88,11 @@ export default function App() {
           fullWidth={true}
           value={thumbnailText}
           onChange={handleTextbarChange}
+          onKeyDown={handleKeyPress}
+          label="Thumbnail Description"
+          placeholder="A Rainbow Colored Tesla Model 3 Driving Through the Mountains"
           id="outlined-multiline-flexible"
-          placeholder='A Rainbow Colored Tesla Model 3 Driving Through the Mountains'
           multiline
-          maxRows={1}
         />
         <Button
           sx={{
@@ -96,8 +108,8 @@ export default function App() {
         </Button>
         {isLoading && (
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <CircularProgress />
-        </div>
+            <CircularProgress />
+          </div>
         )}
       </Container>
       <Container
