@@ -55,8 +55,8 @@ export default function App() {
           component="img"
           sx={{
             display: isClicked && !isLoading ? "inline-block" : "none",
-            height: 400,
-            width: 584,
+            height: { xs: 200, sm: 300, md: 400 },
+            width: { xs: 292, sm: 438, md: 584 },
             margin: '0 auto',
           }}
           src={imageUrl}
@@ -106,11 +106,13 @@ export default function App() {
         <Box
           component="img"
           sx={{
-            height: 225,
-            width: 400,
+            // height: 225,
+            // width: 400,
             display: 'inline-block',
             margin: '0 auto',
-            padding: '10px'
+            padding: '10px',
+            height: { xs: 200, sm: 300, md: 400 },
+            width: { xs: 292, sm: 438, md: 584 },
           }}
           alt="The house from the offer."
           src={RainbowTesla}
@@ -118,8 +120,8 @@ export default function App() {
         <Box
           component="img"
           sx={{
-            height: 225,
-            width: 400,
+            height: { xs: 200, sm: 300, md: 400 },
+            width: { xs: 292, sm: 438, md: 584 },
             display: 'inline-block',
             margin: '0 auto',
             padding: '10px'
