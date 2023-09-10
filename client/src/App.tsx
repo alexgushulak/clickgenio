@@ -116,8 +116,8 @@ export default function App() {
             display: 'inline-block',
             margin: '0 auto',
             padding: '10px',
-            height: { xs: 200, sm: 300, md: 400 },
-            width: { xs: 292, sm: 438, md: 584 },
+            height: { xs: 172, sm: 215, md: 215 },
+            width: { xs: 301, sm: 377, md: 377 },
           }}
           src={RainbowTesla}
         />
@@ -125,8 +125,8 @@ export default function App() {
           component="img"
           sx={{
             display: 'inline-block',
-            height: { xs: 200, sm: 300, md: 400 },
-            width: { xs: 292, sm: 438, md: 584 },
+            height: { xs: 172, sm: 215, md: 215 },
+            width: { xs: 301, sm: 377, md: 377 },
             margin: '0 auto',
             padding: '10px'
           }}
