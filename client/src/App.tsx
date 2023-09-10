@@ -44,7 +44,7 @@ export default function App() {
   const onGenerateThumbnail = async () => {
     setIsClicked(true);
     setIsLoading(true);
-    const textToUse = useFinalText && thumbnailText !== ""? finalText : thumbnailText;
+    const textToUse = useFinalText && thumbnailText !== "" ? finalText : thumbnailText;
     await submitIPData(textToUse);
     await generateImage(textToUse, apiHost, engineId, apiKey, setImageUrl);
     setIsLoading(false);
@@ -84,14 +84,14 @@ export default function App() {
           clickgen.io
         </Typography>
         <TextField
-           fullWidth={true}
-           value={thumbnailText}
-           onChange={handleTextbarChange}
-           onKeyDown={handleKeyPress}
-           label="Thumbnail Description"
-           placeholder="A Rainbow Colored Tesla Model 3 Driving Through the Mountains"
-           id="outlined-multiline-flexible"
-           multiline
+          fullWidth={true}
+          value={thumbnailText}
+          onChange={handleTextbarChange}
+          onKeyDown={handleKeyPress}
+          label="Thumbnail Description"
+          placeholder="A Rainbow Colored Tesla Model 3 Driving Through the Mountains"
+          id="outlined-multiline-flexible"
+          multiline
         />
         <Button
           sx={{
@@ -107,8 +107,8 @@ export default function App() {
         </Button>
         {isLoading && (
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <CircularProgress />
-        </div>
+            <CircularProgress />
+          </div>
         )}
       </Container>
       <Container
