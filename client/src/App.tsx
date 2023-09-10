@@ -66,8 +66,8 @@ export default function App() {
           component="img"
           sx={{
             display: isClicked && !isLoading ? "inline-block" : "none",
-            height: 400,
-            width: 584,
+            height: { xs: 200, sm: 300, md: 400 },
+            width: { xs: 292, sm: 438, md: 584 },
             margin: '0 auto',
           }}
           src={imageUrl}
@@ -113,33 +113,39 @@ export default function App() {
         )}
       </Container>
       <Container
-        sx={{ display: "block", margin: "25px auto", "text-align": "center" }}
+        sx={{
+          display: "flex",
+          flexDirection: { xs: 'column', md: 'row' },
+          justifyContent: "center",
+          alignItems: "center",
+          margin: "25px auto",
+          "text-align": "center"
+        }}
       >
         <Box
           component="img"
           sx={{
-            height: 225,
-            width: 400,
             display: 'inline-block',
             margin: '0 auto',
-            padding: '10px'
+            padding: '10px',
+            height: { xs: 172, sm: 215, md: 215 },
+            width: { xs: 301, sm: 377, md: 377 },
           }}
-          alt="The house from the offer."
           src={RainbowTesla}
         />
         <Box
           component="img"
           sx={{
-            height: 225,
-            width: 400,
             display: 'inline-block',
+            height: { xs: 172, sm: 215, md: 215 },
+            width: { xs: 301, sm: 377, md: 377 },
             margin: '0 auto',
             padding: '10px'
           }}
-          alt="The house from the offer."
           src={Tsunami}
         />
       </Container>
+
     </div>
   );
 }
