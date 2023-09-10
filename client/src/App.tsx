@@ -34,6 +34,7 @@ export default function App() {
 
   const handleKeyPress = async (event: any) => {
     if (event.key === 'Enter') {
+      event.preventDefault();
       setFinalText(thumbnailText);
       setUseFinalText(true);
       await onGenerateThumbnail();
