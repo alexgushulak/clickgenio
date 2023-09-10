@@ -1,11 +1,27 @@
-import Upload from "@aws-sdk/lib-storage";
-import { S3Client, S3 } from "@aws-sdk/client-s3";
 import 'dotenv/config';
 import AWS from 'aws-sdk';
+import multer from 'multer';
+import multerS3 from 'multer-s3';
 
-async function uploadToS3(file_name) {
-    return 0
-};
+AWS.config.update({
+  secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
+  accessKeyId: process.env.S3_ACCESS_KEY_ID,
+  region: process.env.S3_REGION
+})
+
+const s3 = new AWS.S3();
+
+const upload = multer({
+  storage:multerS3({
+    bucket : process.env.S3_BUCKET,
+    s3  : s3,
+    key:(req, file, cb) => {
+      const folderName = 'full-images/';
+      const key = folderName + file.originalname
+      cb(null, key);
+    }
+  })
+});
 
 async function downloadFromS3(file_name) {
     const accessKeyId = process.env.S3_ACCESS_KEY_ID
@@ -36,4 +52,4 @@ async function downloadFromS3(file_name) {
     return fileStream
 };
 
-export { uploadToS3, downloadFromS3 };
+export { upload, downloadFromS3 };

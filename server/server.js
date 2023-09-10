@@ -3,7 +3,7 @@ import cors from 'cors';
 import geoip from 'geoip-lite';
 import bodyParser from 'body-parser';
 import { generateImage, watermarkImage } from './utils/imageGeneration.js';
-import { uploadToS3, downloadFromS3 } from './utils/s3Handler.js';
+import { upload, downloadFromS3 } from './utils/s3Handler.js';
 
 
 const app = express();
@@ -60,11 +60,14 @@ app.get('/download', jsonParser, async (req, res) => {
     }
 });
 
-app.post('upload', jsonParser, async (req, res) => {
+app.post('/upload', upload.single("file"), async (req, res) => {
     try {
-        return 0
-    } catch {
-
+        res.send("File Uploaded Succesfully");
+    } catch (err) {
+        console.log("File Upload Error", err)
+        res.status(500).send({
+            message: "Internal Server Error, Purchase could not be completed"
+        })
     }
 });
 
