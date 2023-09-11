@@ -3,7 +3,8 @@ import cors from 'cors';
 import geoip from 'geoip-lite';
 import bodyParser from 'body-parser';
 import { generateImage, watermarkImage } from './utils/imageGeneration.js';
-import * as fs from 'node:fs/promises';
+import { upload, downloadFromS3 } from './utils/s3Handler.js';
+
 
 const app = express();
 app.use(cors());
@@ -31,7 +32,6 @@ app.post('/submit', jsonParser, async (req,res) => {
     const apiKey = "sk-36jFn0ywSl2ktMvPnqdMdcbJRdI1x3bNLL8Hydd81XrmxWT9";
     try {
         const base64_encoded_image = await generateImage(thumbnail_image_text, apiHost, engineId, apiKey);
-        console.log("Recieved image from stability.ai")
         res.status(200).send({
             imageBase64: base64_encoded_image
         });
@@ -40,6 +40,33 @@ app.post('/submit', jsonParser, async (req,res) => {
         res.status(500).send({
             message: "Internal Server Error"
         });
+    }
+});
+
+app.get('/download', jsonParser, async (req, res) => {
+    // needs auth
+    try {
+        let file_name = `full_${req.query.id}.png`;
+        let s3path = `full-images/${file_name}`;
+        let fileStream = await downloadFromS3(s3path);
+        res.attachment('thumbnail.png')
+        fileStream.pipe(res);
+    } catch (err) {
+        console.log(err)
+        res.status(500).send({
+            message: "Internal Server Error, Purchase could not be completed"
+        })
+    }
+});
+
+app.post('/upload', upload.single("file"), async (req, res) => {
+    try {
+        res.send("File Uploaded Succesfully");
+    } catch (err) {
+        console.log("File Upload Error", err)
+        res.status(500).send({
+            message: "Internal Server Error, Purchase could not be completed"
+        })
     }
 });
 
