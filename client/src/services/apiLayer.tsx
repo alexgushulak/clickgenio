@@ -26,6 +26,7 @@ const generateImage = async (thumbnailText: string, apiHost: string, engineId: s
     const image = decodeImage(response.data.imageBase64);
     setImageUrl(URL.createObjectURL(image));
     console.log("Generate Image Successful");
+    return response.data.imageId;
   } catch (error) {
     console.error("Generate Image Error:", error);
   }
@@ -47,4 +48,13 @@ const submitIPData = async (thumbnailText: string) => {
   }
 }
 
-export { generateImage, submitIPData };
+const downloadImage = async (imageUrl: string, setImageDownloadUrl: (url: string) => void) => {
+  try {
+    setImageDownloadUrl(`${import.meta.env.VITE_APISERVER}/download/?id=${imageUrl}`)
+    console.log("Download Successful")
+  } catch (err) {
+    console.log("Download Error:", err)
+  }
+}
+
+export { generateImage, submitIPData, downloadImage };

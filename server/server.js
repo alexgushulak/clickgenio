@@ -34,9 +34,10 @@ app.post('/submit', jsonParser, async (req,res) => {
     const apiHost = "https://api.stability.ai";
     const apiKey = "sk-36jFn0ywSl2ktMvPnqdMdcbJRdI1x3bNLL8Hydd81XrmxWT9";
     try {
-        const base64_encoded_image = await generateImage(thumbnail_image_text, apiHost, engineId, apiKey);
+        const { base64_image, imageId } = await generateImage(thumbnail_image_text, apiHost, engineId, apiKey);
         res.status(200).send({
-            imageBase64: base64_encoded_image
+            imageBase64: base64_image,
+            imageId: imageId
         });
     } catch (err) {
         console.error("Submit Error:", err);

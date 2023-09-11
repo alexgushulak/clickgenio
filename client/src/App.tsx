@@ -9,7 +9,7 @@ import {
   Box,
 } from "@mui/material";
 import { Routes, Route } from "react-router-dom";
-import { generateImage, submitIPData } from "./services/apiLayer";
+import { generateImage, submitIPData, downloadImage } from "./services/apiLayer";
 import RainbowTesla from "./assets/rainbow_tesla.png";
 import Tsunami from "./assets/tsunami.png";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -22,6 +22,8 @@ export default function App() {
   const apiKey = import.meta.env.VITE_APIKEY
   const [thumbnailText, setThumbnailText] = useState("");
   const [imageUrl, setImageUrl] = useState("");
+  const [imageDownloadUrl, setImageDownloadUrl] = useState("");
+  const [imageId, setImageId] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
   const [finalText, setFinalText] = useState('');
@@ -47,7 +49,9 @@ export default function App() {
     setIsLoading(true);
     const textToUse = useFinalText && thumbnailText !== "" ? finalText : thumbnailText;
     await submitIPData(textToUse);
-    await generateImage(textToUse, apiHost, engineId, apiKey, setImageUrl);
+    const my_imageId = await generateImage(textToUse, apiHost, engineId, apiKey, setImageUrl);
+    setImageId(my_imageId)
+    setImageDownloadUrl(`${import.meta.env.VITE_APISERVER}/download/?id=${my_imageId}`)
     setIsLoading(false);
   };
 
@@ -72,6 +76,19 @@ export default function App() {
           }}
           src={imageUrl}
         />
+        <Button
+          sx={{
+            display: isClicked && !isLoading ? "block" : "none",
+            "text-align": "center",
+            margin: "0 auto",
+            bottom: '75px',
+            mt: 1,
+            width: '250px'
+          }}
+          color="success"
+          variant="contained"
+          href={imageDownloadUrl}
+        >Download Full Size Image</Button>
         <Typography
           variant="h3"
           component="h3"
