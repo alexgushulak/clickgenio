@@ -16,9 +16,12 @@ app.get('/', (req, res) => {
 
 app.post('/metadata', jsonParser, async (req, res) => {
     var ip = req.header('x-forwarded-for');
-    var geo = geoip.lookup(ip);
+    if (!ip) {
+        var ip = '72.229.28.185';
+    }
+    const geo = geoip.lookup(ip);
     var thumbnailText = req.body.message;
-    console.log(`IP-Address: ${req.header('x-forwarded-for')}, Location: ${geo}, Thumbnail Text: ${thumbnailText}`);
+    console.log(`User Info -- IP-Address: ${ip}, Location: ${geo.city}, ${geo.country}, Thumbnail Text: ${thumbnailText}`);
     res.status(200).send({
         message: "Received Metadata"
     });
