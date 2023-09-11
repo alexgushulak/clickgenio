@@ -2,6 +2,9 @@ import 'dotenv/config';
 import AWS from 'aws-sdk';
 import multer from 'multer';
 import multerS3 from 'multer-s3';
+import * as fs from 'node:fs';
+
+let bucketName = process.env.S3_BUCKET;
 
 AWS.config.update({
   secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
@@ -22,6 +25,22 @@ const upload = multer({
     }
   })
 });
+
+function uploadToS3(s3fileName, filePath, folderName) {
+  const params = {
+    Bucket: bucketName,
+    Key: `${folderName}/${s3fileName}`,
+    Body: fs.createReadStream(filePath)
+  }
+
+  s3.upload(params, (err, data) => {
+      if (err) {
+        console.error('Error uploading file:', err);
+      } else {
+        console.log('File uploaded successfully. S3 Location:', data.Location);
+      }
+  });
+}
 
 async function downloadFromS3(file_name) {
     const accessKeyId = process.env.S3_ACCESS_KEY_ID
@@ -52,4 +71,4 @@ async function downloadFromS3(file_name) {
     return fileStream
 };
 
-export { upload, downloadFromS3 };
+export { upload, downloadFromS3, uploadToS3 };

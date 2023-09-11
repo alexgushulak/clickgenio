@@ -32,7 +32,6 @@ app.post('/submit', jsonParser, async (req,res) => {
     const apiKey = "sk-36jFn0ywSl2ktMvPnqdMdcbJRdI1x3bNLL8Hydd81XrmxWT9";
     try {
         const base64_encoded_image = await generateImage(thumbnail_image_text, apiHost, engineId, apiKey);
-        console.log("Recieved image from stability.ai")
         res.status(200).send({
             imageBase64: base64_encoded_image
         });
