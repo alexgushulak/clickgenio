@@ -18,7 +18,7 @@ async function writeBase64toPNG(image_object) {
         console.log(`Image ${fileName} uploaded to S3`)
         return {imageId, fileName, localFilePath};
     } catch(err) {
-        console.log(`Full Image Error: ${err}`);
+        console.error(`Full Image Error: ${err}`);
     }
 };
 
@@ -31,7 +31,7 @@ async function encodePNGtoBase64(date_string) {
         const base64_image = buf.toString('base64');
         return base64_image;
     } catch(err) {
-        console.log(`Base64 Image Error: ${err}`);
+        console.error(`Base64 Image Error: ${err}`);
     }
 }
 
@@ -45,7 +45,7 @@ async function watermarkImage(date_string, full_image_path) {
         await new Promise((resolve) => setTimeout(resolve, 500));
         uploadWatermarkImageToS3(`watermarked_${date_string}.png`, watermarked_image_path, 'watermarked-images');
     } catch(err) {
-        console.log(`Watermark Image Error: ${err}`);
+        console.error(`Watermark Image Error: ${err}`);
     }
 
     try {
@@ -53,7 +53,7 @@ async function watermarkImage(date_string, full_image_path) {
         const image = await Jimp.read(watermarked_image_path);
         image.resize(584,400).write(watermarked_image_path);
     } catch(err) {
-        console.log(`Image Resize Error: ${err}`);
+        console.error(`Image Resize Error: ${err}`);
     }
 };
 
@@ -61,7 +61,7 @@ function uploadWatermarkImageToS3(fileName, localFilePath, s3FolderName) {
     try {
         uploadToS3(fileName, localFilePath, s3FolderName);
     } catch(err) {
-        console.log(`Upload Watermark Image Error: ${err}`);
+        console.error(`Upload Watermark Image Error: ${err}`);
     }
 }
 
@@ -74,10 +74,8 @@ const createImageFiles = async (stabilityAIResponse) => {
     let imageId, fileName, localFilePath;
 
     try {
-        console.log("Trying to create images")
         const result = await writeBase64toPNG(stabilityAIResponse.artifacts[0].base64)
         const { imageId, fileName, localFilePath } = result || {};
-        console.log(imageId, fileName, localFilePath)
         await watermarkImage(imageId, localFilePath)
         return await encodePNGtoBase64(imageId);
     } catch (err) {
