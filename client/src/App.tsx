@@ -94,7 +94,7 @@ export default function App() {
     link.click();
   };
 
-  React.useEffect(() => {
+  const checkIdExistsOnPageLoad = () => {
     const query = new URLSearchParams(window.location.search);
     id = query.get("id");
 
@@ -108,17 +108,10 @@ export default function App() {
     } else {
       console.log("No Id in Query");
     }
+  }
 
-    if (query.get("success")) {
-      setMessage("Order placed! You will receive an email confirmation.");
-    }
-
-    if (query.get("canceled")) {
-      setMessage(
-        "Order canceled -- continue to shop around and checkout when you're ready."
-      );
-    }
-    
+  React.useEffect(() => {
+    checkIdExistsOnPageLoad()
     submitIPData("Logged On")
   }, [])
 
@@ -128,9 +121,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={""} />
       </Routes>
-      <Container sx={{ mb: 5, mt: 15 }}>
-        <ProductDisplay />
-        <div>
+      <div>
           {id && (
             <div>
               <div>Thank you for your purchase!</div>
@@ -144,8 +135,9 @@ export default function App() {
               </Button>
             </div>
           )}
-          {/* Other code here */}
-        </div>
+          {
+      <Container sx={{ mb: 5, mt: 15 }}>
+        <ProductDisplay />
         <Typography
           variant="h3"
           component="h3"
@@ -186,6 +178,8 @@ export default function App() {
           </div>
         )}
       </Container>
+      }
+        </div>
       <Container
         sx={{
           display: "flex",
