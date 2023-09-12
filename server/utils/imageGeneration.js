@@ -105,7 +105,7 @@ const generateImage = async (thumbnailText, apiHost, engineId, apiKey) => {
             }
         });
         console.log('Recieved Image from Stability.AI')
-        const { base64_image, imageId } = await createImageFiles(response.data);)
+        const { base64_image, imageId } = await createImageFiles(response.data);
         return { base64_image, imageId };
     } catch (err) {
         console.error("Generate Image Error:", err);

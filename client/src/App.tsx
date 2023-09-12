@@ -14,7 +14,9 @@ import RainbowTesla from "./assets/rainbow_tesla.png";
 import Tsunami from "./assets/tsunami.png";
 import CircularProgress from "@mui/material/CircularProgress";
 import "./App.css";
-import { NoEncryption } from "@mui/icons-material";
+import axios from 'axios';
+
+let id: any = null
 
 export default function App() {
   const engineId = import.meta.env.VITE_ENGINEID
@@ -28,6 +30,7 @@ export default function App() {
   const [isClicked, setIsClicked] = useState(false);
   const [finalText, setFinalText] = useState('');
   const [useFinalText, setUseFinalText] = useState(false);
+  const [message, setMessage] = useState("");
 
   const handleTextbarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setThumbnailText(event.target.value);
@@ -55,7 +58,61 @@ export default function App() {
     setIsLoading(false);
   };
 
+  const ProductDisplay = () => (
+    <section>
+      <Box
+          component="img"
+          sx={{
+            display: isClicked && !isLoading ? "inline-block" : "none",
+            height: { xs: 200, sm: 300, md: 400 },
+            width: { xs: 292, sm: 438, md: 584 },
+            margin: '0 auto',
+          }}
+          src={imageUrl}
+        />
+      <form action={`http://localhost:5001/create-checkout-session/?imgid=${imageId}`} method="POST">
+      <Button
+          sx={{
+            display: isClicked && !isLoading ? "block" : "none",
+            "text-align": "center",
+            margin: "0 auto",
+            bottom: '75px',
+            mt: 1,
+            width: '250px'
+          }}
+          type="submit"
+          color="success"
+          variant="contained"
+        >Download Full Size Image</Button>
+      </form>
+    </section>
+  );
+
   React.useEffect(() => {
+    const query = new URLSearchParams(window.location.search);
+    id = query.get("id");
+
+    if (id) {
+      try {
+        setImageId(id);
+        console.log(id);
+      } catch {
+        console.log("Error");
+      }
+    } else {
+      console.log("No Id in Query");
+    }
+
+    if (query.get("success")) {
+      setMessage("Order placed! You will receive an email confirmation.");
+    }
+
+    if (query.get("canceled")) {
+      setMessage(
+        "Order canceled -- continue to shop around and checkout when you're ready."
+      );
+    }
+    
     submitIPData("Logged On")
   }, [])
 
@@ -66,29 +123,24 @@ export default function App() {
         <Route path="/" element={""} />
       </Routes>
       <Container sx={{ mb: 5, mt: 15 }}>
-        <Box
-          component="img"
-          sx={{
-            display: isClicked && !isLoading ? "inline-block" : "none",
-            height: { xs: 200, sm: 300, md: 400 },
-            width: { xs: 292, sm: 438, md: 584 },
-            margin: '0 auto',
-          }}
-          src={imageUrl}
-        />
-        <Button
-          sx={{
-            display: isClicked && !isLoading ? "block" : "none",
-            "text-align": "center",
-            margin: "0 auto",
-            bottom: '75px',
-            mt: 1,
-            width: '250px'
-          }}
-          color="success"
-          variant="contained"
-          href={imageDownloadUrl}
-        >Download Full Size Image</Button>
+        <ProductDisplay />
+        <div>
+          {id && (
+            <div>
+              <Button
+                sx={{
+                  height: '400px'
+                }}
+                variant="contained"
+                href={`https://clickgenio-production.up.railway.app/download/?id=${imageId}`}
+              >
+                Thank you for your purchase!
+                Click Here to Download Your Image Now!
+              </Button>
+            </div>
+          )}
+          {/* Other code here */}
+        </div>
         <Typography
           variant="h3"
           component="h3"
