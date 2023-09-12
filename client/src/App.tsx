@@ -8,13 +8,13 @@ import {
   Button,
   Box,
 } from "@mui/material";
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { Routes, Route } from "react-router-dom";
 import { generateImage, submitIPData, downloadImage } from "./services/apiLayer";
 import RainbowTesla from "./assets/rainbow_tesla.png";
 import Tsunami from "./assets/tsunami.png";
 import CircularProgress from "@mui/material/CircularProgress";
 import "./App.css";
-import axios from 'axios';
 
 let id: any = null
 
@@ -88,6 +88,12 @@ export default function App() {
     </section>
   );
 
+  const onDownload = () => {
+    const link = document.createElement("a");
+    link.href = `https://clickgenio-production.up.railway.app/download/?id=${imageId}`;
+    link.click();
+  };
+
   React.useEffect(() => {
     const query = new URLSearchParams(window.location.search);
     id = query.get("id");
@@ -127,15 +133,14 @@ export default function App() {
         <div>
           {id && (
             <div>
+              <div>Thank you for your purchase!</div>
               <Button
-                sx={{
-                  height: '400px'
-                }}
+                component="label"
+                startIcon={<FileDownloadIcon />}
                 variant="contained"
-                href={`https://clickgenio-production.up.railway.app/download/?id=${imageId}`}
-              >
-                Thank you for your purchase!
-                Click Here to Download Your Image Now!
+                color="success"
+                onClick={onDownload}
+              > Download Thumbnail
               </Button>
             </div>
           )}
