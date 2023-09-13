@@ -7,12 +7,11 @@ import { generateImage } from './utils/imageGeneration.js';
 import stripe from 'stripe';
 import S3Handler from './utils/s3Handler.js';
 
+//these should all be done in constructor there is no order in this code its going to be unreadable...
 const stripeInstance = new stripe(process.env.STRIPE_SECRET_KEY);
-
 const app = express();
 const S3Instance = S3Handler.getInstance();
 app.use(cors());
-const port = 5001;
 const jsonParser = bodyParser.json();
 
 app.get('/', (req, res) => {
@@ -105,6 +104,6 @@ app.post('/create-checkout-session', async (req, res) => {
 ``
 app.listen(4242, () => console.log('Running on port 4242'));
 
-app.listen(port, ()=>{
-    console.log(`Server Running on port ${port}`);
+app.listen(process.env.PORT, ()=>{
+    console.log(`Server Running on port ${process.env.PORT}`);
 });
