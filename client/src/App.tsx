@@ -212,6 +212,9 @@ export default function App() {
           }}
           src={Tsunami}
         />
+      </Container> */}
+      <Container>
+        <PhotoGallery photos={photos} />
       </Container>
 
     </div>
