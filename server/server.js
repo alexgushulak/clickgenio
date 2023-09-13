@@ -93,14 +93,14 @@ app.post('/create-checkout-session', async (req, res) => {
       },
     ],
     mode: 'payment',
-    success_url: `http://127.0.0.1:3000/?id=${IMAGE_ID}`,
-    cancel_url: `https://clickgen.io/?=canceled=true `,
+    success_url: `${process.env.CLIENT_URL}/?id=${IMAGE_ID}`,
+    cancel_url: `${process.env.CLIENT_URL}/?=canceled=true `,
     automatic_tax: {enabled: true},
   });
 
   res.redirect(303, session.url);
 });
-
+``
 app.listen(4242, () => console.log('Running on port 4242'));
 
 app.listen(port, ()=>{

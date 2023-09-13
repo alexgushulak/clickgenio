@@ -70,7 +70,7 @@ export default function App() {
           }}
           src={imageUrl}
         />
-      <form action={`http://localhost:5001/create-checkout-session/?imgid=${imageId}`} method="POST">
+      <form action={`${import.meta.env.VITE_APISERVER}/create-checkout-session/?imgid=${imageId}`} method="POST">
       <Button
           sx={{
             display: isClicked && !isLoading ? "block" : "none",
