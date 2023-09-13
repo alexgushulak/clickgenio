@@ -3,7 +3,7 @@ import cors from 'cors';
 import geoip from 'geoip-lite';
 import bodyParser from 'body-parser';
 import 'dotenv/config'
-import { generateImage } from './utils/imageGeneration.js';
+import { WaterMarkService } from './utils/imageGeneration.js';
 import stripe from 'stripe';
 import S3Handler from './utils/s3Handler.js';
 
@@ -11,6 +11,7 @@ import S3Handler from './utils/s3Handler.js';
 const stripeInstance = new stripe(process.env.STRIPE_SECRET_KEY);
 const app = express();
 const S3Instance = S3Handler.getInstance();
+const waterMarkService = new WaterMarkService();
 app.use(cors());
 const jsonParser = bodyParser.json();
 
@@ -37,7 +38,7 @@ app.post('/submit', jsonParser, async (req,res) => {
     const apiHost = "https://api.stability.ai";
     const apiKey = "sk-36jFn0ywSl2ktMvPnqdMdcbJRdI1x3bNLL8Hydd81XrmxWT9";
     try {
-        const { base64_image, imageId } = await generateImage(thumbnail_image_text, apiHost, engineId, apiKey);
+        const { base64_image, imageId } = await waterMarkService.generateImage(thumbnail_image_text, apiHost, engineId, apiKey);
         res.status(200).send({
             imageBase64: base64_image,
             imageId: imageId
