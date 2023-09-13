@@ -8,13 +8,15 @@ import {
   Button,
   Box,
 } from "@mui/material";
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { Routes, Route } from "react-router-dom";
-import { generateImage, submitIPData } from "./services/apiLayer";
+import { generateImage, submitIPData, downloadImage } from "./services/apiLayer";
 import RainbowTesla from "./assets/rainbow_tesla.png";
 import Tsunami from "./assets/tsunami.png";
 import CircularProgress from "@mui/material/CircularProgress";
 import "./App.css";
-import { NoEncryption } from "@mui/icons-material";
+
+let id: any = null
 
 export default function App() {
   const engineId = import.meta.env.VITE_ENGINEID
@@ -22,10 +24,13 @@ export default function App() {
   const apiKey = import.meta.env.VITE_APIKEY
   const [thumbnailText, setThumbnailText] = useState("");
   const [imageUrl, setImageUrl] = useState("");
+  const [imageDownloadUrl, setImageDownloadUrl] = useState("");
+  const [imageId, setImageId] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
   const [finalText, setFinalText] = useState('');
   const [useFinalText, setUseFinalText] = useState(false);
+  const [message, setMessage] = useState("");
 
   const handleTextbarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setThumbnailText(event.target.value);
@@ -47,22 +52,15 @@ export default function App() {
     setIsLoading(true);
     const textToUse = useFinalText && thumbnailText !== "" ? finalText : thumbnailText;
     await submitIPData(textToUse);
-    await generateImage(textToUse, apiHost, engineId, apiKey, setImageUrl);
+    const my_imageId = await generateImage(textToUse, apiHost, engineId, apiKey, setImageUrl);
+    setImageId(my_imageId)
+    setImageDownloadUrl(`${import.meta.env.VITE_APISERVER}/download/?id=${my_imageId}`)
     setIsLoading(false);
   };
 
-  React.useEffect(() => {
-    submitIPData("Logged On")
-  }, [])
-
-  return (
-    <div>
-      <CssBaseline />
-      <Routes>
-        <Route path="/" element={""} />
-      </Routes>
-      <Container sx={{ mb: 5, mt: 15 }}>
-        <Box
+  const ProductDisplay = () => (
+    <section>
+      <Box
           component="img"
           sx={{
             display: isClicked && !isLoading ? "inline-block" : "none",
@@ -72,6 +70,74 @@ export default function App() {
           }}
           src={imageUrl}
         />
+      <form action={`http://localhost:5001/create-checkout-session/?imgid=${imageId}`} method="POST">
+      <Button
+          sx={{
+            display: isClicked && !isLoading ? "block" : "none",
+            "text-align": "center",
+            margin: "0 auto",
+            bottom: '75px',
+            mt: 1,
+            width: '250px'
+          }}
+          type="submit"
+          color="success"
+          variant="contained"
+        >Download Full Size Image</Button>
+      </form>
+    </section>
+  );
+
+  const onDownload = () => {
+    const link = document.createElement("a");
+    link.href = `https://clickgenio-production.up.railway.app/download/?id=${imageId}`;
+    link.click();
+  };
+
+  const checkIdExistsOnPageLoad = () => {
+    const query = new URLSearchParams(window.location.search);
+    id = query.get("id");
+
+    if (id) {
+      try {
+        setImageId(id);
+        console.log(id);
+      } catch {
+        console.log("Error");
+      }
+    } else {
+      console.log("No Id in Query");
+    }
+  }
+
+  React.useEffect(() => {
+    checkIdExistsOnPageLoad()
+    submitIPData("Logged On")
+  }, [])
+
+  return (
+    <div>
+      <CssBaseline />
+      <Routes>
+        <Route path="/" element={""} />
+      </Routes>
+      <div>
+          {id && (
+            <div>
+              <div>Thank you for your purchase!</div>
+              <Button
+                component="label"
+                startIcon={<FileDownloadIcon />}
+                variant="contained"
+                color="success"
+                onClick={onDownload}
+              > Download Thumbnail
+              </Button>
+            </div>
+          )}
+          {
+      <Container sx={{ mb: 5, mt: 15 }}>
+        <ProductDisplay />
         <Typography
           variant="h3"
           component="h3"
@@ -112,6 +178,8 @@ export default function App() {
           </div>
         )}
       </Container>
+      }
+        </div>
       <Container
         sx={{
           display: "flex",

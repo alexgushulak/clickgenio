@@ -77,7 +77,8 @@ const createImageFiles = async (stabilityAIResponse) => {
         const result = await writeBase64toPNG(stabilityAIResponse.artifacts[0].base64)
         const { imageId, fileName, localFilePath } = result || {};
         await watermarkImage(imageId, localFilePath)
-        return await encodePNGtoBase64(imageId);
+        const base64_image = await encodePNGtoBase64(imageId);
+        return { base64_image, imageId };
     } catch (err) {
         console.error("Create Image Files Error:", err);
     }
@@ -104,8 +105,8 @@ const generateImage = async (thumbnailText, apiHost, engineId, apiKey) => {
             }
         });
         console.log('Recieved Image from Stability.AI')
-        const base64image = await createImageFiles(response.data);
-        return base64image;
+        const { base64_image, imageId } = await createImageFiles(response.data);
+        return { base64_image, imageId };
     } catch (err) {
         console.error("Generate Image Error:", err);
     }
