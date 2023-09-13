@@ -3,7 +3,9 @@ import watermark from 'jimp-watermark';
 import * as fs from 'node:fs';
 import Jimp from 'jimp';
 import { Buffer } from 'buffer';
-import { uploadToS3 } from './s3Handler.js';
+import S3Handler from './s3Handler.js';
+
+const S3Instance = S3Handler.getInstance();
 
 async function writeBase64toPNG(image_object) {
     const imageId = Date.now().toString();
@@ -14,7 +16,7 @@ async function writeBase64toPNG(image_object) {
     try {
         await fs.promises.writeFile(localFilePath, buf)
         console.log(`Image ${fileName} saved locally`);
-        uploadToS3(fileName, localFilePath, s3FolderName);
+        S3Instance.uploadToS3(fileName, localFilePath, s3FolderName);
         console.log(`Image ${fileName} uploaded to S3`)
         return {imageId, fileName, localFilePath};
     } catch(err) {
@@ -59,7 +61,7 @@ async function watermarkImage(date_string, full_image_path) {
 
 function uploadWatermarkImageToS3(fileName, localFilePath, s3FolderName) {
     try {
-        uploadToS3(fileName, localFilePath, s3FolderName);
+        S3Instance.uploadToS3(fileName, localFilePath, s3FolderName);
     } catch(err) {
         console.error(`Upload Watermark Image Error: ${err}`);
     }

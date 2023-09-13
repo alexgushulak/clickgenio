@@ -15,6 +15,7 @@ import RainbowTesla from "./assets/rainbow_tesla.png";
 import Tsunami from "./assets/tsunami.png";
 import CircularProgress from "@mui/material/CircularProgress";
 import "./App.css";
+import PhotoGallery from "./components/PhotoGallery";
 
 let id: any = null
 
@@ -93,6 +94,11 @@ export default function App() {
     link.href = `https://clickgenio-production.up.railway.app/download/?id=${imageId}`;
     link.click();
   };
+
+  const photos: string[] =[
+    './assets/rainbow_tesla.png',
+    './assets/tsunami.png'
+  ]
 
   const checkIdExistsOnPageLoad = () => {
     const query = new URLSearchParams(window.location.search);
@@ -190,7 +196,7 @@ export default function App() {
           "text-align": "center"
         }}
       >
-        <Box
+        {/* <Box
           component="img"
           sx={{
             display: 'inline-block',
@@ -211,8 +217,8 @@ export default function App() {
             padding: '10px'
           }}
           src={Tsunami}
-        />
-      </Container> */}
+        /> */}
+      </Container>
       <Container>
         <PhotoGallery photos={photos} />
       </Container>

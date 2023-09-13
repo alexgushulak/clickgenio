@@ -3,12 +3,14 @@ import cors from 'cors';
 import geoip from 'geoip-lite';
 import bodyParser from 'body-parser';
 import 'dotenv/config'
-import { generateImage, watermarkImage } from './utils/imageGeneration.js';
-import { upload, downloadFromS3 } from './utils/s3Handler.js';
+import { generateImage } from './utils/imageGeneration.js';
 import stripe from 'stripe';
+import S3Handler from './utils/s3Handler.js';
+
 const stripeInstance = new stripe(process.env.STRIPE_SECRET_KEY);
 
 const app = express();
+const S3Instance = S3Handler.getInstance();
 app.use(cors());
 const port = 5001;
 const jsonParser = bodyParser.json();
@@ -54,7 +56,7 @@ app.get('/download', jsonParser, async (req, res) => {
     try {
         let file_name = `full_${req.query.id}.png`;
         let s3path = `full-images/${file_name}`;
-        let fileStream = await downloadFromS3(s3path);
+        let fileStream = await S3Instance.downloadFromS3(s3path);
         res.attachment('thumbnail.png')
         fileStream.pipe(res);
     } catch (err) {
@@ -65,7 +67,7 @@ app.get('/download', jsonParser, async (req, res) => {
     }
 });
 
-app.post('/upload', upload.single("file"), async (req, res) => {
+app.post('/upload', S3Instance.upload.single("file"), async (req, res) => {
     try {
         res.send("File Uploaded Succesfully");
     } catch (err) {
