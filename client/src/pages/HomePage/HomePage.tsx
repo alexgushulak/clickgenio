@@ -17,7 +17,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 let id: any = null
 
 export default function HomePage() {
-    const engineId = import.meta.env.VITE_ENGINEID
+  const engineId = import.meta.env.VITE_ENGINEID
   const apiHost = import.meta.env.VITE_APIHOST
   const apiKey = import.meta.env.VITE_APIKEY
   const [thumbnailText, setThumbnailText] = useState("");
@@ -84,12 +84,6 @@ export default function HomePage() {
     </section>
   );
 
-  const onDownload = () => {
-    const link = document.createElement("a");
-    link.href = `https://clickgenio-production.up.railway.app/download/?id=${imageId}`;
-    link.click();
-  };
-
     return (
       <Container>
         <div>
@@ -107,20 +101,8 @@ export default function HomePage() {
             </div>
           )}
           {
-      <Container sx={{ mb: 0, mt: 0, height: '100%' }}>
+      <Container sx={{ mb: 0, mt: '100px', height: '100%' }}>
         <ProductDisplay />
-        <Typography
-          variant="h3"
-          component="h3"
-          sx={{
-            display: "block",
-            "text-align": "center",
-            margin: "0 auto",
-            mt: 1,
-          }}
-        >
-          clickgen.io
-        </Typography>
         <TextField
           fullWidth={true}
           value={thumbnailText}
