@@ -1,104 +1,31 @@
-// App.tsx
 import React, { useState } from "react";
 import {
   CssBaseline,
-  Container,
-  Typography,
-  TextField,
-  Button,
-  Box,
+  Container
 } from "@mui/material";
-import FileDownloadIcon from '@mui/icons-material/FileDownload';
-import { Routes, Route } from "react-router-dom";
-import { generateImage, submitIPData, downloadImage } from "./services/apiLayer";
-import RainbowTesla from "./assets/rainbow_tesla.png";
-import Tsunami from "./assets/tsunami.png";
-import CircularProgress from "@mui/material/CircularProgress";
+import {
+  Routes,
+  Route
+} from "react-router-dom";
+import { submitIPData } from "./services/apiLayer";
 import "./App.css";
-import PhotoGallery from "./components/PhotoGallery";
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import PurchasePage from "./pages/PurchasePage/PurchasePage";
+import HomePage from "./pages/HomePage/HomePage";
+import HomePage2 from './pages/HomePage2/HomePage2';
+import ResponsiveAppBar from "./pages/ResponsiveAppBar";
+
 
 let id: any = null
 
+const darkTheme = createTheme({
+  palette: {
+    mode: 'dark',
+  },
+});
+
 export default function App() {
-  const engineId = import.meta.env.VITE_ENGINEID
-  const apiHost = import.meta.env.VITE_APIHOST
-  const apiKey = import.meta.env.VITE_APIKEY
-  const [thumbnailText, setThumbnailText] = useState("");
-  const [imageUrl, setImageUrl] = useState("");
-  const [imageDownloadUrl, setImageDownloadUrl] = useState("");
   const [imageId, setImageId] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [isClicked, setIsClicked] = useState(false);
-  const [finalText, setFinalText] = useState('');
-  const [useFinalText, setUseFinalText] = useState(false);
-  const [message, setMessage] = useState("");
-
-  const handleTextbarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setThumbnailText(event.target.value);
-  };
-
-
-  const handleKeyPress = async (event: any) => {
-    if (event.key === 'Enter') {
-      event.preventDefault();
-      setFinalText(thumbnailText);
-      setUseFinalText(true);
-      await onGenerateThumbnail();
-      event.preventDefault();
-    }
-  };
-
-  const onGenerateThumbnail = async () => {
-    setIsClicked(true);
-    setIsLoading(true);
-    const textToUse = useFinalText && thumbnailText !== "" ? finalText : thumbnailText;
-    await submitIPData(textToUse);
-    const my_imageId = await generateImage(textToUse, apiHost, engineId, apiKey, setImageUrl);
-    setImageId(my_imageId)
-    setImageDownloadUrl(`${import.meta.env.VITE_APISERVER}/download/?id=${my_imageId}`)
-    setIsLoading(false);
-  };
-
-  const ProductDisplay = () => (
-    <section>
-      <Box
-          component="img"
-          sx={{
-            display: isClicked && !isLoading ? "inline-block" : "none",
-            height: { xs: 200, sm: 300, md: 400 },
-            width: { xs: 292, sm: 438, md: 584 },
-            margin: '0 auto',
-          }}
-          src={imageUrl}
-        />
-      <form action={`${import.meta.env.VITE_APISERVER}/create-checkout-session/?imgid=${imageId}`} method="POST">
-      <Button
-          sx={{
-            display: isClicked && !isLoading ? "block" : "none",
-            "text-align": "center",
-            margin: "0 auto",
-            bottom: '75px',
-            mt: 1,
-            width: '250px'
-          }}
-          type="submit"
-          color="success"
-          variant="contained"
-        >Download Full Size Image</Button>
-      </form>
-    </section>
-  );
-
-  const onDownload = () => {
-    const link = document.createElement("a");
-    link.href = `https://clickgenio-production.up.railway.app/download/?id=${imageId}`;
-    link.click();
-  };
-
-  const photos: string[] =[
-    './assets/rainbow_tesla.png',
-    './assets/tsunami.png'
-  ]
 
   const checkIdExistsOnPageLoad = () => {
     const query = new URLSearchParams(window.location.search);
@@ -121,108 +48,22 @@ export default function App() {
     submitIPData("Logged On")
   }, [])
 
-  return (
-    <div>
-      <CssBaseline />
-      <Routes>
-        <Route path="/" element={""} />
-      </Routes>
-      <div>
-          {id && (
-            <div>
-              <div>Thank you for your purchase!</div>
-              <Button
-                component="label"
-                startIcon={<FileDownloadIcon />}
-                variant="contained"
-                color="success"
-                onClick={onDownload}
-              > Download Thumbnail
-              </Button>
-            </div>
-          )}
-          {
-      <Container sx={{ mb: 5, mt: 15 }}>
-        <ProductDisplay />
-        <Typography
-          variant="h3"
-          component="h3"
-          sx={{
-            display: "block",
-            "text-align": "center",
-            margin: "0 auto",
-            mt: 1,
-          }}
-        >
-          clickgen.io
-        </Typography>
-        <TextField
-          fullWidth={true}
-          value={thumbnailText}
-          onChange={handleTextbarChange}
-          onKeyDown={handleKeyPress}
-          label="Thumbnail Description"
-          placeholder="A Rainbow Colored Tesla Model 3 Driving Through the Mountains"
-          id="outlined-multiline-flexible"
-          multiline
-        />
-        <Button
-          sx={{
-            display: isLoading ? "none" : "block",
-            "text-align": "center",
-            margin: "0 auto",
-            mt: 1,
-          }}
-          variant="contained"
-          onClick={onGenerateThumbnail}
-        >
-          GENERATE THUMBNAIL
-        </Button>
-        {isLoading && (
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <CircularProgress />
-          </div>
-        )}
-      </Container>
-      }
-        </div>
-      <Container
-        sx={{
-          display: "flex",
-          flexDirection: { xs: 'column', md: 'row' },
-          justifyContent: "center",
-          alignItems: "center",
-          margin: "25px auto",
-          "text-align": "center"
-        }}
-      >
-        {/* <Box
-          component="img"
-          sx={{
-            display: 'inline-block',
-            margin: '0 auto',
-            padding: '10px',
-            height: { xs: 172, sm: 215, md: 215 },
-            width: { xs: 301, sm: 377, md: 377 },
-          }}
-          src={RainbowTesla}
-        />
-        <Box
-          component="img"
-          sx={{
-            display: 'inline-block',
-            height: { xs: 172, sm: 215, md: 215 },
-            width: { xs: 301, sm: 377, md: 377 },
-            margin: '0 auto',
-            padding: '10px'
-          }}
-          src={Tsunami}
-        /> */}
-      </Container>
-      <Container>
-        <PhotoGallery photos={photos} />
-      </Container>
+  const darkTheme = createTheme({
+    palette: {
+      mode: 'light',
+    },
+  });
 
-    </div>
+
+  return (
+    <ThemeProvider theme={darkTheme}>
+      <CssBaseline />
+      <ResponsiveAppBar />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/purchase" element={<PurchasePage />} />
+        <Route path="/home" element={<HomePage2 />} />
+      </Routes>
+    </ThemeProvider>
   );
 }
