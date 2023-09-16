@@ -1,3 +1,4 @@
+// App.tsx
 import React, { useState } from "react";
 import {
   CssBaseline,
@@ -9,22 +10,24 @@ import {
 } from "@mui/material";
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { Routes, Route } from "react-router-dom";
-import { generateImage, submitIPData, downloadImage } from "../../services/apiLayer";
+import { generateImage, submitIPData } from "../../services/apiLayer";
 import RainbowTesla from "../../assets/rainbow_tesla.png";
 import Tsunami from "../../assets/tsunami.png";
 import CircularProgress from "@mui/material/CircularProgress";
+import "../../App.css";
 
 let id: any = null
 
-export default function HomePage() {
+export default function App() {
   const engineId = import.meta.env.VITE_ENGINEID
   const apiHost = import.meta.env.VITE_APIHOST
   const apiKey = import.meta.env.VITE_APIKEY
   const [thumbnailText, setThumbnailText] = useState("");
   const [imageUrl, setImageUrl] = useState("");
+  const [imageDownloadUrl, setImageDownloadUrl] = useState("");
+  const [imageId, setImageId] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
-  const [imageId, setImageId] = useState("");
   const [finalText, setFinalText] = useState('');
   const [useFinalText, setUseFinalText] = useState(false);
   const [message, setMessage] = useState("");
@@ -51,6 +54,7 @@ export default function HomePage() {
     await submitIPData(textToUse);
     const my_imageId = await generateImage(textToUse, apiHost, engineId, apiKey, setImageUrl);
     setImageId(my_imageId)
+    setImageDownloadUrl(`${import.meta.env.VITE_APISERVER}/download/?id=${my_imageId}`)
     setIsLoading(false);
   };
 
@@ -84,9 +88,40 @@ export default function HomePage() {
     </section>
   );
 
-    return (
-      <Container>
-        <div>
+  const onDownload = () => {
+    const link = document.createElement("a");
+    link.href = `https://clickgenio-production.up.railway.app/download/?id=${imageId}`;
+    link.click();
+  };
+
+  const checkIdExistsOnPageLoad = () => {
+    const query = new URLSearchParams(window.location.search);
+    id = query.get("id");
+
+    if (id) {
+      try {
+        setImageId(id);
+        console.log(id);
+      } catch {
+        console.log("Error");
+      }
+    } else {
+      console.log("No Id in Query");
+    }
+  }
+
+  React.useEffect(() => {
+    checkIdExistsOnPageLoad()
+    submitIPData("Logged On")
+  }, [])
+
+  return (
+    <div>
+      <CssBaseline />
+      <Routes>
+        <Route path="/" element={""} />
+      </Routes>
+      <div>
           {id && (
             <div>
               <div>Thank you for your purchase!</div>
@@ -101,8 +136,20 @@ export default function HomePage() {
             </div>
           )}
           {
-      <Container sx={{ mb: 0, mt: '100px', height: '100%' }}>
+      <Container sx={{ mb: 5, mt: 15 }}>
         <ProductDisplay />
+        <Typography
+          variant="h3"
+          component="h3"
+          sx={{
+            display: "block",
+            "text-align": "center",
+            margin: "0 auto",
+            mt: 1,
+          }}
+        >
+          clickgen.io
+        </Typography>
         <TextField
           fullWidth={true}
           value={thumbnailText}
@@ -166,6 +213,6 @@ export default function HomePage() {
           src={Tsunami}
         />
       </Container>
-      </Container>
-    );
+    </div>
+  );
 }
