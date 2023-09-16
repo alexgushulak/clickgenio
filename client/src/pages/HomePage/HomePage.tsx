@@ -174,7 +174,8 @@ export default function App() {
         </Button>
         {isLoading && (
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            Please Wait 30 Seconds for the Image to generate <CircularProgress />
+            Please Wait 30 Seconds for the Image to generate
+            <CircularProgress />
           </div>
         )}
       </Container>

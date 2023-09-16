@@ -7,6 +7,8 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import CircularProgress from "@mui/material/CircularProgress";
 import { generateImage, submitIPData } from "../../services/apiLayer";
+import ProductDisplay from "./ProductDisplay/ProductDisplay";
+import Typography from '@mui/material/Typography';
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -56,51 +58,61 @@ export default function HomePage2() {
       setImageId(my_imageId)
       setIsLoading(false);
     };
+
+    const onRefreshThumbnail = async () => {
+      setIsClicked(true);
+      setIsLoading(true);
+      const textToUse = useFinalText && thumbnailText !== "" ? finalText : thumbnailText;
+      await submitIPData(textToUse);
+      const my_imageId = await generateImage(textToUse, apiHost, engineId, apiKey, setImageUrl);
+      setImageId(my_imageId)
+      setIsLoading(false);
+    };
   
-    const ProductDisplay = () => (
-      <section>
-        <Box
-            component="img"
-            sx={{
-              display: isClicked && !isLoading ? "inline-block" : "none",
-              height: { xs: 200, sm: 300, md: 400 },
-              width: { xs: 292, sm: 438, md: 584 },
-              margin: '0 auto',
-            }}
-            src={imageUrl}
-          />
-        <form action={`${import.meta.env.VITE_APISERVER}/create-checkout-session/?imgid=${imageId}`} method="POST">
-        <Button
-            sx={{
-              display: isClicked && !isLoading ? "inline-block" : "none",
-              "text-align": "center",
-              margin: "0 2px",
-              bottom: '0px',
-              mt: 1,
-              width: '250px'
-            }}
-            type="submit"
-            color="success"
-            variant="contained"
-          >Buy Full Size Image
-        </Button>
-        <Button
-            sx={{
-              display: isClicked && !isLoading ? "inline-block" : "none",
-              "text-align": "center",
-              margin: "0 2px",
-              bottom: '0px',
-              mt: 1,
-              width: '250px'
-            }}
-            type="submit"
-            color="info"
-            variant="contained"
-          >Download Low Res Image
-        </Button>
-        </form>
-      </section>
-    );
+    // const ProductDisplay = () => (
+    //   <section>
+    //     <Box
+    //         component="img"
+    //         sx={{
+    //           display: isClicked && !isLoading ? "inline-block" : "none",
+    //           height: { xs: 200, sm: 300, md: 400 },
+    //           width: { xs: 292, sm: 438, md: 584 },
+    //           margin: '0 auto',
+    //         }}
+    //         src={imageUrl}
+    //       />
+    //     <form action={`${import.meta.env.VITE_APISERVER}/create-checkout-session/?imgid=${imageId}`} method="POST">
+    //     <Button
+    //         sx={{
+    //           display: isClicked && !isLoading ? "inline-block" : "none",
+    //           "text-align": "center",
+    //           margin: "0 2px",
+    //           bottom: '0px',
+    //           mt: 1,
+    //           width: '250px'
+    //         }}
+    //         type="submit"
+    //         color="success"
+    //         variant="contained"
+    //       >Buy Full Size Image
+    //     </Button>
+    //     <Button
+    //         sx={{
+    //           display: isClicked && !isLoading ? "inline-block" : "none",
+    //           "text-align": "center",
+    //           margin: "0 2px",
+    //           bottom: '0px',
+    //           mt: 1,
+    //           width: '250px'
+    //         }}
+    //         type="submit"
+    //         color="info"
+    //         variant="contained"
+    //       >Download Low Res Image
+    //     </Button>
+    //     </form>
+    //   </section>
+    // );
   
     const onDownload = () => {
       const link = document.createElement("a");
@@ -109,8 +121,8 @@ export default function HomePage2() {
     };
 
     return (
-        <Grid container spacing={2} sx={{mt: '20px'}}>
-            <Grid item xs={12} md={5}>
+        <Grid container spacing={3} sx={{padding: '25px'}}>
+            <Grid item xs={12} md={4}>
                 <Item>
                     <TextField
                         fullWidth={true}
@@ -136,16 +148,14 @@ export default function HomePage2() {
                     </Button>
                     {isLoading && (
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                            Please Wait 30 Seconds for the Image to generate <CircularProgress />
+                            Please Wait 30 Seconds for the Image to generate <CircularProgress sx={{padding: '10px'}}/>
                         </div>
                     )}
                 </Item>
             </Grid>
-            <Grid item xs={12} md={7}>
+            <Grid item xs={12} md={8}>
                 <Item>
-                    <h1>Thumbnail Preview</h1>
-                    <Button variant="contained">Generate Random Image</Button>
-                    <ProductDisplay />
+                    <ProductDisplay isClicked={isClicked} isLoading={isLoading} imageUrl={imageUrl} imageId={imageId} onRefreshThumbnail={onRefreshThumbnail} />
                 </Item>
             </Grid>
         </Grid>
