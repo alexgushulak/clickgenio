@@ -9,7 +9,7 @@ import stripe from 'stripe';
 const stripeInstance = new stripe(process.env.STRIPE_SECRET_KEY);
 
 const app = express();
-const s3Instance = new S3Handler;
+const s3Instance = S3Handler.getInstance();
 app.use(cors());
 const port = 5001;
 const jsonParser = bodyParser.json();

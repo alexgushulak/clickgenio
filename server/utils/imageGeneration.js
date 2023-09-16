@@ -5,7 +5,7 @@ import Jimp from 'jimp';
 import { Buffer } from 'buffer';
 import S3Handler from './s3Handler.js';
 
-const s3Instance = new S3Handler();
+const s3Instance = S3Handler.getInstance();
 
 
 async function writeBase64toPNG(image_object) {
