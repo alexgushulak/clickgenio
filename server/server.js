@@ -49,6 +49,21 @@ app.post('/submit', jsonParser, async (req,res) => {
     }
 });
 
+app.get('/download2/watermark', jsonParser, async (req, res) => {
+    try {
+        let file_name = `watermarked_${req.query.id}.png`;
+        let s3path = `watermarked-images/${file_name}`;
+        let fileStream = await downloadFromS3(s3path);
+        res.attachment('watermark_thumbnail.png')
+        fileStream.pipe(res);
+    } catch (err) {
+        console.error('Download Watermark Error:', err)
+        res.status(500).send({
+            message: "Internal Server Error, Download was not succesful"
+        })
+    }
+})
+
 app.get('/download', jsonParser, async (req, res) => {
     // needs auth
     try {

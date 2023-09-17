@@ -7,7 +7,7 @@ import Stack from '@mui/material/Stack';
 import PaymentsIcon from '@mui/icons-material/Payments';
 import Skeleton from '@mui/material/Skeleton';
 
-export default function ProductDisplay(props: {isClicked: boolean, isLoading: boolean, imageUrl: string, imageId: string, onRefreshThumbnail: any}) {
+export default function ProductDisplay(props: {isClicked: boolean, isLoading: boolean, imageUrl: string, imageId: string, onRefreshThumbnail: any, onDownloadWatermark: any}) {
     
     return (
         <Container sx={{
@@ -78,6 +78,7 @@ export default function ProductDisplay(props: {isClicked: boolean, isLoading: bo
                 type="submit"
                 color="info"
                 variant="contained"
+                onClick={props.onDownloadWatermark}
                 endIcon={<DownloadIcon />}
             >Download
             </Button>
