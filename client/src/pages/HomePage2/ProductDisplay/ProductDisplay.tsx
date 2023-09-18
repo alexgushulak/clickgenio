@@ -7,12 +7,14 @@ import Stack from '@mui/material/Stack';
 import PaymentsIcon from '@mui/icons-material/Payments';
 import Skeleton from '@mui/material/Skeleton';
 import RainbowButton from './RainbowButton';
+import './style.css';
 
 export default function ProductDisplay(props: {isClicked: boolean, isLoading: boolean, imageUrl: string, imageId: string, onRefreshThumbnail: any, onDownloadWatermark: any}) {
     
     return (
         <Container sx={{
-            'min-height': '400px'
+            'min-height': '400px',
+            'width': '100%',
         }}>
             {
                 props.isLoading ?
@@ -24,10 +26,7 @@ export default function ProductDisplay(props: {isClicked: boolean, isLoading: bo
                             sm: 300,
                             md: 400
                         },
-                        width: {
-                            xs: 292, 
-                            sm: 438,
-                            md: 584 },
+                        width: '100%',
                         margin: '0 auto',
                     }}
                     variant="rectangular"
@@ -40,7 +39,8 @@ export default function ProductDisplay(props: {isClicked: boolean, isLoading: bo
                     props.isClicked && !props.isLoading ?
                     "inline-block":
                     "none",
-                margin: '0 auto',
+                    margin: '0 auto',
+                    width: '100%',
                 }}
                 src={props.isClicked && !props.isLoading ? 
                     props.imageUrl:
@@ -60,12 +60,14 @@ export default function ProductDisplay(props: {isClicked: boolean, isLoading: bo
                 md: "row" }
         }}>
             <Button
+                className="btn-hover color-9"
                 sx={{
                     display: props.isClicked && !props.isLoading ? "inline-flex" : "none",
                     "text-align": "center",
                     margin: "0 2px",
                     bottom: '0px',
                     mt: 1,
+                    border: '1px solid black'
                 }}
                 type="submit"
                 color="info"
@@ -75,17 +77,33 @@ export default function ProductDisplay(props: {isClicked: boolean, isLoading: bo
             >Download
             </Button>
             <form action={`${import.meta.env.VITE_APISERVER}/create-checkout-session/?imgid=${props.imageId}`} method="POST">
-                <Box sx={{display: props.isClicked && !props.isLoading ? "inline-flex": "none" }}>
-                    <RainbowButton />
-                </Box>
+                <Button
+                    className="btn-hover color-2"
+                    sx={{
+                        display: props.isClicked && !props.isLoading ? "inline-flex" : "none",
+                        "text-align": "center",
+                        margin: "0 10px",
+                        bottom: '0px',
+                        mt: 1,
+                        fontSize: '16px',
+                        border: '1px solid black'
+                    }}
+                    color="warning"
+                    variant="contained"
+                    type="submit"
+                >
+                    <strong>BUY NOW</strong>
+                </Button>
             </form>
-            <Button 
+            <Button
+                className="btn-hover color-8"
                 sx={{
                     display: props.isClicked && !props.isLoading ? "inline-flex" : "none",
                     "text-align": "center",
                     margin: "0 2px",
                     bottom: '0px',
                     mt: 1,
+                    border: '1px solid black'
                 }}
                 onClick={props.onRefreshThumbnail}
                 color="warning"
