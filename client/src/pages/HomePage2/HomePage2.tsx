@@ -120,14 +120,14 @@ export default function HomePage2() {
                   <AlertTitle sx={{textTransform: "uppercase", textStyle: "bold", fontSize: '14px'}}>
                     <strong>iterate multiple times</strong>
                   </AlertTitle>
-                  <i>Initial prompt:</i> "Generate an image of a mountain landscape." <br/><br/>
-                  <i>After reviewing the image:</i> "Generate a breathtaking image of a snow-capped mountain peak at sunrise."
+                  <i>Initial prompt:</i> "Mountain landscape" <br/><br/>
+                  <i>After reviewing the image:</i> "Breathtaking image of a snow-capped mountain peak at sunrise"
                 </Alert>
                 <Alert severity="error" sx={{textAlign: 'left', fontSize: '14px', mb: '10px'}}>
                   <AlertTitle sx={{textTransform: "uppercase", textStyle: "bold", fontSize: '14px'}}>
                     <strong>do not misspell words</strong>
                   </AlertTitle>
-                  <i>Example:</i> detaled, 4K-resollution imag of a fueturistic metroplois at dusk, featurring gleeming skyscrpaers, intriquate flyyng vehicul desgins, and inrticate city liteing
+                  <i>Example:</i> detaled, 4K-resollution imag of a fueturistic metroplois at dusk
                 </Alert>
                 </Item>
             </Grid>

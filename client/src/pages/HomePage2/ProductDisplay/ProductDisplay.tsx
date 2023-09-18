@@ -6,6 +6,7 @@ import DownloadIcon from '@mui/icons-material/Download';
 import Stack from '@mui/material/Stack';
 import PaymentsIcon from '@mui/icons-material/Payments';
 import Skeleton from '@mui/material/Skeleton';
+import RainbowButton from './RainbowButton';
 
 export default function ProductDisplay(props: {isClicked: boolean, isLoading: boolean, imageUrl: string, imageId: string, onRefreshThumbnail: any, onDownloadWatermark: any}) {
     
@@ -39,15 +40,6 @@ export default function ProductDisplay(props: {isClicked: boolean, isLoading: bo
                     props.isClicked && !props.isLoading ?
                     "inline-block":
                     "none",
-                height: { 
-                    xs: 200,
-                    sm: 300,
-                    md: 400
-                },
-                width: {
-                    xs: 292, 
-                    sm: 438,
-                    md: 584 },
                 margin: '0 auto',
                 }}
                 src={props.isClicked && !props.isLoading ? 
@@ -83,22 +75,9 @@ export default function ProductDisplay(props: {isClicked: boolean, isLoading: bo
             >Download
             </Button>
             <form action={`${import.meta.env.VITE_APISERVER}/create-checkout-session/?imgid=${props.imageId}`} method="POST">
-                <Button
-                    sx={{
-                    display: 
-                        props.isClicked && !props.isLoading ?
-                        "inline-flex":
-                        "none",
-                    margin: "0 2px",
-                    bottom: '0px',
-                    mt: 1,
-                    }}
-                    type="submit"
-                    color="success"
-                    variant="contained"
-                    endIcon={<PaymentsIcon />}
-                >Buy
-                </Button>
+                <Box sx={{display: props.isClicked && !props.isLoading ? "inline-flex": "none" }}>
+                    <RainbowButton />
+                </Box>
             </form>
             <Button 
                 sx={{
