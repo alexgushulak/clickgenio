@@ -93,7 +93,7 @@ app.post('/upload', upload.single("file"), async (req, res) => {
 
 app.post('/create-checkout-session', async (req, res) => {
   const IMAGE_ID = req.query.imgid;
-  console.log(IMAGE_ID)
+  console.log("BUY BUTTON CLICKED")
   const session = await stripeInstance.checkout.sessions.create({
     submit_type: 'pay',
     billing_address_collection: 'auto',
