@@ -60,9 +60,9 @@ export default function App() {
       <CssBaseline />
       <ResponsiveAppBar />
       <Routes>
-        <Route path="/" element={<HomePage />} />
+        <Route path="/" element={<HomePage2 />} />
         <Route path="/purchase" element={<PurchasePage />} />
-        <Route path="/home" element={<HomePage2 />} />
+        <Route path="/home" element={<HomePage />} />
       </Routes>
     </ThemeProvider>
   );

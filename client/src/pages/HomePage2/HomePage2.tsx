@@ -11,6 +11,7 @@ import ProductDisplay from "./ProductDisplay/ProductDisplay";
 import Typography from '@mui/material/Typography';
 import AlertTitle from '@mui/material/AlertTitle';
 import Alert from '@mui/material/Alert';
+import CustomizedSnackbars from './SnackBar';
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -83,13 +84,14 @@ export default function HomePage2() {
                 <Item>
                     <TextField
                         sx={{
-                          backgroundColor: '#121212'
+                          borderColor: 'red'
                         }}
+                        color='secondary'
                         fullWidth={true}
                         value={thumbnailText}
                         onChange={handleTextbarChange}
                         onKeyDown={handleKeyPress}
-                        label="Thumbnail Description"
+                        label="Describe Your Thumbnail"
                         placeholder="A Rainbow Colored Tesla Model 3 Driving Through the Mountains"
                         id="outlined-multiline-flexible"
                         multiline
@@ -110,6 +112,7 @@ export default function HomePage2() {
                     </Button>
                     {isLoading && (
                         <div style={{ marginTop: '10px', textTransform: "uppercase", display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <CustomizedSnackbars />
                             Please wait 30 seconds for the thumbnail to generate <CircularProgress sx={{padding: '10px'}}/>
                         </div>
                     )}
@@ -130,14 +133,21 @@ export default function HomePage2() {
                 </Alert>
                 <Alert severity="error" sx={{textAlign: 'left', fontSize: '14px', mb: '10px'}}>
                   <AlertTitle sx={{textTransform: "uppercase", textStyle: "bold", fontSize: '14px'}}>
+                    <strong>do not try to generate words in the image</strong>
+                  </AlertTitle>
+                  <i>Example:</i> Big white title saying "The Best Thumbnail Generator" with a red background<br/><br/>
+                  This will not work because the AI is not trained on words
+                </Alert>
+                <Alert severity="error" sx={{textAlign: 'left', fontSize: '14px', mb: '10px'}}>
+                  <AlertTitle sx={{textTransform: "uppercase", textStyle: "bold", fontSize: '14px'}}>
                     <strong>do not misspell words</strong>
                   </AlertTitle>
                   <i>Example:</i> detaled, 4K-resollution imag of a fueturistic metroplois at dusk
                 </Alert>
                 </Item>
             </Grid>
-            <Grid item xs={12} md={7}>
-                <Item>
+            <Grid item sx={{ml: 0, mr: 0}} xs={12} md={7}>
+                <Item sx={{pl: 0, pr: 0}}>
                     <ProductDisplay 
                       isClicked={isClicked}
                       isLoading={isLoading}
