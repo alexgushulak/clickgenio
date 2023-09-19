@@ -6,7 +6,7 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import CircularProgress from "@mui/material/CircularProgress";
-import { generateImage, submitDownloadData, submitIPData, submitThumbnailData } from "../../services/apiLayer";
+import { generateImage, submitDownloadData, submitIPData, submitThumbnailData, submitBuyData } from "../../services/apiLayer";
 import ProductDisplay from "./ProductDisplay/ProductDisplay";
 import Typography from '@mui/material/Typography';
 import AlertTitle from '@mui/material/AlertTitle';
@@ -86,6 +86,11 @@ export default function HomePage2() {
       link.click();
     }
 
+    const onBuyImage = async () => {
+      const textToUse = useFinalText && thumbnailText !== "" ? finalText : thumbnailText;
+      await submitBuyData(textToUse);
+    }
+
     return (
         <Grid container spacing={3} sx={{padding: '25px'}}>
             {isEmptyTextBox && (<div style={{textTransform: 'uppercase'}}><CustomizedSnackbars severity="warning" message="Thumbnail description can not be empty"/></div>)}
@@ -163,7 +168,8 @@ export default function HomePage2() {
                       imageUrl={imageUrl}
                       imageId={imageId}
                       onRefreshThumbnail={onRefreshThumbnail}
-                      onDownloadWatermark={onDownloadWatermark} />
+                      onDownloadWatermark={onDownloadWatermark}
+                      onPurchase={onBuyImage} />
                 </Item>
             </Grid>
         </Grid>

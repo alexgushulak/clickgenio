@@ -11,7 +11,7 @@ import Skeleton from '@mui/material/Skeleton';
 import RainbowButton from './RainbowButton';
 import './style.css';
 
-export default function ProductDisplay(props: {isClicked: boolean, isLoading: boolean, imageUrl: string, imageId: string, onRefreshThumbnail: any, onDownloadWatermark: any}) {
+export default function ProductDisplay(props: {isClicked: boolean, isLoading: boolean, imageUrl: string, imageId: string, onRefreshThumbnail: any, onDownloadWatermark: any, onPurchase: any}) {
     
     return (
         <Container sx={{
@@ -73,9 +73,10 @@ export default function ProductDisplay(props: {isClicked: boolean, isLoading: bo
                         fontSize: '13px',
                         border: '1px solid black'
                     }}
-                    type="submit"
                     color="warning"
                     variant="contained"
+                    onClick={props.onPurchase}
+                    type="submit"
                 >
                     <strong>BUY HD THUMBNAIL</strong>
                 </Button>
