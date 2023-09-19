@@ -1,7 +1,9 @@
 import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import RefreshIcon from '@mui/icons-material/Refresh';
+import CachedIcon from '@mui/icons-material/Cached';
 import DownloadIcon from '@mui/icons-material/Download';
 import Stack from '@mui/material/Stack';
 import PaymentsIcon from '@mui/icons-material/Payments';
@@ -51,15 +53,34 @@ export default function ProductDisplay(props: {isClicked: boolean, isLoading: bo
             width: {
                 xs: 292, 
                 sm: 438,
-                md: 584 },
+                md: 384 },
             textAlign: 'center',
-            margin: '0 auto',
+            margin: '10px auto',
             flexDirection: {
-                xs: "column",
+                xs: "row",
                 sm: "row",
                 md: "row" }
         }}>
-            <Button
+            <form action={`${import.meta.env.VITE_APISERVER}/create-checkout-session/?imgid=${props.imageId}`} method="POST">
+                <Button
+                    className="btn-hover color-1"
+                    sx={{
+                        display: props.isClicked && !props.isLoading ? "inline-flex" : "none",
+                        "text-align": "center",
+                        margin: "0 10px",
+                        bottom: '0px',
+                        mt: 1,
+                        fontSize: '13px',
+                        border: '1px solid black'
+                    }}
+                    type="submit"
+                    color="warning"
+                    variant="contained"
+                >
+                    <strong>BUY HD THUMBNAIL</strong>
+                </Button>
+            </form>
+            <IconButton
                 className="btn-hover color-9"
                 sx={{
                     display: props.isClicked && !props.isLoading ? "inline-flex" : "none",
@@ -67,35 +88,15 @@ export default function ProductDisplay(props: {isClicked: boolean, isLoading: bo
                     margin: "0 2px",
                     bottom: '0px',
                     mt: 1,
-                    border: '1px solid black'
+                    border: '1px solid black',
+                    width: '45px'
                 }}
                 type="submit"
-                color="info"
-                variant="contained"
                 onClick={props.onDownloadWatermark}
-                endIcon={<DownloadIcon />}
-            >Download
-            </Button>
-            <form action={`${import.meta.env.VITE_APISERVER}/create-checkout-session/?imgid=${props.imageId}`} method="POST">
-                <Button
-                    className="btn-hover color-2"
-                    sx={{
-                        display: props.isClicked && !props.isLoading ? "inline-flex" : "none",
-                        "text-align": "center",
-                        margin: "0 10px",
-                        bottom: '0px',
-                        mt: 1,
-                        fontSize: '16px',
-                        border: '1px solid black'
-                    }}
-                    color="warning"
-                    variant="contained"
-                    type="submit"
-                >
-                    <strong>BUY NOW</strong>
-                </Button>
-            </form>
-            <Button
+            >
+                <DownloadIcon/>
+            </IconButton>
+            <IconButton
                 className="btn-hover color-8"
                 sx={{
                     display: props.isClicked && !props.isLoading ? "inline-flex" : "none",
@@ -103,15 +104,13 @@ export default function ProductDisplay(props: {isClicked: boolean, isLoading: bo
                     margin: "0 2px",
                     bottom: '0px',
                     mt: 1,
-                    border: '1px solid black'
+                    border: '1px solid black',
+                    width: '45px'
                 }}
                 onClick={props.onRefreshThumbnail}
-                color="warning"
-                variant="contained"
-                endIcon={<RefreshIcon />}
             >
-                Refresh
-            </Button>
+            <CachedIcon/>
+            </IconButton>
         </Stack>
       </Container>
     );

@@ -11,13 +11,13 @@
 }
 
 .btn-hover {
-    width: 200px;
+    width: 180px;
     font-size: 16px;
     font-weight: 600;
     color: #fff;
     cursor: pointer;
     margin: 20px;
-    height: 55px;
+    height: 45px;
     text-align:center;
     background-size: 300% 100%;
     border: 10px solid black;
@@ -36,6 +36,7 @@
     -o-transition: all .4s ease-in-out;
     -webkit-transition: all .4s ease-in-out;
     transition: all .4s ease-in-out;
+    border: 1px solid black;
 }
 
 .btn-hover:focus {

@@ -82,6 +82,9 @@ export default function HomePage2() {
             <Grid item xs={12} md={5}>
                 <Item>
                     <TextField
+                        sx={{
+                          backgroundColor: '#121212'
+                        }}
                         fullWidth={true}
                         value={thumbnailText}
                         onChange={handleTextbarChange}
@@ -92,19 +95,21 @@ export default function HomePage2() {
                         multiline
                     />
                     <Button
+                    className="btn-hover color-10"
                     sx={{
                         display: isLoading ? "none" : "block",
                         "text-align": "center",
                         margin: "0 auto",
+                        width: '100%',
                         mt: 1,
                     }}
                     variant="contained"
                     onClick={onGenerateThumbnail}
                     >
-                    GENERATE THUMBNAIL
+                    GENERATE YOUR FREE THUMBNAIL
                     </Button>
                     {isLoading && (
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <div style={{ marginTop: '10px', textTransform: "uppercase", display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                             Please wait 30 seconds for the thumbnail to generate <CircularProgress sx={{padding: '10px'}}/>
                         </div>
                     )}

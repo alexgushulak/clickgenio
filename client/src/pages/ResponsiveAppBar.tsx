@@ -35,14 +35,14 @@ function ResponsiveAppBar() {
               fontFamily: 'helvetica',
               fontWeight: 700,
               float: 'left',
-              color: 'inherit',
+              color: 'white',
               textDecoration: 'none',
             }}
           >
             CLICKGEN.IO<br/>
             <Typography sx={{
               float: 'left',
-              position: 'fixed',
+              position: 'absolute',
               top: '40px',
               fontSize: '10px',
               display: {
@@ -78,7 +78,7 @@ function ResponsiveAppBar() {
                 md: 'none'
               },
               float: 'left',
-              position: 'fixed',
+              position: 'absolute',
               top: '38px',
               fontSize: '10px',
             }}>AI Generated Youtube Thumbnails</Typography>
