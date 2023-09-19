@@ -11,6 +11,7 @@ import ProductDisplay from "./ProductDisplay/ProductDisplay";
 import Typography from '@mui/material/Typography';
 import AlertTitle from '@mui/material/AlertTitle';
 import Alert from '@mui/material/Alert';
+import CustomizedSnackbars from './SnackBar';
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -83,13 +84,14 @@ export default function HomePage2() {
                 <Item>
                     <TextField
                         sx={{
-                          backgroundColor: '#121212'
+                          borderColor: 'red'
                         }}
+                        color='secondary'
                         fullWidth={true}
                         value={thumbnailText}
                         onChange={handleTextbarChange}
                         onKeyDown={handleKeyPress}
-                        label="Thumbnail Description"
+                        label="Describe Your Thumbnail"
                         placeholder="A Rainbow Colored Tesla Model 3 Driving Through the Mountains"
                         id="outlined-multiline-flexible"
                         multiline
@@ -110,6 +112,7 @@ export default function HomePage2() {
                     </Button>
                     {isLoading && (
                         <div style={{ marginTop: '10px', textTransform: "uppercase", display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <CustomizedSnackbars />
                             Please wait 30 seconds for the thumbnail to generate <CircularProgress sx={{padding: '10px'}}/>
                         </div>
                     )}
