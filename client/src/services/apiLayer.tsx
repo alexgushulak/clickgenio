@@ -48,6 +48,54 @@ const submitIPData = async (thumbnailText: string) => {
   }
 }
 
+const submitThumbnailData = async (thumbnailText: string) => {
+  try {
+    await axios.post(`${import.meta.env.VITE_APISERVER}/metadata`, {
+      message: `Submission: ${thumbnailText}`
+    }, {
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      }
+    });
+    console.log("metadata successful")
+  } catch (error) {
+    console.error("metadata error")
+  }
+}
+
+const submitDownloadData = async (thumbnailText: string) => {
+  try {
+    await axios.post(`${import.meta.env.VITE_APISERVER}/metadata`, {
+      message: `Image Downloaded`
+    }, {
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      }
+    });
+    console.log("metadata successful")
+  } catch (error) {
+    console.error("metadata error")
+  }
+}
+
+const submitBuyData = async (thumbnailText: string) => {
+  try {
+    await axios.post(`${import.meta.env.VITE_APISERVER}/metadata`, {
+      message: `Image Buy Button Clicked`
+    }, {
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      }
+    });
+    console.log("metadata successful")
+  } catch (error) {
+    console.error("metadata error")
+  }
+}
+
 const downloadImage = async (imageUrl: string, setImageDownloadUrl: (url: string) => void) => {
   try {
     setImageDownloadUrl(`${import.meta.env.VITE_APISERVER}/download/?id=${imageUrl}`)
@@ -57,4 +105,4 @@ const downloadImage = async (imageUrl: string, setImageDownloadUrl: (url: string
   }
 }
 
-export { generateImage, submitIPData, downloadImage };
+export { generateImage, submitIPData, downloadImage, submitThumbnailData, submitDownloadData, submitBuyData };
