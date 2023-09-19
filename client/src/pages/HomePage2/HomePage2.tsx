@@ -133,14 +133,21 @@ export default function HomePage2() {
                 </Alert>
                 <Alert severity="error" sx={{textAlign: 'left', fontSize: '14px', mb: '10px'}}>
                   <AlertTitle sx={{textTransform: "uppercase", textStyle: "bold", fontSize: '14px'}}>
+                    <strong>do not try to generate words in the image</strong>
+                  </AlertTitle>
+                  <i>Example:</i> Big white title saying "The Best Thumbnail Generator" with a red background<br/><br/>
+                  This will not work because the AI is not trained on words
+                </Alert>
+                <Alert severity="error" sx={{textAlign: 'left', fontSize: '14px', mb: '10px'}}>
+                  <AlertTitle sx={{textTransform: "uppercase", textStyle: "bold", fontSize: '14px'}}>
                     <strong>do not misspell words</strong>
                   </AlertTitle>
                   <i>Example:</i> detaled, 4K-resollution imag of a fueturistic metroplois at dusk
                 </Alert>
                 </Item>
             </Grid>
-            <Grid item xs={12} md={7}>
-                <Item>
+            <Grid item sx={{ml: 0, mr: 0}} xs={12} md={7}>
+                <Item sx={{pl: 0, pr: 0}}>
                     <ProductDisplay 
                       isClicked={isClicked}
                       isLoading={isLoading}
