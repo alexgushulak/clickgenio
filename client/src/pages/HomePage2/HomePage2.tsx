@@ -7,6 +7,10 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import CircularProgress from "@mui/material/CircularProgress";
 import { generateImage, submitIPData } from "../../services/apiLayer";
+import ProductDisplay from "./ProductDisplay/ProductDisplay";
+import Typography from '@mui/material/Typography';
+import AlertTitle from '@mui/material/AlertTitle';
+import Alert from '@mui/material/Alert';
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -56,63 +60,31 @@ export default function HomePage2() {
       setImageId(my_imageId)
       setIsLoading(false);
     };
-  
-    const ProductDisplay = () => (
-      <section>
-        <Box
-            component="img"
-            sx={{
-              display: isClicked && !isLoading ? "inline-block" : "none",
-              height: { xs: 200, sm: 300, md: 400 },
-              width: { xs: 292, sm: 438, md: 584 },
-              margin: '0 auto',
-            }}
-            src={imageUrl}
-          />
-        <form action={`${import.meta.env.VITE_APISERVER}/create-checkout-session/?imgid=${imageId}`} method="POST">
-        <Button
-            sx={{
-              display: isClicked && !isLoading ? "inline-block" : "none",
-              "text-align": "center",
-              margin: "0 2px",
-              bottom: '0px',
-              mt: 1,
-              width: '250px'
-            }}
-            type="submit"
-            color="success"
-            variant="contained"
-          >Buy Full Size Image
-        </Button>
-        <Button
-            sx={{
-              display: isClicked && !isLoading ? "inline-block" : "none",
-              "text-align": "center",
-              margin: "0 2px",
-              bottom: '0px',
-              mt: 1,
-              width: '250px'
-            }}
-            type="submit"
-            color="info"
-            variant="contained"
-          >Download Low Res Image
-        </Button>
-        </form>
-      </section>
-    );
-  
-    const onDownload = () => {
-      const link = document.createElement("a");
-      link.href = `https://clickgenio-production.up.railway.app/download/?id=${imageId}`;
-      link.click();
+
+    const onRefreshThumbnail = async () => {
+      setIsClicked(true);
+      setIsLoading(true);
+      const textToUse = useFinalText && thumbnailText !== "" ? finalText : thumbnailText;
+      await submitIPData(textToUse);
+      const my_imageId = await generateImage(textToUse, apiHost, engineId, apiKey, setImageUrl);
+      setImageId(my_imageId)
+      setIsLoading(false);
     };
 
+    const onDownloadWatermark = async () => {
+      const link = document.createElement("a");
+      link.href = `${import.meta.env.VITE_APISERVER}/download2/watermark?id=${imageId}`;
+      link.click();
+    }
+
     return (
-        <Grid container spacing={2} sx={{mt: '20px'}}>
+        <Grid container spacing={3} sx={{padding: '25px'}}>
             <Grid item xs={12} md={5}>
                 <Item>
                     <TextField
+                        sx={{
+                          backgroundColor: '#121212'
+                        }}
                         fullWidth={true}
                         value={thumbnailText}
                         onChange={handleTextbarChange}
@@ -123,29 +95,56 @@ export default function HomePage2() {
                         multiline
                     />
                     <Button
+                    className="btn-hover color-10"
                     sx={{
                         display: isLoading ? "none" : "block",
                         "text-align": "center",
                         margin: "0 auto",
+                        width: '100%',
                         mt: 1,
                     }}
                     variant="contained"
                     onClick={onGenerateThumbnail}
                     >
-                    GENERATE THUMBNAIL
+                    GENERATE YOUR FREE THUMBNAIL
                     </Button>
                     {isLoading && (
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                            Please Wait 30 Seconds for the Image to generate <CircularProgress />
+                        <div style={{ marginTop: '10px', textTransform: "uppercase", display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            Please wait 30 seconds for the thumbnail to generate <CircularProgress sx={{padding: '10px'}}/>
                         </div>
                     )}
+                </Item>
+                <Item>
+                <Alert severity="success" sx={{textAlign: 'left', fontSize: '14px', mb: '10px'}}>
+                  <AlertTitle sx={{textTransform: "uppercase", textStyle: "bold", fontSize: '14px'}}>
+                    <strong>Describe the image in as much detail as possible</strong>
+                  </AlertTitle>
+                  <i>Example:</i> Detailed, 4K-resolution image of a futuristic metropolis at dusk, featuring gleaming skyscrapers, intricate flying vehicle designs, and intricate city lighting
+                </Alert>
+                <Alert severity="success" sx={{textAlign: 'left', fontSize: '14px', mb: '10px'}}>
+                  <AlertTitle sx={{textTransform: "uppercase", textStyle: "bold", fontSize: '14px'}}>
+                    <strong>iterate multiple times</strong>
+                  </AlertTitle>
+                  <i>Initial prompt:</i> "Mountain landscape" <br/><br/>
+                  <i>After reviewing the image:</i> "Breathtaking image of a snow-capped mountain peak at sunrise"
+                </Alert>
+                <Alert severity="error" sx={{textAlign: 'left', fontSize: '14px', mb: '10px'}}>
+                  <AlertTitle sx={{textTransform: "uppercase", textStyle: "bold", fontSize: '14px'}}>
+                    <strong>do not misspell words</strong>
+                  </AlertTitle>
+                  <i>Example:</i> detaled, 4K-resollution imag of a fueturistic metroplois at dusk
+                </Alert>
                 </Item>
             </Grid>
             <Grid item xs={12} md={7}>
                 <Item>
-                    <h1>Thumbnail Preview</h1>
-                    <Button variant="contained">Generate Random Image</Button>
-                    <ProductDisplay />
+                    <ProductDisplay 
+                      isClicked={isClicked}
+                      isLoading={isLoading}
+                      imageUrl={imageUrl}
+                      imageId={imageId}
+                      onRefreshThumbnail={onRefreshThumbnail}
+                      onDownloadWatermark={onDownloadWatermark} />
                 </Item>
             </Grid>
         </Grid>

@@ -12,28 +12,12 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
+import Rocket from '../../public/rocket.png';
 
 const pages = [''];
 const settings = [''];
 
 function ResponsiveAppBar() {
-  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
-  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
-
-  const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElNav(event.currentTarget);
-  };
-  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElUser(event.currentTarget);
-  };
-
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
-  };
-
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
 
   return (
     <AppBar position="static">
@@ -47,25 +31,39 @@ function ResponsiveAppBar() {
             href="/"
             sx={{
               mr: 2,
-              display: { xs: 'none', md: 'flex' },
+              display: { xs: 'none', md: 'inline-flex' },
               fontFamily: 'helvetica',
               fontWeight: 700,
-              color: 'inherit',
+              float: 'left',
+              color: 'white',
               textDecoration: 'none',
             }}
           >
-            CLICKGEN.IO
+            CLICKGEN.IO<br/>
+            <Typography sx={{
+              float: 'left',
+              position: 'absolute',
+              top: '40px',
+              fontSize: '10px',
+              display: {
+                xs: 'none',
+                md: 'inline-flex'
+              },
+            }}>AI Generated Youtube Thumbnails</Typography>
           </Typography>
 
           <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
           <Typography
-            variant="h5"
+            variant="h6"
             noWrap
             component="a"
             href="/"
             sx={{
               mr: 2,
-              display: { xs: 'flex', md: 'none' },
+              display: {
+                xs: 'flex',
+                md: 'none'
+              },
               flexGrow: 1,
               fontFamily: 'helvetica',
               fontWeight: 700,
@@ -73,7 +71,17 @@ function ResponsiveAppBar() {
               textDecoration: 'none',
             }}
           >
-            CLICKGEN.IO
+            CLICKGEN.IO<br/>
+            <Typography sx={{
+              display: {
+                xs: 'flex',
+                md: 'none'
+              },
+              float: 'left',
+              position: 'absolute',
+              top: '38px',
+              fontSize: '10px',
+            }}>AI Generated Youtube Thumbnails</Typography>
           </Typography>
         </Toolbar>
       </Container>
