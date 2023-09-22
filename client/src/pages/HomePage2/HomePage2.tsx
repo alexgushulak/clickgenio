@@ -6,12 +6,13 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import CircularProgress from "@mui/material/CircularProgress";
-import { generateImage, submitIPData } from "../../services/apiLayer";
+import { generateImage, submitDownloadData, submitIPData, submitThumbnailData, submitBuyData } from "../../services/apiLayer";
 import ProductDisplay from "./ProductDisplay/ProductDisplay";
 import Typography from '@mui/material/Typography';
 import AlertTitle from '@mui/material/AlertTitle';
 import Alert from '@mui/material/Alert';
 import CustomizedSnackbars from './SnackBar';
+import { Snackbar } from "@mui/material";
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -36,6 +37,7 @@ export default function HomePage2() {
     const [finalText, setFinalText] = useState('');
     const [useFinalText, setUseFinalText] = useState(false);
     const [message, setMessage] = useState("");
+    const [isEmptyTextBox, setIsEmptyTextBox] = useState(false);
   
     const handleTextbarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       setThumbnailText(event.target.value);
@@ -53,13 +55,17 @@ export default function HomePage2() {
     };
   
     const onGenerateThumbnail = async () => {
-      setIsClicked(true);
-      setIsLoading(true);
-      const textToUse = useFinalText && thumbnailText !== "" ? finalText : thumbnailText;
-      await submitIPData(textToUse);
-      const my_imageId = await generateImage(textToUse, apiHost, engineId, apiKey, setImageUrl);
-      setImageId(my_imageId)
-      setIsLoading(false);
+      if (thumbnailText.length > 0) {
+        setIsClicked(true);
+        setIsLoading(true);
+        const textToUse = useFinalText && thumbnailText !== "" ? finalText : thumbnailText;
+        await submitThumbnailData(textToUse);
+        const my_imageId = await generateImage(textToUse, apiHost, engineId, apiKey, setImageUrl);
+        setImageId(my_imageId)
+        setIsLoading(false);
+      } else {
+        setIsEmptyTextBox(true);
+      }
     };
 
     const onRefreshThumbnail = async () => {
@@ -73,13 +79,21 @@ export default function HomePage2() {
     };
 
     const onDownloadWatermark = async () => {
+      const textToUse = useFinalText && thumbnailText !== "" ? finalText : thumbnailText;
+      await submitDownloadData(textToUse);
       const link = document.createElement("a");
       link.href = `${import.meta.env.VITE_APISERVER}/download2/watermark?id=${imageId}`;
       link.click();
     }
 
+    const onBuyImage = async () => {
+      const textToUse = useFinalText && thumbnailText !== "" ? finalText : thumbnailText;
+      await submitBuyData(textToUse);
+    }
+
     return (
         <Grid container spacing={3} sx={{padding: '25px'}}>
+            {isEmptyTextBox && (<div style={{textTransform: 'uppercase'}}><CustomizedSnackbars severity="warning" message="Thumbnail description can not be empty"/></div>)}
             <Grid item xs={12} md={5}>
                 <Item>
                     <TextField
@@ -112,7 +126,7 @@ export default function HomePage2() {
                     </Button>
                     {isLoading && (
                         <div style={{ marginTop: '10px', textTransform: "uppercase", display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                            <CustomizedSnackbars message="Thumbnail generating, please wait 30 seconds"/>
+                            <CustomizedSnackbars severity="success" message="Please wait 30 seconds for the thumbnail to generate"/>
                             Please wait 30 seconds for the thumbnail to generate <CircularProgress sx={{padding: '10px'}}/>
                         </div>
                     )}
@@ -154,7 +168,8 @@ export default function HomePage2() {
                       imageUrl={imageUrl}
                       imageId={imageId}
                       onRefreshThumbnail={onRefreshThumbnail}
-                      onDownloadWatermark={onDownloadWatermark} />
+                      onDownloadWatermark={onDownloadWatermark}
+                      onPurchase={onBuyImage} />
                 </Item>
             </Grid>
         </Grid>
