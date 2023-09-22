@@ -108,8 +108,8 @@ app.post('/create-checkout-session', async (req, res) => {
       },
     ],
     mode: 'payment',
-    success_url: `${process.env.CLIENT_URL}/?id=${IMAGE_ID}`,
-    cancel_url: `${process.env.CLIENT_URL}/?=canceled=true `,
+    success_url: `${process.env.CLIENT_URL}/home/?id=${IMAGE_ID}`,
+    cancel_url: `${process.env.CLIENT_URL}/ `,
     automatic_tax: {enabled: true},
   });
 

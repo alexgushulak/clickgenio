@@ -112,7 +112,7 @@ export default function HomePage2() {
                     </Button>
                     {isLoading && (
                         <div style={{ marginTop: '10px', textTransform: "uppercase", display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                            <CustomizedSnackbars />
+                            <CustomizedSnackbars message="Thumbnail generating, please wait 30 seconds"/>
                             Please wait 30 seconds for the thumbnail to generate <CircularProgress sx={{padding: '10px'}}/>
                         </div>
                     )}

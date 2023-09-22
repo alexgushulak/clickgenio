@@ -10,6 +10,7 @@ import PaymentsIcon from '@mui/icons-material/Payments';
 import Skeleton from '@mui/material/Skeleton';
 import RainbowButton from './RainbowButton';
 import './style.css';
+import CustomizedSnackbars from '../SnackBar';
 
 export default function ProductDisplay(props: {isClicked: boolean, isLoading: boolean, imageUrl: string, imageId: string, onRefreshThumbnail: any, onDownloadWatermark: any}) {
     
@@ -34,6 +35,10 @@ export default function ProductDisplay(props: {isClicked: boolean, isLoading: bo
                     variant="rectangular"
                     
                 /> :
+                <div>
+                <div style={{textTransform: "uppercase"}}>
+                    <CustomizedSnackbars message="Thumbnail Generated! Please Scroll Down to View" />
+                </div>
                 <Box
                 component="img"
                 sx={{
@@ -47,7 +52,7 @@ export default function ProductDisplay(props: {isClicked: boolean, isLoading: bo
                 src={props.isClicked && !props.isLoading ? 
                     props.imageUrl:
                     props.imageUrl}
-            />
+            /></div>
             }
         <Stack spacing={0} alignItems="center" justifyContent="space-evenly" sx={{
             width: {

@@ -51,7 +51,7 @@ async function watermarkImage(date_string, full_image_path) {
     try {
         await new Promise((resolve) => setTimeout(resolve, 500));
         const image = await Jimp.read(watermarked_image_path);
-        image.resize(584,400).write(watermarked_image_path);
+        // image.resize(584,400).write(watermarked_image_path);
     } catch(err) {
         console.error(`Image Resize Error: ${err}`);
     }
