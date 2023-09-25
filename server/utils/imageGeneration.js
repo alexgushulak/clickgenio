@@ -95,7 +95,7 @@ const generateImage = async (thumbnailText, apiHost, engineId, apiKey) => {
             cfg_scale: 11,
             height: 832,
             width: 1216,
-            steps: 80,
+            steps: 30,
             samples: 1,
         }, {
             headers: {
