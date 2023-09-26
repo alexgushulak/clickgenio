@@ -51,7 +51,7 @@ export default function LoadingPreview() {
 
     return (
         <div>
-            <Box sx={{ width: '100%', height: {xs: '150px', sm: '100px', md: '150px', lg: '240px'}, display: 'block', 'background-color': '#141414' }}>
+            <Box sx={{ width: '100%', height: {xs: '90px', sm: '100px', md: '150px', lg: '240px'}, display: 'block', 'background-color': '#141414' }}>
                 <Box
                     component="img"
                     sx={{
@@ -69,7 +69,7 @@ export default function LoadingPreview() {
                         justifyContent: 'center',
                         alignItems: 'center',
                         height: '95%',
-                        fontSize: {xs: '10px', sm: '15px'},
+                        fontSize: {xs: '8px', sm: '15px'},
                         padding: '10px 10px',
                     }}
                 >
