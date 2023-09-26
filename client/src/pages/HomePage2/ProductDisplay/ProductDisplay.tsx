@@ -2,43 +2,26 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
-import RefreshIcon from '@mui/icons-material/Refresh';
 import CachedIcon from '@mui/icons-material/Cached';
 import DownloadIcon from '@mui/icons-material/Download';
 import Stack from '@mui/material/Stack';
-import PaymentsIcon from '@mui/icons-material/Payments';
-import Skeleton from '@mui/material/Skeleton';
-import RainbowButton from './RainbowButton';
 import './style.css';
 import CustomizedSnackbars from '../SnackBar';
+import LoadingPreview from './LoadingPreview';
 
 export default function ProductDisplay(props: {isClicked: boolean, isLoading: boolean, imageUrl: string, imageId: string, onRefreshThumbnail: any, onDownloadWatermark: any, onPurchase: any}) {
     
     return (
         <Container sx={{
-            'min-height': '400px',
+            'min-height': '100px',
             'width': '100%',
         }}>
             {
                 props.isLoading ?
-                <Skeleton
-                    sx={{
-                        bgcolor: 'grey.900',
-                        height: { 
-                            xs: 200,
-                            sm: 300,
-                            md: 400
-                        },
-                        width: '100%',
-                        margin: '0 auto',
-                    }}
-                    variant="rectangular"
-                    
-                /> :
                 <div>
-                <div style={{textTransform: "uppercase"}}>
-                    <CustomizedSnackbars message="Thumbnail Generated! Please Scroll Down to View" />
-                </div>
+                    <LoadingPreview />
+                </div> :
+                <div>
                 <Box
                 component="img"
                 sx={{

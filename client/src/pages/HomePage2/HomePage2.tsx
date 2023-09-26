@@ -2,28 +2,20 @@ import React, { useState } from "react";
 import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
-import Button from '@mui/material/Button';
-import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
-import CircularProgress from "@mui/material/CircularProgress";
 import { generateImage, submitDownloadData, submitIPData, submitThumbnailData, submitBuyData } from "../../services/apiLayer";
 import ProductDisplay from "./ProductDisplay/ProductDisplay";
-import Typography from '@mui/material/Typography';
-import AlertTitle from '@mui/material/AlertTitle';
-import Alert from '@mui/material/Alert';
+import TipsAndTricks from "./TipsAndTricks/TipsAndTricks";
 import CustomizedSnackbars from './SnackBar';
-import { Snackbar } from "@mui/material";
+import PromptInput from "./PromptInput/PromptInput";
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
     ...theme.typography.body2,
     padding: theme.spacing(2),
-    maring: '100px',
+    margin: '10px',
     textAlign: 'center',
     color: theme.palette.text.secondary,
-  }));
-
-let id: any = null
+}));
 
 export default function HomePage2() {
     const engineId = import.meta.env.VITE_ENGINEID
@@ -32,19 +24,17 @@ export default function HomePage2() {
     const [thumbnailText, setThumbnailText] = useState("");
     const [imageUrl, setImageUrl] = useState("");
     const [isLoading, setIsLoading] = useState(false);
-    const [isClicked, setIsClicked] = useState(false);
+    const [imageIsDisplayed, setImageIsDisplayed] = useState(false);
     const [imageId, setImageId] = useState("");
     const [finalText, setFinalText] = useState('');
     const [useFinalText, setUseFinalText] = useState(false);
-    const [message, setMessage] = useState("");
     const [isEmptyTextBox, setIsEmptyTextBox] = useState(false);
   
     const handleTextbarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       setThumbnailText(event.target.value);
     };
-  
-  
-    const handleKeyPress = async (event: any) => {
+
+    const handleKeyPress = async (event: React.KeyboardEvent) => {
       if (event.key === 'Enter') {
         event.preventDefault();
         setFinalText(thumbnailText);
@@ -56,7 +46,7 @@ export default function HomePage2() {
   
     const onGenerateThumbnail = async () => {
       if (thumbnailText.length > 0) {
-        setIsClicked(true);
+        setImageIsDisplayed(true);
         setIsLoading(true);
         const textToUse = useFinalText && thumbnailText !== "" ? finalText : thumbnailText;
         await submitThumbnailData(textToUse);
@@ -69,7 +59,7 @@ export default function HomePage2() {
     };
 
     const onRefreshThumbnail = async () => {
-      setIsClicked(true);
+      setImageIsDisplayed(true);
       setIsLoading(true);
       const textToUse = useFinalText && thumbnailText !== "" ? finalText : thumbnailText;
       await submitIPData(textToUse);
@@ -92,86 +82,45 @@ export default function HomePage2() {
     }
 
     return (
-        <Grid container spacing={3} sx={{padding: '25px'}}>
-            {isEmptyTextBox && (<div style={{textTransform: 'uppercase'}}><CustomizedSnackbars severity="warning" message="Thumbnail description can not be empty"/></div>)}
-            <Grid item xs={12} md={5}>
-                <Item>
-                    <TextField
-                        sx={{
-                          borderColor: 'red'
-                        }}
-                        color='secondary'
-                        fullWidth={true}
-                        value={thumbnailText}
-                        onChange={handleTextbarChange}
-                        onKeyDown={handleKeyPress}
-                        label="Describe Your Thumbnail"
-                        placeholder="A Rainbow Colored Tesla Model 3 Driving Through the Mountains"
-                        id="outlined-multiline-flexible"
-                        multiline
-                    />
-                    <Button
-                    className="btn-hover color-10"
-                    sx={{
-                        display: isLoading ? "none" : "block",
-                        "text-align": "center",
-                        margin: "0 auto",
-                        width: '100%',
-                        mt: 1,
-                    }}
-                    variant="contained"
-                    onClick={onGenerateThumbnail}
-                    >
-                    GENERATE YOUR FREE THUMBNAIL
-                    </Button>
-                    {isLoading && (
-                        <div style={{ marginTop: '10px', textTransform: "uppercase", display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                            <CustomizedSnackbars severity="success" message="Please wait 30 seconds for the thumbnail to generate"/>
-                            Please wait 30 seconds for the thumbnail to generate <CircularProgress sx={{padding: '10px'}}/>
-                        </div>
-                    )}
-                </Item>
-                <Item>
-                <Alert severity="success" sx={{textAlign: 'left', fontSize: '14px', mb: '10px'}}>
-                  <AlertTitle sx={{textTransform: "uppercase", textStyle: "bold", fontSize: '14px'}}>
-                    <strong>Describe the image in as much detail as possible</strong>
-                  </AlertTitle>
-                  <i>Example:</i> Detailed, 4K-resolution image of a futuristic metropolis at dusk, featuring gleaming skyscrapers, intricate flying vehicle designs, and intricate city lighting
-                </Alert>
-                <Alert severity="success" sx={{textAlign: 'left', fontSize: '14px', mb: '10px'}}>
-                  <AlertTitle sx={{textTransform: "uppercase", textStyle: "bold", fontSize: '14px'}}>
-                    <strong>iterate multiple times</strong>
-                  </AlertTitle>
-                  <i>Initial prompt:</i> "Mountain landscape" <br/><br/>
-                  <i>After reviewing the image:</i> "Breathtaking image of a snow-capped mountain peak at sunrise"
-                </Alert>
-                <Alert severity="error" sx={{textAlign: 'left', fontSize: '14px', mb: '10px'}}>
-                  <AlertTitle sx={{textTransform: "uppercase", textStyle: "bold", fontSize: '14px'}}>
-                    <strong>do not try to generate words in the image</strong>
-                  </AlertTitle>
-                  <i>Example:</i> Big white title saying "The Best Thumbnail Generator" with a red background<br/><br/>
-                  This will not work because the AI is not trained on words
-                </Alert>
-                <Alert severity="error" sx={{textAlign: 'left', fontSize: '14px', mb: '10px'}}>
-                  <AlertTitle sx={{textTransform: "uppercase", textStyle: "bold", fontSize: '14px'}}>
-                    <strong>do not misspell words</strong>
-                  </AlertTitle>
-                  <i>Example:</i> detaled, 4K-resollution imag of a fueturistic metroplois at dusk
-                </Alert>
-                </Item>
-            </Grid>
-            <Grid item sx={{ml: 0, mr: 0}} xs={12} md={7}>
-                <Item sx={{pl: 0, pr: 0}}>
-                    <ProductDisplay 
-                      isClicked={isClicked}
-                      isLoading={isLoading}
-                      imageUrl={imageUrl}
-                      imageId={imageId}
-                      onRefreshThumbnail={onRefreshThumbnail}
-                      onDownloadWatermark={onDownloadWatermark}
-                      onPurchase={onBuyImage} />
-                </Item>
-            </Grid>
+      <Grid container spacing={0} sx={{padding: '10px'}}>
+        {isEmptyTextBox && (
+          <div style={{textTransform: 'uppercase'}}>
+            <CustomizedSnackbars
+              severity="warning"
+              message="Thumbnail description can not be empty"
+            />
+          </div>
+        )}
+        <Grid item xs={12} md={5}>
+          <Item>
+            <PromptInput 
+              thumbnailText={thumbnailText}
+              handleTextbarChange={handleTextbarChange}
+              handleKeyPress={handleKeyPress}
+              onGenerateThumbnail={onGenerateThumbnail}
+              isLoading={isLoading}
+            />
+          </Item>
+          <Item>
+            <TipsAndTricks />
+          </Item>
         </Grid>
+        <Grid item xs={12} md={7} 
+          sx={{
+            ml: 0,
+            mr: 0
+          }}>
+          <Item sx={{display: imageIsDisplayed ? 'block': 'none',pl: 0, pr: 0}}>
+            <ProductDisplay 
+              isClicked={imageIsDisplayed}
+              isLoading={isLoading}
+              imageUrl={imageUrl}
+              imageId={imageId}
+              onRefreshThumbnail={onRefreshThumbnail}
+              onDownloadWatermark={onDownloadWatermark}
+              onPurchase={onBuyImage} />
+          </Item>
+        </Grid>
+    </Grid>
     )
 }
