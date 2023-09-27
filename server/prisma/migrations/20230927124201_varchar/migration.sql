@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Image" ALTER COLUMN "imageId" SET DATA TYPE VARCHAR(255);

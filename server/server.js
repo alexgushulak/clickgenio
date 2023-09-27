@@ -6,6 +6,7 @@ import 'dotenv/config'
 import { generateImage, watermarkImage } from './utils/imageGeneration.js';
 import { upload, downloadFromS3 } from './utils/s3Handler.js';
 import stripe from 'stripe';
+import prisma from './db.js';
 const stripeInstance = new stripe(process.env.STRIPE_SECRET_KEY);
 
 const app = express();
@@ -37,6 +38,17 @@ app.post('/submit', jsonParser, async (req,res) => {
     const apiKey = "sk-36jFn0ywSl2ktMvPnqdMdcbJRdI1x3bNLL8Hydd81XrmxWT9";
     try {
         const { base64_image, imageId } = await generateImage(thumbnail_image_text, apiHost, engineId, apiKey);
+        try {
+            await prisma.image.create({
+                data: {
+                    imageId: imageId,
+                    text: thumbnail_image_text,
+                    s3url: `https://clickgenio-production.up.railway.app/download?id=${imageId}`,
+                },
+            })
+        } catch (err) {
+            console.log("Prisma Error:", err)
+        }
         res.status(200).send({
             imageBase64: base64_image,
             imageId: imageId
