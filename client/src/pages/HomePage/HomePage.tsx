@@ -34,6 +34,7 @@ export default function App() {
 
   const handleTextbarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setThumbnailText(event.target.value);
+    console.log(event.target.value);
   };
 
 

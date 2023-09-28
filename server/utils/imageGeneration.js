@@ -4,6 +4,7 @@ import * as fs from 'node:fs';
 import Jimp from 'jimp';
 import { Buffer } from 'buffer';
 import { uploadToS3 } from './s3Handler.js';
+import { prompt_engine } from '../openai.js';
 
 async function writeBase64toPNG(image_object) {
     const imageId = Date.now().toString();
@@ -85,11 +86,12 @@ const createImageFiles = async (stabilityAIResponse) => {
 }
 
 const generateImage = async (thumbnailText, apiHost, engineId, apiKey) => {
+
     try {
         const response = await axios.post(`${apiHost}/v1/generation/${engineId}/text-to-image`, {
             text_prompts: [
                 {
-                    text: thumbnailText,
+                    text: await prompt_engine(thumbnailText, " A youtube thumbnail of "),
                 },
             ],
             cfg_scale: 11,
