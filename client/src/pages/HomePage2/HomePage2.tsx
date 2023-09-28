@@ -7,7 +7,7 @@ import ProductDisplay from "./ProductDisplay/ProductDisplay";
 import TipsAndTricks from "./TipsAndTricks/TipsAndTricks";
 import CustomizedSnackbars from './SnackBar';
 import PromptInput from "./PromptInput/PromptInput";
-import GalleryComponent from "../GalleryComponent/GalleryComponent";
+import { text } from "stream/consumers";
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -33,6 +33,7 @@ export default function HomePage2() {
   
     const handleTextbarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       setThumbnailText(event.target.value);
+      console.log(event.target.value);
     };
 
     const handleKeyPress = async (event: React.KeyboardEvent) => {
@@ -121,9 +122,6 @@ export default function HomePage2() {
               onRefreshThumbnail={onRefreshThumbnail}
               onDownloadWatermark={onDownloadWatermark}
               onPurchase={onBuyImage} />
-          </Item>
-          <Item>
-            <GalleryComponent />
           </Item>
         </Grid>
     </Grid>
