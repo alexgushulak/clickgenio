@@ -12,10 +12,6 @@ export async function create(imageId, text, s3url) {
     })
 }
 
-export async function getAllImages() {
-    return await prisma.image.findMany()
-}
-
 export async function getLastNImages(imageCount) {
     return await prisma.image.findMany({
         take: imageCount,
@@ -24,7 +20,5 @@ export async function getLastNImages(imageCount) {
         }
     })
 }
-
-console.log(await getAllImages())
 
 export default prisma

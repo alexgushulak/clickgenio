@@ -20,6 +20,7 @@ export default function GalleryComponent() {
                 myImageData.forEach((item: any) => {
                     item.s3url = item.s3url.replace("download", "download2/watermark")
                 })
+                console.log(myImageData[0].s3url)
             })
     }, [loadCount])
 
@@ -31,8 +32,8 @@ export default function GalleryComponent() {
     }, [loadCount])
 
     return (
-      <div><h2>What People Are Making:</h2>
             <ImageList sx={{ display: isLoaded ? 'inline-block' : 'none', width: '100%', height: '80vh' }}>
+              <h2>What People Are Making:</h2>
               {myImageData.map((item: any) => (
                 <ImageListItem key={item.id} sx={{ width: {xs: '100%', sm:'50%'}, display: 'inline-block'}}>
                   <img
@@ -46,6 +47,5 @@ export default function GalleryComponent() {
                 </ImageListItem>
               ))}
             </ImageList>
-        </div>
   );
 }

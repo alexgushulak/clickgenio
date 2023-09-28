@@ -49,8 +49,5 @@ export async function prompt_engine(user_prompt, yt_thumbnail) {
     messages: [{ role: "system", content: prompt+yt_thumbnail+user_prompt }],
     model: "gpt-3.5-turbo",
   });
-
-  console.log(completion.choices[0].message.content)
-
   return completion.choices[0].message.content
 }
