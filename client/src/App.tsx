@@ -14,6 +14,7 @@ import PurchasePage from "./pages/PurchasePage/PurchasePage";
 import HomePage from "./pages/HomePage/HomePage";
 import HomePage2 from './pages/HomePage2/HomePage2';
 import ResponsiveAppBar from "./pages/ResponsiveAppBar";
+import GalleryComponent from "./pages/GalleryComponent/GalleryComponent";
 
 
 let id: any = null
@@ -63,6 +64,7 @@ export default function App() {
         <Route path="/" element={<HomePage2 />} />
         <Route path="/purchase" element={<PurchasePage />} />
         <Route path="/home" element={<HomePage />} />
+        <Route path="/gallery" element={<GalleryComponent />} />
       </Routes>
     </ThemeProvider>
   );

@@ -6,7 +6,7 @@ import 'dotenv/config'
 import { generateImage, watermarkImage } from './utils/imageGeneration.js';
 import { upload, downloadFromS3 } from './utils/s3Handler.js';
 import stripe from 'stripe';
-import prisma from './db.js';
+import prisma, { getLastNImages } from './db.js';
 const stripeInstance = new stripe(process.env.STRIPE_SECRET_KEY);
 
 const app = express();
@@ -91,6 +91,20 @@ app.get('/download', jsonParser, async (req, res) => {
         })
     }
 });
+
+app.get('/gallery', jsonParser, async (req, res) => {
+    try {
+        const images = await getLastNImages(20);
+        res.status(200).send({
+            images
+        })
+    } catch (err) {
+        console.log("Gallery Error:", err)
+        res.status(500).send({
+            message: "Internal Server Error, Purchase could not be completed"
+        })
+    }
+})
 
 app.post('/upload', upload.single("file"), async (req, res) => {
     try {
