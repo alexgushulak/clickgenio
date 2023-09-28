@@ -39,7 +39,7 @@ export default function LoadingPreview() {
             if (oldProgress === 100) {
             return 100;
             }
-            const diff = 0.5;
+            const diff = 0.2;
             return Math.min(oldProgress + diff, 100);
         });
         }, 100);

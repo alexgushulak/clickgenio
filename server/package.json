@@ -6,7 +6,8 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "server": "node server"
+    "server": "node server",
+    "openai": "node openai"
   },
   "type": "module",
   "author": "",
@@ -27,6 +28,7 @@
     "jimp-watermark": "^1.1.0",
     "multer": "^1.4.5-lts.1",
     "multer-s3": "^2.10.0",
+    "openai": "^4.0.0",
     "prisma": "^5.3.1",
     "stripe": "^13.5.0",
     "watermarkjs": "^2.1.1"
