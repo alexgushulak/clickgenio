@@ -94,10 +94,10 @@ const generateImage = async (thumbnailText, apiHost, engineId, apiKey) => {
                     text: await prompt_engine(thumbnailText, " A youtube thumbnail of "),
                 },
             ],
-            cfg_scale: 11,
+            cfg_scale: 6,
             height: 832,
             width: 1216,
-            steps: 30,
+            steps: 40,
             samples: 1,
         }, {
             headers: {
