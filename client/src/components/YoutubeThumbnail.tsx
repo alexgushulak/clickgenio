@@ -47,7 +47,7 @@ const YouTubeThumbnail: React.FC<YouTubeThumbnailProps> = ({ imageSrc, title }) 
         </Grid>
         <Grid item xs={12} sm={5} sx={{color: 'white', display: 'inline-block', height: '100%', width: '100%', padding: '0px', margin: {xs: '10px 0px', sm: '2px 0px'}, verticalAlign: 'text-top', textAlign: 'left', float: 'left'}}>
             <Typography sx={{fontSize: '15px', padding: '0px 10px'}}><strong>{capitalize(title)}</strong></Typography>
-            <Typography sx={{fontSize: '14px', padding: '2px 6px 2px 10px', display: 'inline-block', float: 'left'}}>ClICKGEN.IO</Typography><CheckCircleIcon sx={{display: 'inline-block', right: '10px', height: '18px', paddingTop: '5px'}}/>
+            <Typography sx={{fontSize: '14px', padding: '2px 0px 2px 10px', display: 'inline-block', float: 'left'}}>ClICKGEN.IO</Typography><CheckCircleIcon sx={{display: 'inline-block', right: '10px', height: '18px', paddingTop: '5px'}}/>
             <Typography sx={{padding: '2px 10px'}}>{randomViewCount()}M Views</Typography>
         </Grid>
     </Grid>
