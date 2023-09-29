@@ -41,7 +41,7 @@ async function watermarkImage(date_string, full_image_path) {
     try {
         await watermark.addWatermark(full_image_path, './assets/CLICKGENIO_watermark.png', {
             'dstPath' : watermarked_image_path,
-            'opacity': 0.3,
+            'opacity': 0.6,
         });
         await new Promise((resolve) => setTimeout(resolve, 500));
         uploadWatermarkImageToS3(`watermarked_${date_string}.png`, watermarked_image_path, 'watermarked-images');

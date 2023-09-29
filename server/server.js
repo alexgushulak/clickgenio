@@ -94,7 +94,7 @@ app.get('/download', jsonParser, async (req, res) => {
 
 app.get('/gallery', jsonParser, async (req, res) => {
     try {
-        const images = await getLastNImages(18);
+        const images = await getLastNImages(10);
         res.status(200).send({
             images
         })
