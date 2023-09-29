@@ -7,7 +7,6 @@ import ProductDisplay from "./ProductDisplay/ProductDisplay";
 import TipsAndTricks from "./TipsAndTricks/TipsAndTricks";
 import CustomizedSnackbars from './SnackBar';
 import PromptInput from "./PromptInput/PromptInput";
-import { text } from "stream/consumers";
 import GalleryComponent from "../GalleryComponent/GalleryComponent";
 
 const Item = styled(Paper)(({ theme }) => ({

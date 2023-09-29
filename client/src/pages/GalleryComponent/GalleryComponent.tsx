@@ -2,6 +2,9 @@ import React from 'react';
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 import ImageListItemBar from '@mui/material/ImageListItemBar';
+import YouTubeThumbnail from '../../components/YoutubeThumbnail';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
 
 export default function GalleryComponent() {
     const [myImageData, setMyImageData] = React.useState([])
@@ -21,18 +24,12 @@ export default function GalleryComponent() {
 
     return (
             <ImageList sx={{ display: 'inline-block', width: '100%', height: '80vh' }}>
-              <h2>What People Are Making:</h2>
+              <Typography variant='h4' sx={{mb: '30px'}}>Recent Thumbnails</Typography>
+              <Grid container spacing={2}>
               {myImageData.map((item: any) => (
-                <ImageListItem key={item.id} sx={{ width: {xs: '100%', sm:'50%'}, display: 'inline-block'}}>
-                  <img
-                    srcSet={item.s3url}
-                    alt={item.title}
-                  />
-                  <ImageListItemBar
-                    title={item.text}
-                  />
-                </ImageListItem>
+                  <YouTubeThumbnail imageSrc={item.s3url} title={item.text} />
               ))}
+              </Grid>
             </ImageList>
   );
 }
