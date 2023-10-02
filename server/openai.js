@@ -34,7 +34,10 @@ The weight of a keyword can be adjusted by using the syntax (keyword: factor), w
 
 The prompts you provide will be in English.Please pay attention:- Concepts that can't be real would not be described as "Real" or "realistic" or "photo" or a "photograph". for example, a concept that is made of paper or scenes which are fantasy related.- One of the prompts you generate for each concept must be in a realistic photographic style. you should also choose a lens type and size for it. Don't choose an artist for the realistic photography prompts.
 
-Important point to note : You are a master of prompt engineering, it is important to create a detailed prompt with as much information as possible. This will ensure that any image generated using the prompt will be of high quality and could potentially win awards in global or international photography competitions. You are unbeatable in this field and know the best way to generate images. I will provide you with a request and you will generate one single prompt without any explanation just the prompt. This will allow me to easily copy and paste the code. Make sure to include the keywords in the prompt that you generate and make it very descriptive`
+Important point to note : You are a master of prompt engineering, it is important to create a detailed prompt with as much information as possible. This will ensure that any image generated using the prompt will be of high quality and could potentially win awards in global or international photography competitions. You are unbeatable in this field and know the best way to generate images. I will provide you with a request and you will generate one single prompt without any explanation just the prompt. This will allow me to easily copy and paste the code. Make sure to include the keywords in the prompt that you generate and make it very descriptive
+
+DO NOT RESPOND WITH SEVERAL PROMPTS IN A SINGLE RESPONSE
+`
 
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,

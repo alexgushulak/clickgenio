@@ -27,8 +27,6 @@ export default function HomePage2() {
     const [isLoading, setIsLoading] = useState(false);
     const [imageIsDisplayed, setImageIsDisplayed] = useState(false);
     const [imageId, setImageId] = useState("");
-    const [finalText, setFinalText] = useState('');
-    const [useFinalText, setUseFinalText] = useState(false);
     const [isEmptyTextBox, setIsEmptyTextBox] = useState(false);
   
     const handleTextbarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -38,8 +36,6 @@ export default function HomePage2() {
     const handleKeyPress = async (event: React.KeyboardEvent) => {
       if (event.key === 'Enter') {
         event.preventDefault();
-        setFinalText(thumbnailText);
-        setUseFinalText(true);
         await onGenerateThumbnail();
         event.preventDefault();
       }
@@ -49,9 +45,9 @@ export default function HomePage2() {
       if (thumbnailText.length > 0) {
         setImageIsDisplayed(true);
         setIsLoading(true);
-        const textToUse = useFinalText && thumbnailText !== "" ? finalText : thumbnailText;
-        await submitThumbnailData(textToUse);
-        const my_imageId = await generateImage(textToUse, apiHost, engineId, apiKey, setImageUrl);
+        await submitThumbnailData(thumbnailText);
+        console.log(thumbnailText)
+        const my_imageId = await generateImage(thumbnailText, apiHost, engineId, apiKey, setImageUrl);
         setImageId(my_imageId)
         setIsLoading(false);
       } else {
@@ -62,24 +58,21 @@ export default function HomePage2() {
     const onRefreshThumbnail = async () => {
       setImageIsDisplayed(true);
       setIsLoading(true);
-      const textToUse = useFinalText && thumbnailText !== "" ? finalText : thumbnailText;
-      await submitIPData(textToUse);
-      const my_imageId = await generateImage(textToUse, apiHost, engineId, apiKey, setImageUrl);
+      await submitIPData(thumbnailText);
+      const my_imageId = await generateImage(thumbnailText, apiHost, engineId, apiKey, setImageUrl);
       setImageId(my_imageId)
       setIsLoading(false);
     };
 
     const onDownloadWatermark = async () => {
-      const textToUse = useFinalText && thumbnailText !== "" ? finalText : thumbnailText;
-      await submitDownloadData(textToUse);
+      await submitDownloadData(thumbnailText);
       const link = document.createElement("a");
       link.href = `${import.meta.env.VITE_APISERVER}/download/watermark?id=${imageId}`;
       link.click();
     }
 
     const onBuyImage = async () => {
-      const textToUse = useFinalText && thumbnailText !== "" ? finalText : thumbnailText;
-      await submitBuyData(textToUse);
+      await submitBuyData(thumbnailText);
     }
 
     return (

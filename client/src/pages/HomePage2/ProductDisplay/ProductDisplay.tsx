@@ -58,7 +58,7 @@ export default function ProductDisplay(props: {isClicked: boolean, isLoading: bo
                         margin: "0 10px",
                         bottom: '0px',
                         mt: 1,
-                        fontSize: '13px',
+                        fontSize: '12px',
                         border: '1px solid black'
                     }}
                     color="warning"
@@ -66,7 +66,7 @@ export default function ProductDisplay(props: {isClicked: boolean, isLoading: bo
                     onClick={props.onPurchase}
                     type="submit"
                 >
-                    <strong>BUY HD THUMBNAIL</strong>
+                    <strong>REMOVE WATERMARK</strong>
                 </Button>
             </form>
             <IconButton
