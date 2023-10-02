@@ -19,7 +19,7 @@ const app = express();
 app.use(cors());
 const port = 5001;
 const jsonParser = bodyParser.json();
-const imageCacheJob = new ImagePreviewCacheJob(0.1);
+const imageCacheJob = new ImagePreviewCacheJob(120);
 imageCacheJob.start()
 
 const __filename = fileURLToPath(import.meta.url);
