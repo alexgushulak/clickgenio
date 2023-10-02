@@ -22,6 +22,7 @@ export async function uploadImageDataToDB(imageId, userPrompt, stableDiffusionPr
 
 export async function getLastNImages(imageCount) {
     try {
+        await prisma.$connect()
         const images = await prisma.image.findMany({
             take: imageCount,
             orderBy: {
