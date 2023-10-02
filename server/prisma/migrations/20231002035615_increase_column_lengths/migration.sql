@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Image" ALTER COLUMN "stableDiffusionPrompt" SET DATA TYPE VARCHAR(512),
+ALTER COLUMN "userPrompt" SET DATA TYPE VARCHAR(512);

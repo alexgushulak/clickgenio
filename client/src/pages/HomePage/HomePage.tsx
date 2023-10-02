@@ -91,7 +91,7 @@ export default function App() {
 
   const onDownload = () => {
     const link = document.createElement("a");
-    link.href = `https://clickgenio-production.up.railway.app/download/?id=${imageId}`;
+    link.href = `${import.meta.env.VITE_APISERVER}/download/full?id=${imageId}`;
     link.click();
   };
 

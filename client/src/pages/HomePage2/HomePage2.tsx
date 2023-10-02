@@ -33,7 +33,6 @@ export default function HomePage2() {
   
     const handleTextbarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       setThumbnailText(event.target.value);
-      console.log(event.target.value);
     };
 
     const handleKeyPress = async (event: React.KeyboardEvent) => {
@@ -51,7 +50,6 @@ export default function HomePage2() {
         setImageIsDisplayed(true);
         setIsLoading(true);
         const textToUse = useFinalText && thumbnailText !== "" ? finalText : thumbnailText;
-        console.log(textToUse)
         await submitThumbnailData(textToUse);
         const my_imageId = await generateImage(textToUse, apiHost, engineId, apiKey, setImageUrl);
         setImageId(my_imageId)
@@ -75,7 +73,7 @@ export default function HomePage2() {
       const textToUse = useFinalText && thumbnailText !== "" ? finalText : thumbnailText;
       await submitDownloadData(textToUse);
       const link = document.createElement("a");
-      link.href = `${import.meta.env.VITE_APISERVER}/download2/watermark?id=${imageId}`;
+      link.href = `${import.meta.env.VITE_APISERVER}/download/watermark?id=${imageId}`;
       link.click();
     }
 

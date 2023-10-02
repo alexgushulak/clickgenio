@@ -7,7 +7,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "server": "node server",
-    "openai": "node openai"
+    "openai": "node utils/imageEngine.js"
   },
   "type": "module",
   "author": "",
@@ -30,7 +30,9 @@
     "multer-s3": "^2.10.0",
     "openai": "^4.0.0",
     "prisma": "^5.3.1",
+    "sharp": "^0.32.6",
     "stripe": "^13.5.0",
+    "uuid": "^9.0.1",
     "watermarkjs": "^2.1.1"
   }
 }

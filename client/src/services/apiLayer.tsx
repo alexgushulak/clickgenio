@@ -15,7 +15,7 @@ const decodeImage = (image_object: any) => {
 
 const generateImage = async (thumbnailText: string, apiHost: string, engineId: string, apiKey: string, setImageUrl: (url: string) => void) => {
   try {
-    const response = await axios.post(`${import.meta.env.VITE_APISERVER}/submit`, {
+    const response = await axios.post(`${import.meta.env.VITE_APISERVER}/generateImage`, {
       message: thumbnailText
     }, {
       headers: {

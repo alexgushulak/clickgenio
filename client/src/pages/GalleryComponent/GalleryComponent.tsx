@@ -8,28 +8,38 @@ import Typography from '@mui/material/Typography';
 
 export default function GalleryComponent() {
     const [myImageData, setMyImageData] = React.useState([])
+    // const [viewCount, setViewCount] = React.useState("")
 
     React.useEffect(() => {
+        // setViewCount((Math.random() * (5 - 1) + 1).toFixed(1));
         fetch(`${import.meta.env.VITE_APISERVER}/gallery`)
             .then(res => res.json())
             .then(data => {
+                console.log(data.images)
                 const myImageData = data.images.map((item: any) => item)
                 setMyImageData(myImageData)
                 myImageData.forEach((item: any) => {
-                    item.s3url = item.s3url.replace("download", "download2/watermark")
+                    item.previewUrl = `${import.meta.env.VITE_APISERVER}/${item.imageId}.jpg`
                 })
-                console.log(myImageData[0].s3url)
+                myImageData.forEach((item: any) => {
+                    item.viewCount = (Math.random() * (5 - 1) + 1).toFixed(1);
+                  });
             })
+            console.log(myImageData)
+
     }, [])
 
+
     return (
+        <div>
+            <Typography variant='h4' sx={{mb: '0px'}}>Recent Thumbnails</Typography>
             <ImageList sx={{ display: 'inline-block', width: '100%', height: '80vh' }}>
-              <Typography variant='h4' sx={{mb: '30px'}}>Recent Thumbnails</Typography>
-              <Grid container spacing={2}>
-              {myImageData.map((item: any) => (
-                  <YouTubeThumbnail imageSrc={item.s3url} title={item.text} />
-              ))}
-              </Grid>
+            <Grid container spacing={2}>
+            {myImageData.map((item: any) => (
+                <YouTubeThumbnail key={item.imageData} imageSrc={item.previewUrl} title={item.userPrompt} viewCount={item.viewCount} />
+            ))}
+            </Grid>
             </ImageList>
-  );
+        </div>
+    )
 }

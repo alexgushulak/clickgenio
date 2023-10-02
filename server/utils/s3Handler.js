@@ -50,7 +50,7 @@ async function downloadFromS3(file_name) {
 
     var fileKey = file_name
 
-    console.log('Trying to download the file', fileKey);
+    console.log('Downloading: ', fileKey);
 
     AWS.config.update(
       {
@@ -66,9 +66,18 @@ async function downloadFromS3(file_name) {
         Key: fileKey,
     };
 
-    var fileStream = s3.getObject(options).createReadStream();
-    
-    return fileStream
+    return new Promise((resolve, reject) => {
+      const fileStream = s3.getObject(options).createReadStream();
+  
+      // Attach an error event listener to the stream
+      fileStream.on('error', (err) => {
+        console.log("S3 Download Error: ", err.code, fileKey)
+        reject(err); // Reject the promise with the error
+      });
+  
+      // Return the stream
+      resolve(fileStream);
+    });
 };
 
 export { upload, downloadFromS3, uploadToS3 };

@@ -4,17 +4,27 @@ import * as fs from 'node:fs';
 import Jimp from 'jimp';
 import { Buffer } from 'buffer';
 import { uploadToS3 } from './s3Handler.js';
-import { prompt_engine } from '../openai.js';
+import sharp from 'sharp';
 
-async function writeBase64toPNG(image_object) {
+function writeBase64toPNG(image_object) {
     const imageId = Date.now().toString();
     const fileName = `full_${imageId}.png`;
+    const fileName2 = `full_${imageId}_compress.png`;
     const localFilePath = `./generated-images/${fileName}`;
+    const localFilePath2 = `./generated-images/${fileName2}`;
     const s3FolderName = 'full-images';
     var buf = new Buffer.from(image_object, 'base64');
     try {
-        await fs.promises.writeFile(localFilePath, buf)
+        // fs.promises.writeFile(localFilePath, buf)
+        try {
+            // sharp(buf).jpeg({ quality: 50 }).toFile(localFilePath);
+            fs.promises.writeFile(localFilePath, buf)
+            console.log("Sharp Image Compressed")
+        } catch(err) {
+            console.error("Sharp Error", err)
+        }
         console.log(`Image ${fileName} saved locally`);
+        new Promise((resolve) => setTimeout(resolve, 500));
         uploadToS3(fileName, localFilePath, s3FolderName);
         console.log(`Image ${fileName} uploaded to S3`)
         return {imageId, fileName, localFilePath};
@@ -37,7 +47,7 @@ async function encodePNGtoBase64(date_string) {
 }
 
 async function watermarkImage(date_string, full_image_path) {
-    const watermarked_image_path = `./generated-images/watermarked_${date_string}.png`;
+    const watermarked_image_path = `./generated-images/watermarked_${date_string}.jpg`;
     try {
         await watermark.addWatermark(full_image_path, './assets/CLICKGENIO_watermark.png', {
             'dstPath' : watermarked_image_path,
@@ -49,13 +59,13 @@ async function watermarkImage(date_string, full_image_path) {
         console.error(`Watermark Image Error: ${err}`);
     }
 
-    try {
-        await new Promise((resolve) => setTimeout(resolve, 500));
-        const image = await Jimp.read(watermarked_image_path);
-        // image.resize(584,400).write(watermarked_image_path);
-    } catch(err) {
-        console.error(`Image Resize Error: ${err}`);
-    }
+    // try {
+    //     await new Promise((resolve) => setTimeout(resolve, 500));
+    //     const image = await Jimp.read(watermarked_image_path);
+    //     // image.resize(584,400).write(watermarked_image_path);
+    // } catch(err) {
+    //     console.error(`Image Resize Error: ${err}`);
+    // }
 };
 
 function uploadWatermarkImageToS3(fileName, localFilePath, s3FolderName) {
@@ -75,8 +85,9 @@ const createImageFiles = async (stabilityAIResponse) => {
     let imageId, fileName, localFilePath;
 
     try {
-        const result = await writeBase64toPNG(stabilityAIResponse.artifacts[0].base64)
+        const result = writeBase64toPNG(stabilityAIResponse.artifacts[0].base64)
         const { imageId, fileName, localFilePath } = result || {};
+        console.log("Write Base 64 to PNG", result)
         await watermarkImage(imageId, localFilePath)
         const base64_image = await encodePNGtoBase64(imageId);
         return { base64_image, imageId };
