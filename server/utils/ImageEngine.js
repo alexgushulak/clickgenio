@@ -1,0 +1,181 @@
+import { v4 as uuidv4 } from 'uuid';
+import axios from 'axios';
+import sharp from 'sharp';
+import fs from 'fs';
+import { uploadToS3 } from './s3Handler.js';
+
+export class ImageEngine {
+
+    static API_HOST = "https://api.stability.ai";
+    static STABILITY_AI_API_KEY = process.env.STABILITY_AI_API_KEY
+    static ENGINE_ID = 'stable-diffusion-xl-1024-v1-0';
+    static YOUTUBE_THUMBNAIL = ' A Youtube thumbnail Of ';
+
+    constructor(serverFolder, s3Folder, steps) {
+        this.ID = uuidv4().toString()
+        this.serverFolder = serverFolder
+        this.s3Folder = s3Folder
+        this.steps = steps
+        this.engineId = ImageEngine.ENGINE_ID
+        this.apiHost = ImageEngine.API_HOST
+        this.apiKey = ImageEngine.STABILITY_AI_API_KEY
+        this.height = 768
+        this.width = 1344
+        this.base64 = null
+        this.base64_watermark = null
+        this.userPrompt = null
+        this.stableDiffusionPrompt = null
+
+        this.fullResolutionFileName = `${this.ID}.jpg`
+        this.watermarkedFileName = `${this.ID}.jpg`
+        this.previewFileName = `${this.ID}.jpg`
+
+        this.fullResolutionFilePath = `${this.serverFolder}/full/${this.fullResolutionFileName}`
+        this.watermarkedFilePath = `${this.serverFolder}/watermark/${this.watermarkedFileName}`
+        this.previewFilePath = `${this.serverFolder}/preview/${this.previewFileName}`
+    }
+
+    fetchImage = async (thumbnailDescription, promptEngine) => {
+        try {
+            this.userPrompt = thumbnailDescription
+            this.stableDiffusionPrompt = await promptEngine(this.userPrompt, this.YOUTUBE_THUMBNAIL)
+            console.log(this.stableDiffusionPrompt)
+
+            const headers = {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+                Authorization: `Bearer ${this.apiKey}`,
+            }
+
+            const config = {
+                text_prompts: [{
+                    text: this.stableDiffusionPrompt
+                },],
+                cfg_scale: 6,
+                height: this.height,
+                width: this.width,
+                steps: this.steps,
+                samples: 1,
+            }
+
+            const apiUrl = `${this.apiHost}/v1/generation/${this.engineId}/text-to-image`
+
+            const stabilityAIResponse = await axios.post(
+                apiUrl, 
+                config,
+                {headers: headers}
+            );
+
+            const { base64, seed, finishReason } = stabilityAIResponse.data.artifacts[0]
+            this.base64 = base64
+            console.log("fetchImage Completed")
+        } catch (err) {
+            if (err.response)  {
+                console.error('Server responded with status code:', err.response.status);
+                console.error('Error response data:', err.response.data);
+                return err.response.data.message
+            }
+        }
+    }
+
+    _createFullResolutionJPG = async () => {
+        try {
+            if (!this.base64) {
+              console.error('No base64 image data available.');
+              return;
+            }
+      
+            const imageBuffer = Buffer.from(this.base64, 'base64');
+
+            const jpgBuffer = await sharp(imageBuffer)
+              .toFormat('jpg')
+              .toBuffer();
+
+            fs.writeFileSync(this.fullResolutionFilePath, jpgBuffer);
+      
+            console.log('Image converted to JPG.');
+          } catch (err) {
+            console.error('createJPG Error:', err);
+          }
+    }
+
+    _createWatermarkJPG = async(watermarkPath) => {
+        try {
+            if (!this.base64) {
+              console.error('No input image data provided.');
+              return;
+            }
+
+            const inputImageBuffer = Buffer.from(this.base64, 'base64');
+            const watermarkBuffer = await fs.promises.readFile(watermarkPath);
+      
+            const outputImageBuffer = await sharp(inputImageBuffer)
+              .composite([{ input: watermarkBuffer }])
+              .toFormat('jpg')
+              .toBuffer();
+      
+            fs.writeFileSync(this.watermarkedFilePath, outputImageBuffer);
+      
+            console.log('Watermark added to the image.');
+            return outputImageBuffer;
+          } catch (err) {
+            console.error('watermarkPNG Error:', err);
+          }
+    }
+
+    _createPreviewJPG = async (resizePercentage) => {
+        try {
+          if (!this.base64) {
+            console.error('No input image data provided.');
+            return;
+          }
+    
+          const inputImageBuffer = Buffer.from(this.base64, 'base64');
+
+          const newHeight = Math.round(resizePercentage * this.height);
+          const newWidth = Math.round(resizePercentage * this.width);
+    
+          const outputImageBuffer = await sharp(inputImageBuffer)
+            .resize({ width: newWidth, height: newHeight }) // Resize to 25% of the original dimensions
+            .toFormat('jpg')
+            .toBuffer();
+
+          fs.writeFileSync(this.previewFilePath, outputImageBuffer);
+    
+          console.log('Preview image created.');
+        } catch (err) {
+          console.error('createPreview Error:', err);
+        }
+    }
+
+    convertToBase64 = async () => {
+        try {
+          const data = await fs.promises.readFile(this.watermarkedFilePath);
+          const imageBuffer = Buffer.from(data);
+          this.base64_watermark = imageBuffer.toString('base64');
+          console.log("Base64 Conversion Completed")
+          return this.base64_watermark
+        } catch (err) {
+          console.error("Convert To Base64 Error: ", err)
+        }
+    }
+    
+
+    saveImagesOnServer = async () => {
+      console.log("Saving Images on The Server")
+      await this._createFullResolutionJPG()
+      await this._createWatermarkJPG('./assets/CLICKGENIO_watermark.png')
+      await this._createPreviewJPG(0.4)
+    }
+
+    saveImagesOnS3 = () => {
+      console.log("Saving the images on S3")
+      uploadToS3(this.fullResolutionFileName, `./${this.serverFolder}/full/${this.fullResolutionFileName}`, 'full');
+      uploadToS3(this.previewFileName, `./${this.serverFolder}/preview/${this.previewFileName}`, 'preview');
+      uploadToS3(this.watermarkedFileName, `./${this.serverFolder}/watermark/${this.watermarkedFileName}`, 'watermark');
+    }
+
+    getImageId = () => {
+      return this.ID
+    }
+}
