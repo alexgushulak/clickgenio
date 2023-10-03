@@ -60,6 +60,8 @@ class ImagePreviewCacheJob {
 
   async deleteImageCacheFiles() {
     const imageCachePath = 'image-cache'; // Replace with the actual path to your image-cache folder
+    this.userPromptsList = [];
+    this.previewUrlsList = [];
     try {
       const files = await fs.promises.readdir(imageCachePath);
       console.log("Files: ", files)
