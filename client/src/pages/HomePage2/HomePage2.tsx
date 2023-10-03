@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
-import { generateImage, submitDownloadData, submitIPData, submitThumbnailData, submitBuyData } from "../../services/apiLayer";
+import { generateImage, submitDownloadData, submitIPData, submitThumbnailData, submitBuyData, updateImageData } from "../../services/apiLayer";
 import ProductDisplay from "./ProductDisplay/ProductDisplay";
 import TipsAndTricks from "./TipsAndTricks/TipsAndTricks";
 import CustomizedSnackbars from './SnackBar';
@@ -65,6 +65,7 @@ export default function HomePage2() {
     };
 
     const onDownloadWatermark = async () => {
+      await updateImageData(imageId);
       await submitDownloadData(thumbnailText);
       const link = document.createElement("a");
       link.href = `${import.meta.env.VITE_APISERVER}/download/watermark?id=${imageId}`;

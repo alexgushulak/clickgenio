@@ -12,11 +12,13 @@ datasource db {
 
 model Image {
   id                    Int      @id @default(autoincrement())
-  imageId               String   @db.VarChar(255)
+  imageId               String   @db.VarChar(255) @unique
   createdAt             DateTime @default(now())
   userPrompt            String   @db.VarChar(5128)
   stableDiffusionPrompt String   @db.VarChar(5128)
   downloadUrl           String   @db.VarChar(255)
   previewUrl            String   @db.VarChar(255)
   watermarkUrl          String   @db.VarChar(255)
+  isDownloaded          Boolean  @default(false)
+  isPurchased           Boolean  @default(false)
 }

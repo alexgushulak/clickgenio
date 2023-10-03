@@ -13,6 +13,17 @@ const decodeImage = (image_object: any) => {
       return decoded_jpeg_image
 };
 
+const updateImageData = async (id: string) => {
+  console.log("Hello Their Sailor")
+  try {
+    console.log(`${import.meta.env.VITE_APISERVER}/updateImageData?id=${id}`)
+    await axios.post(`${import.meta.env.VITE_APISERVER}/updateImageData?id=${id}`)
+    console.log("Image data updated succesfully")
+  } catch (err) {
+    console.error("Update Image Data Error", err)
+  }
+}
+
 const generateImage = async (thumbnailText: string, apiHost: string, engineId: string, apiKey: string, setImageUrl: (url: string) => void) => {
   try {
     const response = await axios.post(`${import.meta.env.VITE_APISERVER}/generateImage`, {
@@ -107,4 +118,4 @@ const downloadImage = async (imageUrl: string, setImageDownloadUrl: (url: string
 
 
 
-export { generateImage, submitIPData, downloadImage, submitThumbnailData, submitDownloadData, submitBuyData };
+export { generateImage, submitIPData, downloadImage, submitThumbnailData, submitDownloadData, submitBuyData, updateImageData };

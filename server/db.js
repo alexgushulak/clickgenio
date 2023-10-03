@@ -36,4 +36,30 @@ export async function getLastNImages(imageCount) {
     }
 }
 
+export async function markImageAsDownloaded(imageID) {
+  try {
+    console.log(imageID)
+    // Find the image by its imageID
+    const image = await prisma.image.findUnique({
+      where: { imageId: imageID },
+    });
+
+    if (!image) {
+      throw new Error(`Image with imageID ${imageID} not found`);
+    }
+
+    // Update the isDownloaded and isPurchased fields to true
+    await prisma.image.update({
+      where: { imageId: imageID },
+      data: {
+        isDownloaded: true,
+      },
+    });
+
+    console.log(`Image with imageID ${imageID} marked as downloaded.`);
+  } catch (error) {
+    console.error(`Error: ${error.message}`);
+  }
+}
+
 export default prisma
