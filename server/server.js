@@ -55,7 +55,7 @@ app.post('/metadata', jsonParser, async (req, res) => {
 
 app.post('/generateImage', jsonParser, async (req, res) => {
     const thumbnail_image_text = req.body.message;
-    const generation_steps = 30;
+    const generation_steps = 40;
   
     try {
       const imageEngine = new ImageEngine('generated-images', 'full-images', generation_steps);
