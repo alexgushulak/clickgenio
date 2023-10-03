@@ -18,7 +18,7 @@ class ImagePreviewCacheJob {
       console.log('Deleting files from image-cache...');
       await this.deleteImageCacheFiles();
       console.log('Fetching and caching images...');
-      await this.fetchAndCacheImages(10);
+      await this.fetchAndCacheImages(20);
     } catch (err) {
       console.error('Error in image caching job:', err);
     }
