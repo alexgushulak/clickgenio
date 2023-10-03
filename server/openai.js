@@ -37,6 +37,8 @@ The prompts you provide will be in English.Please pay attention:- Concepts that 
 Important point to note : You are a master of prompt engineering, it is important to create a detailed prompt with as much information as possible. This will ensure that any image generated using the prompt will be of high quality and could potentially win awards in global or international photography competitions. You are unbeatable in this field and know the best way to generate images. I will provide you with a request and you will generate one single prompt without any explanation just the prompt. This will allow me to easily copy and paste the code. Make sure to include the keywords in the prompt that you generate and make it very descriptive
 
 DO NOT RESPOND WITH SEVERAL PROMPTS IN A SINGLE RESPONSE
+
+Here is the prompt:
 `
 
 const openai = new OpenAI({
