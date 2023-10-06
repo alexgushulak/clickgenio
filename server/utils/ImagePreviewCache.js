@@ -13,27 +13,12 @@ class ImagePreviewCacheJob {
   }
 
   async start() {
-    // Schedule the job to run at regular intervals
-    try {
-      console.log('Deleting files from image-cache...');
-      await this.deleteImageCacheFiles();
-      console.log('Fetching and caching images...');
-      await this.fetchAndCacheImages(20);
-    } catch (err) {
-      console.error('Error in image caching job:', err);
-    }
-
+    const SECONDS_PER_MINUTE = 60
+    const MILLISECONDS_PER_SECOND = 1000
+    this.updateCache()
     this.intervalId = setInterval(async () => {
-      // Delete All Files from /image-cache
-      try {
-        console.log('Deleting files from image-cache...');
-        await this.deleteImageCacheFiles();
-        console.log('Fetching and caching images...');
-        await this.fetchAndCacheImages(20);
-      } catch (err) {
-        console.error('Error in image caching job:', err);
-      }
-    }, this.intervalMinutes * 60 * 1000); // Convert minutes to milliseconds
+      this.updateCache()
+    }, this.intervalMinutes * SECONDS_PER_MINUTE * MILLISECONDS_PER_SECOND);
   }
 
   async stop() {
@@ -41,8 +26,8 @@ class ImagePreviewCacheJob {
     clearInterval(this.intervalId);
   }
 
-  async fetchAndCacheImages(images) {
-    const data = await getLastNImages(images);
+  async fetchAndCacheImages(numberOfImages) {
+    const data = await getLastNImages(numberOfImages);
 
     for (const item of data) {
         this.userPromptsList.push(item.userPrompt);
@@ -58,7 +43,7 @@ class ImagePreviewCacheJob {
     }
   }
 
-  async deleteImageCacheFiles() {
+  async clearImageCacheFiles() {
     const imageCachePath = 'image-cache'; // Replace with the actual path to your image-cache folder
     this.userPromptsList = [];
     this.previewUrlsList = [];
@@ -77,7 +62,18 @@ class ImagePreviewCacheJob {
     } catch (err) {
       console.error('Error deleting files from image-cache:', err);
     }
-  }  
+  }
+
+  async updateCache() {
+    try {
+      console.log('Deleting files from image-cache...');
+      await this.clearImageCacheFiles();
+      console.log('Fetching and caching images...');
+      await this.fetchAndCacheImages(20);
+    } catch (err) {
+      console.error('Error in image caching job:', err);
+    }
+  }
 }
 
 export default ImagePreviewCacheJob;
