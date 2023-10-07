@@ -65,7 +65,7 @@ export default function HomePage2() {
     };
 
     const onDownloadWatermark = async () => {
-      await updateImageData(imageId);
+      await updateImageData(imageId, "download");
       await submitDownloadData(thumbnailText);
       const link = document.createElement("a");
       link.href = `${import.meta.env.VITE_APISERVER}/download/watermark?id=${imageId}`;
@@ -73,6 +73,7 @@ export default function HomePage2() {
     }
 
     const onBuyImage = async () => {
+      await updateImageData(imageId, "purchase");
       await submitBuyData(thumbnailText);
     }
 

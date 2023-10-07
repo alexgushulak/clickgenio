@@ -1,7 +1,5 @@
 import Container from '@mui/material/Container';
-import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
@@ -10,10 +8,8 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-import SpaceMan from '../../assets/space.png'
 import Button from '@mui/material/Button'
-import { TextField } from '@mui/material';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { createTheme } from '@mui/material/styles';
 import GalleryGrid from './GalleryGrid/GalleryGrid';
 import { useNavigate } from "react-router-dom";
 import ReasonToBe from './ReasonToBe/ReasonToBe';

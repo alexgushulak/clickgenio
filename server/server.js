@@ -8,7 +8,7 @@ import bodyParser from 'body-parser';
 import 'dotenv/config'
 import { upload, downloadFromS3 } from './utils/s3Handler.js';
 import stripe from 'stripe';
-import prisma, { getLastNImages, uploadImageDataToDB, markImageAsDownloaded } from './db.js';
+import prisma, { getLastNImages, uploadImageDataToDB, markImageAsDownloaded, markImageAsPurchased } from './db.js';
 import { ImageEngine } from './utils/ImageEngine.js';
 import { promptEngineChatGPT } from './openai.js';
 import ImagePreviewCacheJob from './utils/ImagePreviewCache.js'
@@ -159,15 +159,30 @@ app.post('/upload', upload.single("file"), async (req, res) => {
 });
 
 app.post('/updateImageData', async (req, res) => {
-  try {
-    const imageID = req.query.id;
-    await markImageAsDownloaded(imageID)
-    res.status(200).send()
-  } catch (err) {
-    console.error('Update Image Error: ', err)
+
+  const updateType = req.query.updateType;
+  const imageID = req.query.id;
+
+  if (updateType == "download") {
+    try {
+      const imageID = req.query.id;
+      await markImageAsDownloaded(imageID)
+      res.status(200).send()
+    } catch (err) {
+      console.error('Update Image Error: ', err)
+    }
+  } else if (updateType == "purchase") {
+    try {
+      const imageID = req.query.id;
+      await markImageAsPurchased(imageID)
+      res.status(200).send()
+    } catch (err) {
+      console.error('Update Image Error: ', err)
+    }
+  } else {
+
   }
 })
-
 app.post('/create-checkout-session', async (req, res) => {
   const IMAGE_ID = req.query.imgid;
   console.log("BUY BUTTON CLICKED")

@@ -13,10 +13,9 @@ const decodeImage = (image_object: any) => {
       return decoded_jpeg_image
 };
 
-const updateImageData = async (id: string) => {
-  console.log("Hello Their Sailor")
+const updateImageData = async (id: string, updateType: "download" | "purchase") => {
   try {
-    await axios.post(`${import.meta.env.VITE_APISERVER}/updateImageData?id=${id}`)
+    await axios.post(`${import.meta.env.VITE_APISERVER}/updateImageData?id=${id}&updateType=${updateType}`)
   } catch (err) {
     console.error("Update Image Data Error", err)
   }
