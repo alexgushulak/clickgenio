@@ -15,7 +15,7 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import resumeURL from '../assets/Alex_Gushulak_Software_Resume.pdf';
 import SvgIcon from '@mui/material/SvgIcon';
-import logo from '../assets/logo.svg';
+import logo from '../assets/logo.png';
 import Avatar from '@mui/material/Avatar';
 
 interface Props {
@@ -78,7 +78,7 @@ export default function MainNavBar(props: Props) {
       component="div" mx={2}
       sx={{ height: '42px',flexGrow: 1, textAlign: {xs: 'right', sm: 'left'}, display: { sm: 'block' } }}>
       <a href="/">
-        <img src={logo} alt="logo" height="40px" />
+        <img src={logo} alt="logo" height="40px"/>
       </a>
     </Box>
   );
