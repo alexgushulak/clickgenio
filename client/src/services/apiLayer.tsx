@@ -111,6 +111,16 @@ const downloadImage = async (imageUrl: string, setImageDownloadUrl: (url: string
   }
 }
 
+export const getImageCount = async () => {
+  try {
+    const response = await axios.get(`${import.meta.env.VITE_APISERVER}/imageCount`);
+    return response.data.count;
+  } catch (error) {
+    console.error('Get Image Count Error:', error);
+    throw error;
+  }
+};
+
 
 
 export { generateImage, submitIPData, downloadImage, submitThumbnailData, submitDownloadData, submitBuyData, updateImageData };

@@ -111,4 +111,14 @@ export async function markCTAClicked(sessionId) {
   }
 }
 
+export async function getImageCount() {
+  try {
+    const count = await prisma.image.count();
+    return count;
+  } catch (error) {
+    console.error('Error getting image count:', error);
+    throw error;
+  }
+}
+
 export default prisma

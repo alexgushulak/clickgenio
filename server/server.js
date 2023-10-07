@@ -8,7 +8,7 @@ import bodyParser from 'body-parser';
 import 'dotenv/config'
 import { upload, downloadFromS3 } from './utils/s3Handler.js';
 import stripe from 'stripe';
-import prisma, { getLastNImages, uploadImageDataToDB, markImageAsDownloaded, markImageAsPurchased } from './db.js';
+import { getImageCount, uploadImageDataToDB, markImageAsDownloaded, markImageAsPurchased } from './db.js';
 import { ImageEngine } from './utils/ImageEngine.js';
 import { promptEngineChatGPT } from './openai.js';
 import ImagePreviewCacheJob from './utils/ImagePreviewCache.js'
@@ -20,7 +20,7 @@ app.use(cors());
 const port = 5001;
 const jsonParser = bodyParser.json();
 const CACHE_REFRESH_TIME_IN_MINS = 480;
-const NUMBER_OF_IMAGES_TO_CACHE = 50;
+const NUMBER_OF_IMAGES_TO_CACHE = 50//50;
 const imageCacheJob = new ImagePreviewCacheJob(CACHE_REFRESH_TIME_IN_MINS, NUMBER_OF_IMAGES_TO_CACHE);
 imageCacheJob.start()
 
@@ -206,6 +206,16 @@ app.post('/create-checkout-session', async (req, res) => {
   });
 
   res.redirect(303, session.url);
+});
+
+app.get('/imageCount', async (req, res) => {
+  try {
+    const count = await getImageCount();
+    res.status(200).json({ count });
+  } catch (error) {
+    console.error('Error getting image count:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
 });
 
 app.get('*', function (req, res) {
