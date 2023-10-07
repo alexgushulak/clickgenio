@@ -19,7 +19,9 @@ const app = express();
 app.use(cors());
 const port = 5001;
 const jsonParser = bodyParser.json();
-const imageCacheJob = new ImagePreviewCacheJob(120);
+const CACHE_REFRESH_TIME_IN_MINS = 480;
+const NUMBER_OF_IMAGES_TO_CACHE = 50;
+const imageCacheJob = new ImagePreviewCacheJob(CACHE_REFRESH_TIME_IN_MINS, NUMBER_OF_IMAGES_TO_CACHE);
 imageCacheJob.start()
 
 const __filename = fileURLToPath(import.meta.url);

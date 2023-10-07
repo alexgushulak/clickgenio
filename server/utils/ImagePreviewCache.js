@@ -5,8 +5,9 @@ import { downloadFromS3 } from './s3Handler.js';
 
 
 class ImagePreviewCacheJob {
-  constructor(intervalMinutes) {
+  constructor(intervalMinutes, numberOfImages) {
     this.intervalMinutes = intervalMinutes;
+    this.numberOfImages = numberOfImages || 20
     this.userPromptsList = [];
     this.previewUrlsList = [];
     this.IDList = [];
@@ -15,9 +16,9 @@ class ImagePreviewCacheJob {
   async start() {
     const SECONDS_PER_MINUTE = 60
     const MILLISECONDS_PER_SECOND = 1000
-    this.updateCache()
+    this.updateCache(this.numberOfImages)
     this.intervalId = setInterval(async () => {
-      this.updateCache()
+      this.updateCache(this.numberOfImages)
     }, this.intervalMinutes * SECONDS_PER_MINUTE * MILLISECONDS_PER_SECOND);
   }
 
@@ -64,12 +65,12 @@ class ImagePreviewCacheJob {
     }
   }
 
-  async updateCache() {
+  async updateCache(numberOfImages) {
     try {
       console.log('Deleting files from image-cache...');
       await this.clearImageCacheFiles();
       console.log('Fetching and caching images...');
-      await this.fetchAndCacheImages(20);
+      await this.fetchAndCacheImages(numberOfImages);
     } catch (err) {
       console.error('Error in image caching job:', err);
     }

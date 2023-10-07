@@ -62,4 +62,29 @@ export async function markImageAsDownloaded(imageID) {
   }
 }
 
+export async function markCTAClicked(sessionId) {
+  try {
+    // Find the image by its imageID
+    const session = await prisma.userdata.findUnique({
+      where: { sessionId: sessionId },
+    });
+
+    if (!session) {
+      throw new Error(`Session with Session ID ${imageID} not found`);
+    }
+
+    // Update the isDownloaded and isPurchased fields to true
+    await prisma.userdata.update({
+      where: { sessionId: sessionId },
+      data: {
+        isCTAClicked: true,
+      },
+    });
+
+    console.log(`Session with Session ID ${imageID} marked as clicked.`);
+  } catch (error) {
+    console.error(`Error: ${error.message}`);
+  }
+}
+
 export default prisma

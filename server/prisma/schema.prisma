@@ -22,3 +22,11 @@ model Image {
   isDownloaded          Boolean  @default(false)
   isPurchased           Boolean  @default(false)
 }
+
+model UserData {
+  sessionId     Int     @id @default(autoincrement())
+  ipAddress     String  @db.VarChar(255)
+  city          String  @db.VarChar(255)
+  country       String  @db.VarChar(255)
+  isCTAClicked  Boolean @default(false)
+}

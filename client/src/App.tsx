@@ -61,10 +61,10 @@ export default function App() {
       <CssBaseline />
       <ResponsiveAppBar />
       <Routes>
-        <Route path="/" element={<HomePage2 />} />
+      <Route path="/" element={<Splash />} />
+        <Route path="/generate" element={<HomePage2 />} />
         <Route path="/purchase" element={<PurchasePage />} />
         <Route path="/home" element={<HomePage />} />
-        <Route path="/splash" element={<Splash />} />
       </Routes>
     </ThemeProvider>
   );

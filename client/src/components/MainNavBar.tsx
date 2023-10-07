@@ -86,7 +86,7 @@ export default function MainNavBar(props: Props) {
   const container = window !== undefined ? () => window().document.body : undefined;
 
   return (
-    <Box sx={{ display: 'flex', height: '100px'}}>
+    <Box sx={{ display: 'flex', height: '120px'}}>
       <CssBaseline />
       <AppBar component="nav">
         <Toolbar>

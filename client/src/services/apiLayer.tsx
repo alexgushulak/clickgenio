@@ -16,9 +16,7 @@ const decodeImage = (image_object: any) => {
 const updateImageData = async (id: string) => {
   console.log("Hello Their Sailor")
   try {
-    console.log(`${import.meta.env.VITE_APISERVER}/updateImageData?id=${id}`)
     await axios.post(`${import.meta.env.VITE_APISERVER}/updateImageData?id=${id}`)
-    console.log("Image data updated succesfully")
   } catch (err) {
     console.error("Update Image Data Error", err)
   }
@@ -53,7 +51,6 @@ const submitIPData = async (thumbnailText: string) => {
         Accept: 'application/json',
       }
     });
-    console.log("metadata successful")
   } catch (error) {
     console.error("metadata error")
   }
@@ -69,9 +66,8 @@ const submitThumbnailData = async (thumbnailText: string) => {
         Accept: 'application/json',
       }
     });
-    console.log("metadata successful")
-  } catch (error) {
-    console.error("metadata error")
+  } catch (err) {
+    console.error("metadata error: ", err)
   }
 }
 
