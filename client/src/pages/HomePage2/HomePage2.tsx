@@ -36,7 +36,7 @@ export default function HomePage2() {
     
     useEffect(() => {
         if (searchParams.get('image')) {
-            setImageUrl(`http://localhost:5001/download/watermark?id=${searchParams.get('image')}`)
+            setImageUrl(`${import.meta.env.VITE_APISERVER}/download/watermark?id=${searchParams.get('image')}`)
             setImageId(`${searchParams.get('image')}`)
             setIsIdLink(true)
             setImageIsDisplayed(true)
