@@ -1,0 +1,50 @@
+.image-editor {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+    cursor: pointer;
+    width: 300px;
+  }
+  
+  .editor-container {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+  }
+  
+  .text-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    font-weight: 600;
+    font-family: Arial;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: white;
+    -webkit-text-stroke-width: 10px;
+    -webkit-text-stroke-color: black;
+  }
+  
+  .text-overlay textarea {
+    font-size: 150px;
+    width: 100%;
+    height: 100%;
+    border: none;
+    color: white;
+    background: transparent;
+    resize: none;
+    text-align: center;
+    outline: none;
+    cursor: move;
+  }
+
+  .text-overlay textarea::selection {
+    background-color: rgba(0, 50, 255, 0.2);
+    opacity: 0.4;
+  }
+  

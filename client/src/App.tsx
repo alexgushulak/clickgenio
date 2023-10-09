@@ -15,6 +15,7 @@ import HomePage from "./pages/HomePage/HomePage";
 import HomePage2 from './pages/HomePage2/HomePage2';
 import ResponsiveAppBar from "./pages/ResponsiveAppBar";
 import Splash from "./pages/Splash/Splash";
+import ImageEditor from "./pages/ImageEditor/ImageEditor";
 
 
 let id: any = null
@@ -65,6 +66,7 @@ export default function App() {
         <Route path="/generate" element={<HomePage2 />} />
         <Route path="/purchase" element={<PurchasePage />} />
         <Route path="/home" element={<HomePage />} />
+        <Route path="/editor" element={<ImageEditor />} />
       </Routes>
     </ThemeProvider>
   );

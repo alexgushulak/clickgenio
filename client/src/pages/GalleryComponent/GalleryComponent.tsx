@@ -1,33 +1,12 @@
-import React from 'react';
 import ImageList from '@mui/material/ImageList';
-import ImageListItem from '@mui/material/ImageListItem';
-import ImageListItemBar from '@mui/material/ImageListItemBar';
 import YouTubeThumbnail from '../../components/YoutubeThumbnail';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
+import useGallery from '../../hooks/useGallery';
 
 export default function GalleryComponent() {
-    const [myImageData, setMyImageData] = React.useState([])
-    // const [viewCount, setViewCount] = React.useState("")
+    const [myImageData, setMyImageData] = useGallery()
 
-    React.useEffect(() => {
-        // setViewCount((Math.random() * (5 - 1) + 1).toFixed(1));
-        fetch(`${import.meta.env.VITE_APISERVER}/gallery`)
-            .then(res => res.json())
-            .then(data => {
-                console.log(data.images)
-                const myImageData = data.images.map((item: any) => item)
-                setMyImageData(myImageData)
-                myImageData.forEach((item: any) => {
-                    item.previewUrl = `${import.meta.env.VITE_APISERVER}/${item.imageId}.jpg`
-                })
-                myImageData.forEach((item: any) => {
-                    item.viewCount = (Math.random() * (5 - 1) + 1).toFixed(1);
-                  });
-            })
-            console.log(myImageData)
-
-    }, [])
 
 
     return (

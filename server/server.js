@@ -3,8 +3,6 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import fs from 'fs';
 import cors from 'cors';
-import geoip from 'geoip-lite';
-import bodyParser from 'body-parser';
 import 'dotenv/config'
 import { upload, downloadFromS3 } from './utils/s3Handler.js';
 import stripe from 'stripe';
@@ -12,17 +10,19 @@ import { getImageCount, uploadImageDataToDB, markImageAsDownloaded, markImageAsP
 import { ImageEngine } from './utils/ImageEngine.js';
 import { promptEngineChatGPT } from './openai.js';
 import ImagePreviewCacheJob from './utils/ImagePreviewCache.js'
-const stripeInstance = new stripe(process.env.STRIPE_SECRET_KEY);
-
+import router from './routes/metadata.js'
 
 const app = express();
 app.use(cors());
 const port = 5001;
-const jsonParser = bodyParser.json();
 const CACHE_REFRESH_TIME_IN_MINS = 480;
-const NUMBER_OF_IMAGES_TO_CACHE = 50//50;
+const NUMBER_OF_IMAGES_TO_CACHE = 1;
+
 const imageCacheJob = new ImagePreviewCacheJob(CACHE_REFRESH_TIME_IN_MINS, NUMBER_OF_IMAGES_TO_CACHE);
 imageCacheJob.start()
+
+const stripeInstance = new stripe(process.env.STRIPE_SECRET_KEY);
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -42,20 +42,22 @@ app.get('/', (req, res) => {
     res.send('Hello World!');
 });
 
-app.post('/metadata', jsonParser, async (req, res) => {
-    var ip = req.header('x-forwarded-for');
-    if (!ip) {
-        var ip = '72.229.28.185';
-    }
-    const geo = geoip.lookup(ip);
-    var thumbnailText = req.body.message;
-    console.log(`User Info -- IP-Address: ${ip}, Location: ${geo.city}, ${geo.country}, Thumbnail Text: ${thumbnailText}`);
-    res.status(200).send({
-        message: "Received Metadata"
-    });
-})
+app.use('/metadata', router)
 
-app.post('/generateImage', jsonParser, async (req, res) => {
+// app.post('/metadata', async (req, res) => {
+//     var ip = req.header('x-forwarded-for');
+//     if (!ip) {
+//         var ip = '72.229.28.185';
+//     }
+//     const geo = geoip.lookup(ip);
+//     var thumbnailText = req.body.message;
+//     console.log(`User Info -- IP-Address: ${ip}, Location: ${geo.city}, ${geo.country}, Thumbnail Text: ${thumbnailText}`);
+//     res.status(200).send({
+//         message: "Received Metadata"
+//     });
+// })
+
+app.post('/generateImage', async (req, res) => {
     const thumbnail_image_text = req.body.message;
     const generation_steps = 40;
   
@@ -86,7 +88,7 @@ app.post('/generateImage', jsonParser, async (req, res) => {
     }
   });
   
-app.get('/gallery', jsonParser, async (req, res) => {
+app.get('/gallery', async (res) => {
     function combineListsIntoObjects(list1, list2) {
         if (list1.length !== list2.length) {
           throw new Error("Lists must have the same length");
@@ -122,7 +124,7 @@ app.get('/gallery', jsonParser, async (req, res) => {
     }
 })
 
-app.get('/download/:imagetype', jsonParser, async (req, res) => {
+app.get('/download/:imagetype', async (req, res) => {
     const uuidRegex = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
     if (!uuidRegex.test(req.query.id)) {
         res.status(400).send({ message: 'Invalid UUID format' });
@@ -183,6 +185,7 @@ app.post('/updateImageData', async (req, res) => {
 
   }
 })
+
 app.post('/create-checkout-session', async (req, res) => {
   const IMAGE_ID = req.query.imgid;
   console.log("BUY BUTTON CLICKED")
