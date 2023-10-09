@@ -11,7 +11,7 @@ import '../App.css';
 
 export default function Hero() {
   return (
-    <Container sx={{'min-height': '550px', 'height': {xs: '90vh', sm:'90vh'}, 'line-height': {xs: '25px', sm: '40px'},'margin-top': {xs: 0, sm: 0}, 'margin': '0 auto', 'margin-bottom': {xs: 0, sm: 0}, 'width': {xs: '90vw', sm: '75vw', md: '55vw',}}} >
+    <Container sx={{minHeight: '550px', 'height': {xs: '90vh', sm:'90vh'}, 'line-height': {xs: '25px', sm: '40px'},'margin-top': {xs: 0, sm: 0}, 'margin': '0 auto', 'margin-bottom': {xs: 0, sm: 0}, 'width': {xs: '90vw', sm: '75vw', md: '55vw',}}} >
     <Container
       className="main-page-container"
       sx={{'vertical-align': 'middle', 'display': 'inline'}}

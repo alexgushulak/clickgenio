@@ -15,7 +15,6 @@ export default function GalleryComponent() {
         fetch(`${import.meta.env.VITE_APISERVER}/gallery`)
             .then(res => res.json())
             .then(data => {
-                console.log(data.images)
                 const myImageData = data.images.map((item: any) => item)
                 setMyImageData(myImageData)
                 myImageData.forEach((item: any) => {
@@ -25,8 +24,6 @@ export default function GalleryComponent() {
                     item.viewCount = (Math.random() * (5 - 1) + 1).toFixed(1);
                   });
             })
-            console.log(myImageData)
-
     }, [])
 
 
@@ -36,7 +33,7 @@ export default function GalleryComponent() {
             <ImageList sx={{ display: 'inline-block', width: '100%', height: '80vh' }}>
             <Grid container spacing={2}>
             {myImageData.map((item: any) => (
-                <YouTubeThumbnail key={item.imageData} imageSrc={item.previewUrl} title={item.userPrompt} viewCount={item.viewCount} />
+                <YouTubeThumbnail key={item.previewUrl} imageSrc={item.previewUrl} title={item.userPrompt} viewCount={item.viewCount} />
             ))}
             </Grid>
             </ImageList>

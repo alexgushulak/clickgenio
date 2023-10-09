@@ -41,7 +41,7 @@ const websiteHook = {
 }
 
 const buttonStyle = {
-    "text-align": "center",
+    textAlign: "center",
     margin: "0 0px",
     mt: 0,
     fontSize: '14px',
