@@ -48,10 +48,14 @@ app.post('/metadata', jsonParser, async (req, res) => {
     }
     const geo = geoip.lookup(ip);
     var thumbnailText = req.body.message;
-    console.log(`User Info -- IP-Address: ${ip}, Location: ${geo.city}, ${geo.country}, Thumbnail Text: ${thumbnailText}`);
-    res.status(200).send({
+    try {
+      console.log(`User Info -- IP-Address: ${ip}, Location: ${geo.city}, ${geo.country}, Thumbnail Text: ${thumbnailText}`);
+      res.status(200).send({
         message: "Received Metadata"
-    });
+      });
+    } catch (err) {
+      console.log("Could not log user metadat", err)
+    }
 })
 
 app.post('/generateImage', jsonParser, async (req, res) => {
