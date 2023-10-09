@@ -100,12 +100,6 @@ export default function MainNavBar(props: Props) {
             <MenuIcon />
           </IconButton>
           {websiteLogo}
-          {/* <Typography
-            variant="h6"
-            component="div"
-            sx={{ flexGrow: 1, 'text-align': {xs: 'left', sm: 'left'}, display: { sm: 'block' } }}
-          >
-          </Typography> */}
           <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
             {navLinks.map((link, index) => (
               <Button href={link.path} key={index} sx={{ color: "#FFF", 'font-size': {sm: '11px!important', md: '12px!important'}, mx: {sm: 0.5, md: 1} }}>

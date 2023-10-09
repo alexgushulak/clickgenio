@@ -31,7 +31,8 @@ const descriptionText = {
 }
 
 const itemContainer = {
-    margin: {xs:'10px 0px 10px 20px',sm: '15px 0px'},
+    padding: '0px'!,
+    margin: {xs:'10px 0px 0px 20px',sm: '15px 0px'},
     width: '100%'
 }
 

@@ -75,7 +75,7 @@ export default function App() {
       <Button
           sx={{
             display: isClicked && !isLoading ? "block" : "none",
-            "text-align": "center",
+            textAlign: "center",
             margin: "0 auto",
             bottom: '75px',
             mt: 1,
@@ -144,7 +144,7 @@ export default function App() {
           component="h3"
           sx={{
             display: "block",
-            "text-align": "center",
+            textAlign: "center",
             margin: "0 auto",
             mt: 1,
           }}
@@ -164,7 +164,7 @@ export default function App() {
         <Button
           sx={{
             display: isLoading ? "none" : "block",
-            "text-align": "center",
+            textAlign: "center",
             margin: "0 auto",
             mt: 1,
           }}
@@ -189,7 +189,7 @@ export default function App() {
           justifyContent: "center",
           alignItems: "center",
           margin: "25px auto",
-          "text-align": "center"
+          textAlign: "center"
         }}
       >
         <Box

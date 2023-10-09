@@ -23,7 +23,7 @@ export default function MediaCard({ title, description, imagePath, githubLink, d
         image={imagePath}
         title="na"
       />
-      <CardContent sx={{'min-height': {xs: '100px', sm:'100px', md:'265px'}}}>
+      <CardContent sx={{minHeight: {xs: '100px', sm:'100px', md:'265px'}}}>
         <Typography gutterBottom variant="h5" component="div">{title}</Typography>
         <Typography variant="body2" color="text.secondary" sx={{padding: 2}}>{description}</Typography>
       </CardContent>

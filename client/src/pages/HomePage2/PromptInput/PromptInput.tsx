@@ -1,10 +1,7 @@
-import React from 'react'
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import CircularProgress from "@mui/material/CircularProgress";
-import { generateImage, submitThumbnailData } from "../../../services/apiLayer";
 import CustomizedSnackbars from '../SnackBar';
-import ButtonGroup from './ButtonGroup';
 
 
 export default function PromptInput(props: {thumbnailText: string, handleTextbarChange: any, handleKeyPress: any, onGenerateThumbnail: any, isLoading: boolean}) {
@@ -30,7 +27,7 @@ export default function PromptInput(props: {thumbnailText: string, handleTextbar
               onClick={props.onGenerateThumbnail}
               sx={{
                   display: props.isLoading ? "none" : "block",
-                  "text-align": "center",
+                  textAlign: "center",
                   margin: "0 auto",
                   width: '100%',
                   mt: 1,
@@ -46,11 +43,6 @@ export default function PromptInput(props: {thumbnailText: string, handleTextbar
                 alignItems: 'center',
                 justifyContent: 'center'
               }}>
-                <CustomizedSnackbars
-                  severity="success"
-                  message="Please wait 30 seconds for the thumbnail to generate"
-                />
-                Please wait 30 seconds for the thumbnail to generate <CircularProgress sx={{padding: '10px'}}/>
               </div>
             )}
         </div>

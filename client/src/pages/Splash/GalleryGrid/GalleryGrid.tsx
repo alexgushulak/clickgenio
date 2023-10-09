@@ -24,22 +24,18 @@ export default function GalleryGrid() {
         fetch(`${import.meta.env.VITE_APISERVER}/gallery`)
             .then(res => res.json())
             .then(data => {
-                console.log(data.images)
                 const myImageData = data.images.map((item: any) => item)
                 setMyImageData(myImageData)
-                console.log(...myImageData)
                 myImageData.forEach((item: any) => {
                     item.previewUrl = `${import.meta.env.VITE_APISERVER}/${item.imageId}.jpg`
                 })
             })
-            console.log(myImageData)
-
     }, [])
 
     return (
         <Grid container spacing={2} sx={containerStyle}>
             {myImageData.map((item: any) => (
-                <YoutubeThumbnail key={item.imageData} src={item.previewUrl} />
+                <YoutubeThumbnail key={item.previewUrl} src={item.previewUrl} />
             ))}
         </Grid>
     )

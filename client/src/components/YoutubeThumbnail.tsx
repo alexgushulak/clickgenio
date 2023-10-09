@@ -13,13 +13,6 @@ const ThumbnailImage = styled.img`
   height: 160px;
 `;
 
-const TitleContainer = styled.div`
-  color: white;
-  text-align: left;
-  float: left;
-  height: 100%;
-`;
-
 function capitalize(sentence: string) {
     return sentence.split(' ').map(word => {
       if (word.length === 0) {

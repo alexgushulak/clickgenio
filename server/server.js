@@ -5,14 +5,13 @@ import fs from 'fs';
 import cors from 'cors';
 import geoip from 'geoip-lite';
 import bodyParser from 'body-parser';
+import { checkoutAction } from './payments/removeWatermark.js';
 import 'dotenv/config'
 import { upload, downloadFromS3 } from './utils/s3Handler.js';
-import stripe from 'stripe';
 import { getImageCount, uploadImageDataToDB, markImageAsDownloaded, markImageAsPurchased } from './db.js';
 import { ImageEngine } from './utils/ImageEngine.js';
 import { promptEngineChatGPT } from './openai.js';
 import ImagePreviewCacheJob from './utils/ImagePreviewCache.js'
-const stripeInstance = new stripe(process.env.STRIPE_SECRET_KEY);
 
 
 const app = express();
@@ -20,7 +19,7 @@ app.use(cors());
 const port = 5001;
 const jsonParser = bodyParser.json();
 const CACHE_REFRESH_TIME_IN_MINS = 480;
-const NUMBER_OF_IMAGES_TO_CACHE = 50//50;
+const NUMBER_OF_IMAGES_TO_CACHE = 0;//50
 const imageCacheJob = new ImagePreviewCacheJob(CACHE_REFRESH_TIME_IN_MINS, NUMBER_OF_IMAGES_TO_CACHE);
 imageCacheJob.start()
 
@@ -137,7 +136,8 @@ app.get('/download/:imagetype', jsonParser, async (req, res) => {
         let file_name = `${req.query.id}.jpg`;
         let s3path = `${req.params.imagetype}/${file_name}`;
         let fileStream = await downloadFromS3(s3path);
-        res.attachment('thumbnail.jpg')
+        res.setHeader('Content-Type', 'image/jpeg'); // Set the correct content type for your file
+        res.setHeader('Content-Disposition', `inline; filename="${file_name}"`)
         fileStream.pipe(res);
     } catch (err) {
         console.log(err)
@@ -183,28 +183,12 @@ app.post('/updateImageData', async (req, res) => {
 
   }
 })
-app.post('/create-checkout-session', async (req, res) => {
-  const IMAGE_ID = req.query.imgid;
-  console.log("BUY BUTTON CLICKED")
-  const session = await stripeInstance.checkout.sessions.create({
-    submit_type: 'pay',
-    billing_address_collection: 'auto',
-    shipping_address_collection: {
-      allowed_countries: ['US', 'CA'],
-    },
-    line_items: [
-      {
-        // Provide the exact Price ID (for example, pr_1234) of the product you want to sell
-        price: process.env.PRODUCT_CODE,
-        quantity: 1,
-      },
-    ],
-    mode: 'payment',
-    success_url: `${process.env.CLIENT_URL}/home/?id=${IMAGE_ID}`,
-    cancel_url: `${process.env.CLIENT_URL}/`,
-    automatic_tax: {enabled: true},
-  });
 
+app.post('/create-checkout-session', async (req, res) => {
+  const imageId = req.query.imgid;
+  const sessionId = "FAKE_ID_1000";
+  console.log("BUY BUTTON CLICKED")
+  const session = await checkoutAction(imageId, sessionId)
   res.redirect(303, session.url);
 });
 

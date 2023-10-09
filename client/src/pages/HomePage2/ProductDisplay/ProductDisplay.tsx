@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Box from '@mui/material/Box';
@@ -6,14 +7,13 @@ import CachedIcon from '@mui/icons-material/Cached';
 import DownloadIcon from '@mui/icons-material/Download';
 import Stack from '@mui/material/Stack';
 import './style.css';
-import CustomizedSnackbars from '../SnackBar';
 import LoadingPreview from './LoadingPreview';
 
-export default function ProductDisplay(props: {isClicked: boolean, isLoading: boolean, imageUrl: string, imageId: string, onRefreshThumbnail: any, onDownloadWatermark: any, onPurchase: any}) {
-    
+export default function ProductDisplay(props: {isIdLink: boolean, isClicked: boolean, isLoading: boolean, imageUrl: string, imageId: string, onRefreshThumbnail: any, onDownloadWatermark: any, onPurchase: any}) {
+
     return (
         <Container sx={{
-            'min-height': '100px',
+            minHeight: '100px',
             'width': '100%',
         }}>
             {
@@ -54,7 +54,7 @@ export default function ProductDisplay(props: {isClicked: boolean, isLoading: bo
                     className="btn-hover color-1"
                     sx={{
                         display: props.isClicked && !props.isLoading ? "inline-flex" : "none",
-                        "text-align": "center",
+                        textAlign: "center",
                         margin: "0 10px",
                         bottom: '0px',
                         mt: 1,
@@ -73,7 +73,7 @@ export default function ProductDisplay(props: {isClicked: boolean, isLoading: bo
                 className="btn-hover color-9"
                 sx={{
                     display: props.isClicked && !props.isLoading ? "inline-flex" : "none",
-                    "text-align": "center",
+                    textAlign: "center",
                     margin: "0 2px",
                     bottom: '0px',
                     mt: 1,
@@ -88,8 +88,8 @@ export default function ProductDisplay(props: {isClicked: boolean, isLoading: bo
             <IconButton
                 className="btn-hover color-8"
                 sx={{
-                    display: props.isClicked && !props.isLoading ? "inline-flex" : "none",
-                    "text-align": "center",
+                    display: (props.isClicked && !props.isLoading) && !props.isIdLink ? "inline-flex" : "none",
+                    textAlign: "center",
                     margin: "0 2px",
                     bottom: '0px',
                     mt: 1,

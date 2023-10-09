@@ -1,13 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import { generateImage, submitDownloadData, submitIPData, submitThumbnailData, submitBuyData, updateImageData } from "../../services/apiLayer";
 import ProductDisplay from "./ProductDisplay/ProductDisplay";
 import TipsAndTricks from "./TipsAndTricks/TipsAndTricks";
-import CustomizedSnackbars from './SnackBar';
 import PromptInput from "./PromptInput/PromptInput";
 import GalleryComponent from "../GalleryComponent/GalleryComponent";
+import { useSearchParams } from 'react-router-dom'
+import toast, { Toaster } from 'react-hot-toast';
+import words from 'profane-words'
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -28,6 +30,18 @@ export default function HomePage2() {
     const [imageIsDisplayed, setImageIsDisplayed] = useState(false);
     const [imageId, setImageId] = useState("");
     const [isEmptyTextBox, setIsEmptyTextBox] = useState(false);
+    const [isIdLink, setIsIdLink] = useState(false);
+    const [searchParams, setSearchParams] = useSearchParams();
+    const [myImageURL, setMyImageURL] = useState('');
+    
+    useEffect(() => {
+        if (searchParams.get('image')) {
+            setImageUrl(`http://localhost:5001/download/watermark?id=${searchParams.get('image')}`)
+            setImageId(`${searchParams.get('image')}`)
+            setIsIdLink(true)
+            setImageIsDisplayed(true)
+        }
+    }, [])
   
     const handleTextbarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       setThumbnailText(event.target.value);
@@ -42,20 +56,35 @@ export default function HomePage2() {
     };
   
     const onGenerateThumbnail = async () => {
-      if (thumbnailText.length > 0) {
-        setImageIsDisplayed(true);
-        setIsLoading(true);
-        await submitThumbnailData(thumbnailText);
-        console.log(thumbnailText)
-        const my_imageId = await generateImage(thumbnailText, apiHost, engineId, apiKey, setImageUrl);
-        setImageId(my_imageId)
-        setIsLoading(false);
+      const individualWords: any = thumbnailText.toLowerCase().match(/\b(\w+)\b/g)
+      var invalidPrompt: boolean = false
+      individualWords.forEach((element: any) => {
+        if (words.includes(element)) {
+          invalidPrompt = true
+        }
+      });
+
+      if (invalidPrompt) {
+        toast.error("Invalid Prompt Detected")
       } else {
-        setIsEmptyTextBox(true);
+        if (thumbnailText.length > 0) {
+          setIsIdLink(false);
+          setImageIsDisplayed(true);
+          setIsLoading(true);
+          toast.success('Thumbnail Generating');
+          await submitThumbnailData(thumbnailText);
+          const my_imageId = await generateImage(thumbnailText, apiHost, engineId, apiKey, setImageUrl);
+          setImageId(my_imageId)
+          setSearchParams({"image": my_imageId})
+          setIsLoading(false);
+        } else {
+          toast.error("Please Describe Your Thumbnail")
+        }
       }
     };
 
     const onRefreshThumbnail = async () => {
+      setIsIdLink(false);
       setImageIsDisplayed(true);
       setIsLoading(true);
       await submitIPData(thumbnailText);
@@ -79,14 +108,6 @@ export default function HomePage2() {
 
     return (
       <Grid container spacing={0} sx={{padding: '10px'}}>
-        {isEmptyTextBox && (
-          <div style={{textTransform: 'uppercase'}}>
-            <CustomizedSnackbars
-              severity="warning"
-              message="Thumbnail description can not be empty"
-            />
-          </div>
-        )}
         <Grid item xs={12} md={5}>
           <Item>
             <PromptInput 
@@ -102,12 +123,11 @@ export default function HomePage2() {
           </Item>
         </Grid>
         <Grid item xs={12} md={7} 
-          sx={{
-            ml: 0,
-            mr: 0
-          }}>
+          sx={{ ml: 0, mr: 0}}
+        >
           <Item sx={{display: imageIsDisplayed ? 'block': 'none',pl: 0, pr: 0}}>
-            <ProductDisplay 
+            <ProductDisplay
+              isIdLink={isIdLink}
               isClicked={imageIsDisplayed}
               isLoading={isLoading}
               imageUrl={imageUrl}
@@ -120,6 +140,7 @@ export default function HomePage2() {
             <GalleryComponent />
           </Item>
         </Grid>
+        <Toaster />
     </Grid>
     )
 }

@@ -54,7 +54,7 @@ export default function VerticalTabs() {
             sx={{'margin-top': {xs: 25, sm: 25}, 'margin-bottom': {xs: 75, sm: 0}}}
         >
     <Box
-      className="job-list-box" sx={{ display: { sm: 'flex', xs: 'none' }, flexGrow: 1, bgcolor: '', 'min-height': 'auto', height: 'auto', 'justify-content': 'left', width: {sm: 'auto', md: 'auto'} }}
+      className="job-list-box" sx={{ display: { sm: 'flex', xs: 'none' }, flexGrow: 1, bgcolor: '', minHeight: 'auto', height: 'auto', 'justify-content': 'left', width: {sm: 'auto', md: 'auto'} }}
     >
       <Tabs
         orientation="vertical"

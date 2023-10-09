@@ -39,8 +39,6 @@ export default function App() {
       } catch {
         console.log("Error");
       }
-    } else {
-      console.log("No Id in Query");
     }
   }
 
