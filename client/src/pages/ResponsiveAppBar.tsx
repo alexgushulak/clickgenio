@@ -13,7 +13,7 @@ export default function ResponsiveAppBar() {
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar sx={{height: '64px'}}>
-        <img src={logo} style={{'height': '50px', 'borderRadius': '10px'}}></img>
+        <img src={logo} style={{'height': '50px', 'borderRadius': '13px'}}></img>
           <Container sx={{
             display: { xs: 'none', md: 'inline-flex' },
             ml: 'none',
