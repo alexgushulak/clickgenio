@@ -4,51 +4,45 @@ import Toolbar from '@mui/material/Toolbar';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import logo from '../assets/logo.png';
+import Login from '../components/Login';
+import Box from '@mui/material/Box';
 
 export default function ResponsiveAppBar() {
 
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
-        <Toolbar disableGutters>
-          <img src={logo} style={{'height': '50px', 'borderRadius': '10px'}}></img>
-          <Typography
-            variant="h6"
-            noWrap
-            component="a"
-            href="/"
-            sx={{
-              mr: 2,
-              ml: 1,
-              display: { xs: 'none', md: 'inline-flex' },
-              fontFamily: 'helvetica',
-              fontWeight: 700,
-              float: 'left',
-              color: 'white',
-              textDecoration: 'none',
-            }}
-          > CLICKGEN.IO
-          </Typography>
-          <Typography
-            variant="h6"
-            noWrap
-            component="a"
-            href="/"
-            sx={{
-              mr: 2,
-              ml: 1,
-              display: {
-                xs: 'flex',
-                md: 'none'
-              },
-              flexGrow: 1,
-              fontFamily: 'helvetica',
-              fontWeight: 700,
-              color: 'inherit',
-              textDecoration: 'none',
-            }}
-          > CLICKGEN.IO
-          </Typography>
+        <Toolbar sx={{height: '64px'}}>
+        <img src={logo} style={{'height': '50px', 'borderRadius': '10px'}}></img>
+          <Container sx={{
+            display: { xs: 'none', md: 'inline-flex' },
+            ml: 'none',
+            margin: '0'
+          }}>
+            <Typography
+              variant="h6"
+              noWrap
+              component="a"
+              display="flex"
+              href="/"
+              flexGrow="1"
+              sx={{
+                mt: "6px",
+                fontFamily: 'helvetica',
+                fontWeight: 700,
+                float: 'left',
+                color: 'white',
+                textDecoration: 'none',
+              }}
+            > CLICKGEN.IO
+            </Typography>
+            <Login />
+          </Container>
+          <Container sx={{
+            display: { xs: 'block', md: 'none' },
+          }}>
+            <Login />
+          </Container>
         </Toolbar>
       </Container>
     </AppBar>

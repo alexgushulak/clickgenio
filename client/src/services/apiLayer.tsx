@@ -122,5 +122,4 @@ export const getImageCount = async () => {
 };
 
 
-
 export { generateImage, submitIPData, downloadImage, submitThumbnailData, submitDownloadData, submitBuyData, updateImageData };

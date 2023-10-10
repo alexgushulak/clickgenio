@@ -15,9 +15,13 @@ import HomePage from "./pages/HomePage/HomePage";
 import HomePage2 from './pages/HomePage2/HomePage2';
 import ResponsiveAppBar from "./pages/ResponsiveAppBar";
 import Splash from "./pages/Splash/Splash";
+import { gapi } from 'gapi-script';
 
 
 let id: any = null
+
+// updated
+const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID
 
 const darkTheme = createTheme({
   palette: {
@@ -43,6 +47,14 @@ export default function App() {
   }
 
   React.useEffect(() => {
+    function start() {
+      gapi.client.init({
+        clientId: clientId,
+        scope: ""
+      })
+    };
+
+    gapi.load('client:auth2', start)
     checkIdExistsOnPageLoad()
     submitIPData("Logged On")
   }, [])
