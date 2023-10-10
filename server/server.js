@@ -23,7 +23,7 @@ const clientId = process.env.GOOGLE_CLIENT_ID
 const clientSecret = process.env.GOOGLE_CLIENT_SECRET
 const jsonParser = bodyParser.json();
 const CACHE_REFRESH_TIME_IN_MINS = 480;
-const NUMBER_OF_IMAGES_TO_CACHE = 50;
+const NUMBER_OF_IMAGES_TO_CACHE = parseInt(process.env.NUMBER_OF_IMAGES_TO_CACHE);
 const imageCacheJob = new ImagePreviewCacheJob(CACHE_REFRESH_TIME_IN_MINS, NUMBER_OF_IMAGES_TO_CACHE);
 imageCacheJob.start()
 
@@ -75,7 +75,7 @@ app.post('/auth/google', jsonParser, async (req, res) => {
     var header = JSON.parse(base64urlDecode(headerSeg));
     var payload = JSON.parse(base64urlDecode(payloadSeg));
 
-    console.log("Login Succesful")
+    console.log("Login Succesful", payload.given_name, payload.family_name)
 
     res.json({
       id_token,
