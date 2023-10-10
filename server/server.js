@@ -5,21 +5,25 @@ import fs from 'fs';
 import cors from 'cors';
 import geoip from 'geoip-lite';
 import bodyParser from 'body-parser';
+import { OAuth2Client } from 'google-auth-library'
 import { checkoutAction } from './payments/removeWatermark.js';
-import 'dotenv/config'
 import { upload, downloadFromS3 } from './utils/s3Handler.js';
 import { getImageCount, uploadImageDataToDB, markImageAsDownloaded, markImageAsPurchased } from './db.js';
 import { ImageEngine } from './utils/ImageEngine.js';
 import { promptEngineChatGPT } from './openai.js';
 import ImagePreviewCacheJob from './utils/ImagePreviewCache.js'
+import 'dotenv/config'
+
 
 
 const app = express();
 app.use(cors());
 const port = 5001;
+const clientId = process.env.GOOGLE_CLIENT_ID
+const clientSecret = process.env.GOOGLE_CLIENT_SECRET
 const jsonParser = bodyParser.json();
 const CACHE_REFRESH_TIME_IN_MINS = 480;
-const NUMBER_OF_IMAGES_TO_CACHE = 0;//50
+const NUMBER_OF_IMAGES_TO_CACHE = 1;//50
 const imageCacheJob = new ImagePreviewCacheJob(CACHE_REFRESH_TIME_IN_MINS, NUMBER_OF_IMAGES_TO_CACHE);
 imageCacheJob.start()
 
@@ -37,8 +41,50 @@ var mime = {
     js: 'application/javascript'
 };
 
+
+console.log(clientId, clientSecret)
+const oAuth2Client = new OAuth2Client(
+  process.env.GOOGLE_CLIENT_ID,
+  process.env.GOOGLE_CLIENT_SECRET,
+  'postmessage',
+);
+
 app.get('/', (req, res) => {
     res.send('Hello World!');
+});
+
+app.post('/auth/google', jsonParser, async (req, res) => {
+  try {
+    const { tokens } = await oAuth2Client.getToken(req.body.code);
+    const id_token = tokens.id_token
+    const segments = id_token.split('.');
+
+    if (segments.length !== 3) {
+      throw new Error('Not enough or too many segments');
+    }
+
+    var headerSeg = segments[0];
+    var payloadSeg = segments[1];
+    var signatureSeg = segments[2];
+
+    function base64urlDecode(str) {
+      const base64 = str.replace(/-/g, '+').replace(/_/g, '/');
+      return Buffer.from(base64, 'base64').toString();
+    }
+
+    var header = JSON.parse(base64urlDecode(headerSeg));
+    var payload = JSON.parse(base64urlDecode(payloadSeg));
+
+    console.log("Login Succesful")
+
+    res.json({
+      id_token,
+      payload
+    })
+  } catch (err) {
+    console.log("Login Failure: ", err)
+    res.send(403)
+  }
 });
 
 app.post('/metadata', jsonParser, async (req, res) => {
