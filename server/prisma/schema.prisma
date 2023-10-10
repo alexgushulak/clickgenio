@@ -24,9 +24,12 @@ model Image {
 }
 
 model UserData {
-  sessionId     Int     @id @default(autoincrement())
+  userId        Int     @id @default(autoincrement())
   ipAddress     String  @db.VarChar(255)
+  fullName      String  @db.VarChar(255)
+  emailAddress  String  @db.VarChar(255) @unique
   city          String  @db.VarChar(255)
   country       String  @db.VarChar(255)
+  credits       Int     @default(0)
   isCTAClicked  Boolean @default(false)
 }

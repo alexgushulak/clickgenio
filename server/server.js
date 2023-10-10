@@ -8,7 +8,7 @@ import bodyParser from 'body-parser';
 import { OAuth2Client } from 'google-auth-library'
 import { checkoutAction } from './payments/removeWatermark.js';
 import { upload, downloadFromS3 } from './utils/s3Handler.js';
-import { getImageCount, uploadImageDataToDB, markImageAsDownloaded, markImageAsPurchased } from './db.js';
+import { getImageCount, uploadImageDataToDB, markImageAsDownloaded, markImageAsPurchased, createUserAccount } from './db.js';
 import { ImageEngine } from './utils/ImageEngine.js';
 import { promptEngineChatGPT } from './openai.js';
 import ImagePreviewCacheJob from './utils/ImagePreviewCache.js'
@@ -74,8 +74,8 @@ app.post('/auth/google', jsonParser, async (req, res) => {
 
     var header = JSON.parse(base64urlDecode(headerSeg));
     var payload = JSON.parse(base64urlDecode(payloadSeg));
-
-    console.log("Login Succesful", payload.given_name, payload.family_name)
+    
+    await createUserAccount(payload.email, payload.given_name)
 
     res.json({
       id_token,

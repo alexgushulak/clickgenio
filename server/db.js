@@ -121,4 +121,26 @@ export async function getImageCount() {
   }
 }
 
+export async function createUserAccount(emailAddress, fullName) {
+  try {
+    const account = await prisma.userData.findUnique({
+      where: { emailAddress: emailAddress },
+    });
+
+    if (!account) {
+      await prisma.userData.create({
+        data: {
+          ipAddress: '12345',
+          fullName: fullName,
+          emailAddress: emailAddress,
+          city: 'N/A',
+          country: 'N/A'
+        },
+    })
+    }
+  } catch (err) {
+    console.log("Create User Account Error", err)
+  }
+}
+
 export default prisma
