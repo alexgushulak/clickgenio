@@ -143,4 +143,26 @@ export async function createUserAccount(emailAddress, fullName) {
   }
 }
 
+export async function updateIsEmailOk(emailAddress) {
+  try {
+    const user = await prisma.userData.findUnique({
+      where: { emailAddress: emailAddress },
+    });
+
+    if (!user) {
+      throw new Error(`User with email address ${emailAddress} not found`);
+    }
+    await prisma.userData.update({
+      where: { emailAddress: emailAddress },
+      data: {
+        isEmailOk: true,
+      },
+    });
+
+    console.log(`User with email address ${emailAddress} has signed up for updates`);
+  } catch (error) {
+    console.error(`updateIsEmailOk DB Error: ${error.message}`);
+  }
+}
+
 export default prisma
