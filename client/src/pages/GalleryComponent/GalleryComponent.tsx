@@ -18,7 +18,7 @@ export default function GalleryComponent() {
                 const myImageData = data.images.map((item: any) => item)
                 setMyImageData(myImageData)
                 myImageData.forEach((item: any) => {
-                    item.previewUrl = `${import.meta.env.VITE_APISERVER}/${item.imageId}.jpg`
+                    item.previewUrl = `${import.meta.env.VITE_APISERVER}/image-cache/${item.imageId}.jpg`
                 })
                 myImageData.forEach((item: any) => {
                     item.viewCount = (Math.random() * (5 - 1) + 1).toFixed(1);

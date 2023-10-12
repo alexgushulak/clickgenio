@@ -121,5 +121,17 @@ export const getImageCount = async () => {
   }
 };
 
+export const updateIsEmailOk = async (token: string) => {
+  try {
+    console.log(token)
+    const data = {token: token}
+    const response = await axios.post(`${import.meta.env.VITE_APISERVER}/user/emailOK`, data);
+    return response.data
+  } catch (error) {
+    console.error('Update isEmailOk Error', error);
+    return 403;
+  }
+}
+
 
 export { generateImage, submitIPData, downloadImage, submitThumbnailData, submitDownloadData, submitBuyData, updateImageData };

@@ -8,7 +8,7 @@ import bodyParser from 'body-parser';
 import { OAuth2Client } from 'google-auth-library'
 import { checkoutAction } from './payments/removeWatermark.js';
 import { upload, downloadFromS3 } from './utils/s3Handler.js';
-import { getImageCount, uploadImageDataToDB, markImageAsDownloaded, markImageAsPurchased, createUserAccount } from './db.js';
+import { getImageCount, uploadImageDataToDB, markImageAsDownloaded, markImageAsPurchased, createUserAccount, updateIsEmailOk } from './db.js';
 import { ImageEngine } from './utils/ImageEngine.js';
 import { promptEngineChatGPT } from './openai.js';
 import ImagePreviewCacheJob from './utils/ImagePreviewCache.js'
@@ -23,13 +23,13 @@ const clientId = process.env.GOOGLE_CLIENT_ID
 const clientSecret = process.env.GOOGLE_CLIENT_SECRET
 const jsonParser = bodyParser.json();
 const CACHE_REFRESH_TIME_IN_MINS = 480;
-const NUMBER_OF_IMAGES_TO_CACHE = 50;//parseInt(process.env.NUMBER_OF_IMAGES_TO_CACHE);
+const NUMBER_OF_IMAGES_TO_CACHE = 50;
 const imageCacheJob = new ImagePreviewCacheJob(CACHE_REFRESH_TIME_IN_MINS, NUMBER_OF_IMAGES_TO_CACHE);
 imageCacheJob.start()
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-var dir = path.join(__dirname, 'image-cache');
+var dir = path.join(__dirname, '');
 var mime = {
     html: 'text/html',
     txt: 'text/plain',
@@ -52,6 +52,38 @@ const oAuth2Client = new OAuth2Client(
 app.get('/', (req, res) => {
     res.send('Hello World!');
 });
+
+app.post('/user/emailOK', jsonParser, async (req, res) => {
+  try {
+    console.log(req.body.token)
+    const id_token = req.body.token
+    const segments = id_token.split('.');
+
+    if (segments.length !== 3) {
+      throw new Error('Not enough or too many segments');
+    }
+
+    var payloadSeg = segments[1];
+
+    function base64urlDecode(str) {
+      const base64 = str.replace(/-/g, '+').replace(/_/g, '/');
+      return Buffer.from(base64, 'base64').toString();
+    }
+
+    var payload = JSON.parse(base64urlDecode(payloadSeg));
+
+    await updateIsEmailOk(payload.email)
+
+    res.json({
+      message: "success"
+    })
+  } catch(err) {
+    console.log("Error on route `/user/emailOk`: ", err)
+    res.json({
+      message: "failure"
+    })
+  }
+})
 
 app.post('/auth/google', jsonParser, async (req, res) => {
   try {
@@ -133,7 +165,7 @@ app.post('/generateImage', jsonParser, async (req, res) => {
         message: "Internal Server Error"
       });
     }
-  });
+});
   
 app.get('/gallery', jsonParser, async (req, res) => {
     function combineListsIntoObjects(list1, list2) {

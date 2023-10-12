@@ -27,7 +27,7 @@ export default function GalleryGrid() {
                 const myImageData = data.images.map((item: any) => item)
                 setMyImageData(myImageData)
                 myImageData.forEach((item: any) => {
-                    item.previewUrl = `${import.meta.env.VITE_APISERVER}/${item.imageId}.jpg`
+                    item.previewUrl = `${import.meta.env.VITE_APISERVER}/image-cache/${item.imageId}.jpg`
                 })
             })
     }, [])
