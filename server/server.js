@@ -7,10 +7,12 @@ import geoip from 'geoip-lite';
 import bodyParser from 'body-parser';
 import { OAuth2Client } from 'google-auth-library'
 import { checkoutAction } from './payments/removeWatermark.js';
+import { checkoutActionBuyCredits } from './payments/buyCredits.js';
 import { upload, downloadFromS3 } from './utils/s3Handler.js';
-import { getImageCount, uploadImageDataToDB, markImageAsDownloaded, markImageAsPurchased, createUserAccount, updateIsEmailOk } from './db.js';
+import { getImageCount, uploadImageDataToDB, markImageAsDownloaded, markImageAsPurchased, createUserAccount, updateIsEmailOk, getCreditsByEmail } from './db.js';
 import { ImageEngine } from './utils/ImageEngine.js';
 import { promptEngineChatGPT } from './openai.js';
+import { stripeWebHook } from './payments/stripeWebHook.js';
 import ImagePreviewCacheJob from './utils/ImagePreviewCache.js'
 import 'dotenv/config'
 
@@ -23,7 +25,7 @@ const clientId = process.env.GOOGLE_CLIENT_ID
 const clientSecret = process.env.GOOGLE_CLIENT_SECRET
 const jsonParser = bodyParser.json();
 const CACHE_REFRESH_TIME_IN_MINS = 480;
-const NUMBER_OF_IMAGES_TO_CACHE = 50;
+const NUMBER_OF_IMAGES_TO_CACHE = 1;
 const imageCacheJob = new ImagePreviewCacheJob(CACHE_REFRESH_TIME_IN_MINS, NUMBER_OF_IMAGES_TO_CACHE);
 imageCacheJob.start()
 
@@ -52,6 +54,14 @@ const oAuth2Client = new OAuth2Client(
 app.get('/', (req, res) => {
     res.send('Hello World!');
 });
+
+app.post('/webhook', jsonParser, async (req, res) => {
+  try {
+    stripeWebHook(req, res)
+  } catch (err) {
+    console.log("/webhook route error")
+  }
+})
 
 app.post('/user/emailOK', jsonParser, async (req, res) => {
   try {
@@ -269,9 +279,15 @@ app.post('/updateImageData', async (req, res) => {
 app.post('/create-checkout-session', async (req, res) => {
   const imageId = req.query.imgid;
   const sessionId = "FAKE_ID_1000";
-  console.log("BUY BUTTON CLICKED")
-  const session = await checkoutAction(imageId, sessionId)
-  res.redirect(303, session.url);
+  const credits = req.query.credits;
+
+  if (credits) {
+    var session = await checkoutActionBuyCredits(credits, "Hello@gmail.com")
+  } else {
+    var session = await checkoutAction(imageId, sessionId)
+  }
+
+  res.json({"sessionId": session.id});
 });
 
 app.get('/imageCount', async (req, res) => {
@@ -283,6 +299,44 @@ app.get('/imageCount', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
+app.get('/user/get-credits', (req, res) => {
+  console.log("user/get-credits route")
+  const token = req.query.token; // Assuming the token is sent as a query parameter
+
+  if (!token) {
+    res.status(400).json({ message: 'Token is missing in the request' });
+    return;
+  }
+
+  try {
+    // Extract the email from the JSON token
+    const segments = token.split('.');
+    if (segments.length !== 3) {
+      throw new Error('Not enough or too many segments');
+    }
+
+    const payloadSeg = segments[1];
+    function base64urlDecode(str) {
+      const base64 = str.replace(/-/g, '+').replace(/_/g, '/');
+      return Buffer.from(base64, 'base64').toString();
+    }
+    const payload = JSON.parse(base64urlDecode(payloadSeg));
+    const userEmail = payload.email;
+
+    // Use the userEmail to fetch the credits from the database
+    getCreditsByEmail(userEmail)
+      .then((credits) => {
+        res.status(200).json({ credits });
+      })
+      .catch((error) => {
+        res.status(500).json({ message: 'Error fetching credits', error: error.message });
+      });
+  } catch (err) {
+    res.status(400).json({ message: 'Invalid token format', error: err.message });
+  }
+});
+
 
 app.get('*', function (req, res) {
     var file = path.join(dir, req.path.replace(/\/$/, '/index.html'));

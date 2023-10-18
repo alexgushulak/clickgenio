@@ -60,6 +60,35 @@ export async function markImageAsPurchased(imageID) {
   }
 }
 
+export async function getCreditsByEmail(email) {
+  try {
+    const user = await prisma.userData.findUnique({
+      where: { emailAddress: email },
+    });
+
+    if (!user) {
+      throw new Error(`User with email address ${email} not found`);
+    }
+
+    return user.credits; // Assuming the user data model has a 'credits' field
+  } catch (error) {
+    console.error(`Error fetching credits for ${email}: ${error.message}`);
+  }
+}
+
+export async function updateCredits(email, creditAmount) {
+  try {
+    const currentCredits = await getCreditsByEmail(email);
+    
+    const updatedCredits = parseInt(currentCredits) + parseInt(creditAmount);
+
+    await prisma.userData.update({ where: { emailAddress: email }, data: { credits: updatedCredits } });
+  } catch (error) {
+    console.error(`Error updating credits for ${email}: ${error.message}`);
+    throw error;
+  }
+}
+
 export async function markImageAsDownloaded(imageID) {
   try {
     console.log(imageID)
