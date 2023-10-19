@@ -133,5 +133,44 @@ export const updateIsEmailOk = async (token: string) => {
   }
 }
 
+export const getCredits = async (token: string) => {
+  try {
+    const response = await axios.get(`${import.meta.env.VITE_APISERVER}/user/get-credits?token=${token}`);
+    return response.data
+  } catch (error) {
+    console.error('getCredits Error', error);
+    return 403;
+  }
+}
 
-export { generateImage, submitIPData, downloadImage, submitThumbnailData, submitDownloadData, submitBuyData, updateImageData };
+export const deductCredits = async (token: string) => {
+  try {
+    console.log(token)
+    const response = await axios.post(`${import.meta.env.VITE_APISERVER}/user/deduct-credits?token=${token}`);
+    return {success: 'true'}
+  } catch (error) {
+    console.error('deductCredits Error', error);
+    return 403;
+  }
+}
+
+export const createCreditCheckoutSession = async (credits: number, email: string) => {
+  try {
+    const response = await axios.post(`${import.meta.env.VITE_APISERVER}/create-checkout-session?credits=${credits}&email=${email}`);
+    return response
+  } catch (error) {
+    console.error('Update isEmailOk Error', error);
+    return 403;
+  }
+}
+
+
+export {
+  generateImage,
+  submitIPData,
+  downloadImage,
+  submitThumbnailData,
+  submitDownloadData,
+  submitBuyData,
+  updateImageData
+};

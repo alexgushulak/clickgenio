@@ -63,7 +63,7 @@ export async function markImageAsPurchased(imageID) {
 export async function getCreditsByEmail(email) {
   try {
     const user = await prisma.userData.findUnique({
-      where: { emailAddress: email },
+      where: { emailAddress: email }
     });
 
     if (!user) {
@@ -78,11 +78,19 @@ export async function getCreditsByEmail(email) {
 
 export async function updateCredits(email, creditAmount) {
   try {
+    console.log(email)
     const currentCredits = await getCreditsByEmail(email);
-    
-    const updatedCredits = parseInt(currentCredits) + parseInt(creditAmount);
 
-    await prisma.userData.update({ where: { emailAddress: email }, data: { credits: updatedCredits } });
+    console.log(currentCredits, creditAmount)
+
+    await prisma.userData.update({
+      where: { 
+        emailAddress: email,
+      }, 
+      data: {
+        credits: parseInt(currentCredits) + parseInt(creditAmount),
+      } 
+    });
   } catch (error) {
     console.error(`Error updating credits for ${email}: ${error.message}`);
     throw error;

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
-import { generateImage, submitDownloadData, submitIPData, submitThumbnailData, submitBuyData, updateImageData, updateIsEmailOk } from "../../services/apiLayer";
+import { generateImage, submitDownloadData, submitIPData, submitThumbnailData, submitBuyData, updateImageData, updateIsEmailOk, getCredits, deductCredits } from "../../services/apiLayer";
 import ProductDisplay from "./ProductDisplay/ProductDisplay";
 import TipsAndTricks from "./TipsAndTricks/TipsAndTricks";
 import PromptInput from "./PromptInput/PromptInput";
@@ -12,7 +12,7 @@ import toast, { Toaster } from 'react-hot-toast';
 import words from 'profane-words';
 import Button from '@mui/material/Button';
 import { useCookies } from 'react-cookie';
-import { MediationTwoTone } from "@mui/icons-material";
+import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -46,6 +46,10 @@ export default function HomePage2() {
             setIsIdLink(true)
             setImageIsDisplayed(true)
         }
+
+        if (searchParams.get('success') === 'true') {
+          toast.success('Credits Purchased!')
+        }
     }, [])
   
     const handleTextbarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -53,7 +57,7 @@ export default function HomePage2() {
     };
 
     const handleKeyPress = async (event: React.KeyboardEvent) => {
-      if (event.key === 'Enter') {
+      if (event.key === 'Enter' && !isLoading) {
         event.preventDefault();
         await onGenerateThumbnail();
         event.preventDefault();
@@ -61,6 +65,11 @@ export default function HomePage2() {
     };
   
     const onGenerateThumbnail = async () => {
+      if (thumbnailText.length <= 0) {
+        toast.error("Please Describe Your Thumbnail")
+        return
+      }
+
       const individualWords: any = thumbnailText.toLowerCase().match(/\b(\w+)\b/g)
       var invalidPrompt: boolean = false
       individualWords.forEach((element: any) => {
@@ -71,24 +80,49 @@ export default function HomePage2() {
 
       if (invalidPrompt) {
         toast.error("Invalid Prompt Detected")
-      } else {
-        if (thumbnailText.length > 0) {
-          setIsIdLink(false);
-          setImageIsDisplayed(true);
-          setIsLoading(true);
-          toast.success('Thumbnail Generating');
-          await submitThumbnailData(thumbnailText);
-          const my_imageId = await generateImage(thumbnailText, apiHost, engineId, apiKey, setImageUrl);
-          setImageId(my_imageId)
-          setSearchParams({"image": my_imageId})
-          setIsLoading(false);
-        } else {
-          toast.error("Please Describe Your Thumbnail")
-        }
+        return
       }
+
+      const response = await getCredits(cookies.token)
+      if (response.credits <= 0) {
+        toast.error("Please Purchase More Credits →")
+        return
+      }
+
+      const creditResponse: any = await deductCredits(cookies.token)
+      if (creditResponse.success != 'true') {
+        toast.error("Could not deduct credits")
+        return
+      } else {
+        setCookie('credits', response.credits-1)
+      }
+
+      toast.success('Thumbnail Generating');
+      setIsIdLink(false);
+      setImageIsDisplayed(true);
+      setIsLoading(true);
+      await submitThumbnailData(thumbnailText);
+      const my_imageId = await generateImage(thumbnailText, apiHost, engineId, apiKey, setImageUrl);
+      setImageId(my_imageId)
+      setSearchParams({"image": my_imageId})
+      setIsLoading(false);
     };
 
     const onRefreshThumbnail = async () => {
+      const response = await getCredits(cookies.token)
+      if (response.credits <= 0) {
+        toast.error("Please Purchase More Credits →")
+        return
+      }
+
+      const creditResponse: any = await deductCredits(cookies.token)
+      if (creditResponse.success != 'true') {
+        toast.error("Could not deduct credits")
+        return
+      } else {
+        setCookie('credits', response.credits-1)
+      }
+
       setIsIdLink(false);
       setImageIsDisplayed(true);
       setIsLoading(true);
@@ -107,16 +141,20 @@ export default function HomePage2() {
       await updateImageData(imageId, "download");
       await submitDownloadData(thumbnailText);
       const link = document.createElement("a");
-      link.href = `${import.meta.env.VITE_APISERVER}/download/watermark?id=${imageId}`;
+      link.href = `${import.meta.env.VITE_APISERVER}/download/full?id=${imageId}`;
       link.click();
     }
 
     const onBuyImage = async () => {
       await updateImageData(imageId, "purchase");
-      await submitBuyData(thumbnailText);
+      const link = document.createElement("a");
+      link.href = `${import.meta.env.VITE_APISERVER}/download/full?id=${imageId}`;
+      link.click();
+      //await submitBuyData(thumbnailText);
     }
 
     return (
+      <Container maxWidth="xl">
       <Grid container spacing={0} sx={{padding: '10px'}}>
         <Grid item xs={12} md={5}>
           <Item>
@@ -147,6 +185,7 @@ export default function HomePage2() {
               onPurchase={onBuyImage} />
           </Item>
           <Item>
+            <Box>
             Want to see your face in the thumbnail like these photos?
             <Button 
               sx={{margin: '10px'}}
@@ -154,6 +193,7 @@ export default function HomePage2() {
               variant="contained" >
             Register for Early Access
             </Button>
+            </Box>
             <Box
               component="img"
               sx={{
@@ -161,7 +201,7 @@ export default function HomePage2() {
                 margin: '0 auto',
                 padding: '10px',
                 height: { xs: 172, sm: 215, md: 215 },
-                width: { xs: 301, sm: 377, md: 377 },
+                width: { xs: 301, sm: 377, md: 370 },
               }}
               src={`${import.meta.env.VITE_APISERVER}/assets/alligator.png`}
             />
@@ -172,7 +212,7 @@ export default function HomePage2() {
                 margin: '0 auto',
                 padding: '10px',
                 height: { xs: 172, sm: 215, md: 215 },
-                width: { xs: 301, sm: 377, md: 377 },
+                width: { xs: 301, sm: 377, md: 370 },
               }}
               src={`${import.meta.env.VITE_APISERVER}/assets/lol.png`}
             />
@@ -183,7 +223,7 @@ export default function HomePage2() {
                 margin: '0 auto',
                 padding: '10px',
                 height: { xs: 172, sm: 215, md: 215 },
-                width: { xs: 301, sm: 377, md: 377 },
+                width: { xs: 301, sm: 377, md: 370 },
               }}
               src={`${import.meta.env.VITE_APISERVER}/assets/shark.png`}
             />
@@ -194,7 +234,7 @@ export default function HomePage2() {
                 margin: '0 auto',
                 padding: '10px',
                 height: { xs: 172, sm: 215, md: 215 },
-                width: { xs: 301, sm: 377, md: 377 },
+                width: { xs: 301, sm: 377, md: 370 },
               }}
               src={`${import.meta.env.VITE_APISERVER}/assets/spaceman.png`}
             />
@@ -205,5 +245,6 @@ export default function HomePage2() {
         </Grid>
         <Toaster />
     </Grid>
+      </Container>
     )
 }

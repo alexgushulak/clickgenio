@@ -1,17 +1,48 @@
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import Button from '@mui/material/Button';
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
+import ItemWidget from './ItemWidget/ItemWidget';
+import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import Avatar from '@mui/material/Avatar';
+import { Typography } from '@mui/material';
+import diamondIcon from '../../assets/diamond.webp';
+import goldIcon from '../../assets/gold.webp';
+import ironIcon from '../../assets/iron.webp';
+import Container from '@mui/material/Container';
+import { AuthContext } from '../../main';
+import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect, useContext } from 'react';
 
 export default function PurchasePage() {
-    return (
-      <Container sx={{}}>
-        Purchase Page
-      </Container>
-    );
+  const authContext = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  React.useEffect(() => {
+    if (authContext?.isLoggedIn == false) {
+      navigate('/')
+    }
+  }, [])
+
+  const refundPolicyStyle = {
+    backgroundColor: '#ffe252',
+    borderRadius: '15px',
+    color: 'black',
+    textAlign: 'left',
+    padding: '10px 20px',
+    fontSize: '8px'
+  }
+
+  return (
+    <Container sx={{mt: '30px', mb: '30px'}}>
+      <Grid container spacing={4}>
+        <Grid item xs={12}>
+          <Box sx={refundPolicyStyle}>
+            <Typography sx={{fontSize: '18px'}}>
+              We are <strong>unable to offer refunds</strong> at this time due to the high costs to generate images. Thank you for understanding.
+            </Typography>
+          </Box>
+        </Grid>
+        <ItemWidget image={ironIcon} credits={50} price={5.00} color={"#1a1a1a"}/>
+        <ItemWidget image={goldIcon} credits={100} price={9.00} color={"#171612"}/>
+        <ItemWidget image={diamondIcon} credits={250} price={20.00} color={"#12161c"}/>
+      </Grid>
+    </Container>
+  );
 }

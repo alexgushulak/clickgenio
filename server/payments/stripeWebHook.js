@@ -4,7 +4,6 @@ import 'dotenv/config'
 
 export async function stripeWebHook(req, res) {
     let event = req.body;
-    console.log(event)
     // if (endpointSecret) {
     //   const signature = req.headers['stripe-signature'];
     //   try {
@@ -21,11 +20,12 @@ export async function stripeWebHook(req, res) {
   
     // Handle the event
     switch (event.type) {
-      case 'payment_intent.succeeded':
-        const paymentIntent = event.data.object;
+      case 'checkout.session.completed':
+        console.log("CHECKOUT SESSION COMPLETED")
+        console.log(event)
         const credits = event.data.object.metadata.credits
         const email = event.data.object.metadata.email
-        console.log(`PaymentIntent for ${paymentIntent.amount} was successful!`);
+        console.log(`PaymentIntent for ${credits} ${email} was successful!`);
         try {
           updateCredits(email, credits)
         } catch (err) {
