@@ -34,18 +34,6 @@ export async function stripeWebHook(req, res) {
           console.log("DB Error: ", err)
         }
         break;
-      case 'payment_intent.succeeded':
-        console.log("CHECKOUT SESSION COMPLETED")
-        console.log(event)
-        var credits = event.data.object.metadata.credits
-        var email = event.data.object.metadata.email
-        console.log(`PaymentIntent for ${credits} ${email} was successful!`);
-        try {
-          updateCredits(email, credits)
-        } catch (err) {
-          console.log("DB Error: ", err)
-        }
-        break;
       case 'payment_method.attached':
         const paymentMethod = event.data.object;
         break;
