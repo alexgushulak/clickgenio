@@ -56,6 +56,8 @@ export default function Login() {
             setCookie('pictureURL', login_info.data.picture)
 
             authContext?.setIsLoggedIn(true)
+            console.log("Lets Navigate")
+            navigate("/generate");
         },
         onError: errorResponse => console.log(errorResponse),
     });

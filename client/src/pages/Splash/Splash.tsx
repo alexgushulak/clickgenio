@@ -106,6 +106,7 @@ export default function Splash() {
     const [numberOfThumbnailsCreated, setNumberOfThumbnailsCreated] = React.useState(null);
     const [cookies, setCookie, removeCookie] = useCookies(['token', 'given_name', 'pictureURL', 'credits']);
     const authContext = useContext(AuthContext);
+    const navigate = useNavigate();
 
     const googleLogin = useGoogleLogin({
         flow: 'auth-code',
@@ -119,7 +120,7 @@ export default function Splash() {
             setCookie('given_name', login_info.data.payload.given_name)
             setCookie('pictureURL', login_info.data.payload.picture)
 
-            authContext?.setIsLoggedIn(true)
+            authContext?.setIsLoggedIn(true);
         },
         onError: errorResponse => console.log(errorResponse),
     });
@@ -135,17 +136,10 @@ export default function Splash() {
             }
         }
 
-        if (authContext?.isLoggedIn) {
-            navigate("/generate")
-        }
-
         fetchData();
-    }, [authContext?.isLoggedIn]);                          
-
-    const navigate = useNavigate();
+    }, []);                          
 
     const onCTAClick = async () => {
-        console.log(authContext?.isLoggedIn)
         if (authContext?.isLoggedIn) {
             navigate("/generate");
         } else {
