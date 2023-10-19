@@ -265,11 +265,22 @@ app.post('/create-checkout-session', async (req, res) => {
   const imageId = req.query.imgid;
   const sessionId = "FAKE_ID_1000";
   const credits = req.query.credits;
+  const id_token = req.query.token;
 
-  if (credits) {
-    var session = await checkoutActionBuyCredits(credits, "alex.gushulak@gmail.com")
-  } else {
-    var session = await checkoutAction(imageId, sessionId)
+  const ticket = await oAuth2Client.verifyIdToken({
+    idToken: id_token,
+    audience: process.env.GOOGLE_CLIENT_ID
+  })
+
+  const email = ticket.payload.email
+  try {
+    if (credits) {
+      var session = await checkoutActionBuyCredits(credits, email)
+    } else {
+      var session = await checkoutAction(imageId, sessionId)
+    }
+  } catch(err) {
+    console.error("Could not Complete /create-checkout-session", err)
   }
 
   res.json({"sessionId": session.id});
