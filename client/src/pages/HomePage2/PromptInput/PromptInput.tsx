@@ -28,12 +28,13 @@ export default function PromptInput(props: {thumbnailText: string, handleTextbar
               sx={{
                   display: props.isLoading ? "none" : "block",
                   textAlign: "center",
+                  fontSize: '18px',
                   margin: "0 auto",
                   width: '100%',
                   mt: 1,
               }}
             >
-            GENERATE YOUR FREE THUMBNAIL
+            generate thumbnail (1 credit)
             </Button>
             {props.isLoading && (
               <div style={{

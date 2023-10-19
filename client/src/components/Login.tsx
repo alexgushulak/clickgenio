@@ -85,6 +85,7 @@ export default function Login() {
             try {
                 const response = await getCredits(cookies.token);
                 setCredits(response.credits);
+                setCookie('credits', response.credits)
             } catch (error) {
                 // Handle any errors that occur while fetching credits.
                 console.error('Error fetching credits:', error);
@@ -92,7 +93,7 @@ export default function Login() {
         };
 
         fetchData()
-    }, [setCookie, removeCookie])
+    }, [setCookie, removeCookie, cookies.credits])
       
     
     return (

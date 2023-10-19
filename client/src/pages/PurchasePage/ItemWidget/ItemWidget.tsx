@@ -63,7 +63,7 @@ export default function ItemWidget(props: ItemWidgetProps) {
                 <Box component="img" sx={iconStyle} src={props.image}/>
                 <Typography variant="h4">
                     <strong>
-                        {props.credits} CREDITS
+                        {props.credits} THUMBNAILS
                     </strong>
                 </Typography>
                 <Button variant="contained" sx={buttonStyle} onClick={handleBuyButtonClick}>${props.price}</Button>

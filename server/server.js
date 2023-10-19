@@ -9,7 +9,7 @@ import { OAuth2Client } from 'google-auth-library'
 import { checkoutAction } from './payments/removeWatermark.js';
 import { checkoutActionBuyCredits } from './payments/buyCredits.js';
 import { upload, downloadFromS3 } from './utils/s3Handler.js';
-import { getImageCount, uploadImageDataToDB, markImageAsDownloaded, markImageAsPurchased, createUserAccount, updateIsEmailOk, getCreditsByEmail } from './db.js';
+import { getImageCount, uploadImageDataToDB, markImageAsDownloaded, markImageAsPurchased, createUserAccount, updateIsEmailOk, getCreditsByEmail, updateCredits } from './db.js';
 import { ImageEngine } from './utils/ImageEngine.js';
 import { promptEngineChatGPT } from './openai.js';
 import { stripeWebHook } from './payments/stripeWebHook.js';
@@ -21,11 +21,9 @@ import 'dotenv/config'
 const app = express();
 app.use(cors());
 const port = 5001;
-const clientId = process.env.GOOGLE_CLIENT_ID
-const clientSecret = process.env.GOOGLE_CLIENT_SECRET
 const jsonParser = bodyParser.json();
 const CACHE_REFRESH_TIME_IN_MINS = 480;
-const NUMBER_OF_IMAGES_TO_CACHE = 1;
+const NUMBER_OF_IMAGES_TO_CACHE = 50;
 const imageCacheJob = new ImagePreviewCacheJob(CACHE_REFRESH_TIME_IN_MINS, NUMBER_OF_IMAGES_TO_CACHE);
 imageCacheJob.start()
 
@@ -100,8 +98,6 @@ app.post('/auth/google', jsonParser, async (req, res) => {
       idToken: tokens.id_token,
       audience: process.env.GOOGLE_CLIENT_ID
     })
-
-    console.log("Ticket: ", ticket)
 
     const data = {
       given_name: ticket.payload.given_name,
@@ -290,7 +286,6 @@ app.get('/imageCount', async (req, res) => {
 });
 
 app.get('/user/get-credits', (req, res) => {
-  console.log("user/get-credits route")
   const token = req.query.token; // Assuming the token is sent as a query parameter
 
   if (!token) {
@@ -326,6 +321,24 @@ app.get('/user/get-credits', (req, res) => {
   }
 });
 
+app.post('/user/deduct-credits', async (req, res) => {
+  const id_token = req.query.token;
+
+  const ticket = await oAuth2Client.verifyIdToken({
+    idToken: id_token,
+    audience: process.env.GOOGLE_CLIENT_ID
+  })
+
+  const email = ticket.payload.email
+
+  try {
+    updateCredits(email, -1)
+  } catch (err) {
+    console.log("Deduct Credits DB Error: ", err)
+  }
+
+  res.send(200)
+});
 
 app.get('*', function (req, res) {
     var file = path.join(dir, req.path.replace(/\/$/, '/index.html'));

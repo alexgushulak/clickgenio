@@ -66,13 +66,13 @@ export default function ProductDisplay(props: {isIdLink: boolean, isClicked: boo
                     onClick={props.onPurchase}
                     type="submit"
                 >
-                    <strong>REMOVE WATERMARK</strong>
+                    <strong>Download Image</strong>
                 </Button>
             </form>
             <IconButton
                 className="btn-hover color-9"
                 sx={{
-                    display: props.isClicked && !props.isLoading ? "inline-flex" : "none",
+                    display: "none",
                     textAlign: "center",
                     margin: "0 2px",
                     bottom: '0px',

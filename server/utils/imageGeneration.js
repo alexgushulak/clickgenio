@@ -87,8 +87,8 @@ const createImageFiles = async (stabilityAIResponse) => {
     try {
         const result = writeBase64toPNG(stabilityAIResponse.artifacts[0].base64)
         const { imageId, fileName, localFilePath } = result || {};
-        console.log("Write Base 64 to PNG", result)
-        await watermarkImage(imageId, localFilePath)
+        // console.log("Write Base 64 to PNG", result)
+        // await watermarkImage(imageId, localFilePath)
         const base64_image = await encodePNGtoBase64(imageId);
         return { base64_image, imageId };
     } catch (err) {
