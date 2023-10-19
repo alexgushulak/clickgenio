@@ -123,11 +123,10 @@ export async function markImageAsDownloaded(imageID) {
   }
 }
 
-export async function markCTAClicked(sessionId) {
+export async function markCTAClicked(emailAddress) {
   try {
-    // Find the image by its imageID
-    const session = await prisma.userdata.findUnique({
-      where: { sessionId: sessionId },
+    const session = await prisma.userData.findUnique({
+      where: { emailAddress: emailAddress },
     });
 
     if (!session) {
@@ -135,8 +134,8 @@ export async function markCTAClicked(sessionId) {
     }
 
     // Update the isDownloaded and isPurchased fields to true
-    await prisma.userdata.update({
-      where: { sessionId: sessionId },
+    await prisma.userData.update({
+      where: { emailAddress: emailAddress },
       data: {
         isCTAClicked: true,
       },

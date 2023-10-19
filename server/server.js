@@ -9,7 +9,7 @@ import { OAuth2Client } from 'google-auth-library'
 import { checkoutAction } from './payments/removeWatermark.js';
 import { checkoutActionBuyCredits } from './payments/buyCredits.js';
 import { upload, downloadFromS3 } from './utils/s3Handler.js';
-import { getImageCount, uploadImageDataToDB, markImageAsDownloaded, markImageAsPurchased, createUserAccount, updateIsEmailOk, getCreditsByEmail, updateCredits } from './db.js';
+import { getImageCount, uploadImageDataToDB, markImageAsDownloaded, markImageAsPurchased, markCTAClicked, createUserAccount, updateIsEmailOk, getCreditsByEmail, updateCredits } from './db.js';
 import { ImageEngine } from './utils/ImageEngine.js';
 import { promptEngineChatGPT } from './openai.js';
 import { stripeWebHook } from './payments/stripeWebHook.js';
@@ -273,6 +273,7 @@ app.post('/create-checkout-session', async (req, res) => {
   })
 
   const email = ticket.payload.email
+  await markCTAClicked(email)
   try {
     if (credits) {
       var session = await checkoutActionBuyCredits(credits, email)
