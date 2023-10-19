@@ -25,7 +25,6 @@ export async function stripeWebHook(req, res) {
     switch (event.type) {
       case 'checkout.session.completed':
         console.log("CHECKOUT SESSION COMPLETED")
-        console.log(event)
         var credits = event.data.object.metadata.credits
         var email = event.data.object.metadata.email
         console.log(`PaymentIntent for ${credits} ${email} was successful!`);
@@ -35,7 +34,7 @@ export async function stripeWebHook(req, res) {
           console.log("DB Error: ", err)
         }
         break;
-      case 'payment_intent_succeeded':
+      case 'payment_intent.succeeded':
         console.log("CHECKOUT SESSION COMPLETED")
         console.log(event)
         var credits = event.data.object.metadata.credits
