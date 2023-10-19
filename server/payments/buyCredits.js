@@ -19,7 +19,7 @@ export async function checkoutActionBuyCredits(credits, userEmail) {
         submit_type: 'pay',
         metadata: {
           credits: credits,
-          userEmail: userEmail
+          email: userEmail
         },
         line_items: [
           {

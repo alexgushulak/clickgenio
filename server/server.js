@@ -43,8 +43,6 @@ var mime = {
     js: 'application/javascript'
 };
 
-
-console.log(clientId, clientSecret)
 const oAuth2Client = new OAuth2Client(
   process.env.GOOGLE_CLIENT_ID,
   process.env.GOOGLE_CLIENT_SECRET,
@@ -98,31 +96,22 @@ app.post('/user/emailOK', jsonParser, async (req, res) => {
 app.post('/auth/google', jsonParser, async (req, res) => {
   try {
     const { tokens } = await oAuth2Client.getToken(req.body.code);
-    const id_token = tokens.id_token
-    const segments = id_token.split('.');
-
-    if (segments.length !== 3) {
-      throw new Error('Not enough or too many segments');
-    }
-
-    var headerSeg = segments[0];
-    var payloadSeg = segments[1];
-    var signatureSeg = segments[2];
-
-    function base64urlDecode(str) {
-      const base64 = str.replace(/-/g, '+').replace(/_/g, '/');
-      return Buffer.from(base64, 'base64').toString();
-    }
-
-    var header = JSON.parse(base64urlDecode(headerSeg));
-    var payload = JSON.parse(base64urlDecode(payloadSeg));
-    
-    await createUserAccount(payload.email, payload.given_name)
-
-    res.json({
-      id_token,
-      payload
+    const ticket = await oAuth2Client.verifyIdToken({
+      idToken: tokens.id_token,
+      audience: process.env.GOOGLE_CLIENT_ID
     })
+
+    console.log("Ticket: ", ticket)
+
+    const data = {
+      given_name: ticket.payload.given_name,
+      picture: ticket.payload.picture,
+      id_token: tokens.id_token
+    }
+    
+    await createUserAccount(ticket.payload.email, ticket.payload.given_name)
+
+    res.json(data)
   } catch (err) {
     console.log("Login Failure: ", err)
     res.send(403)
@@ -282,7 +271,7 @@ app.post('/create-checkout-session', async (req, res) => {
   const credits = req.query.credits;
 
   if (credits) {
-    var session = await checkoutActionBuyCredits(credits, "Hello@gmail.com")
+    var session = await checkoutActionBuyCredits(credits, "alex.gushulak@gmail.com")
   } else {
     var session = await checkoutAction(imageId, sessionId)
   }
