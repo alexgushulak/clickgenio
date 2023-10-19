@@ -4,6 +4,9 @@ import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import { loadStripe } from '@stripe/stripe-js';
 import { createCreditCheckoutSession } from '../../../services/apiLayer';'../../../services/apiLayer.tsx';
+import { AuthContext } from '../../../main';
+import { useCookies } from 'react-cookie';
+import { useContext } from 'react';
 
 interface ItemWidgetProps {
     image: string;
@@ -13,6 +16,8 @@ interface ItemWidgetProps {
 }
 
 export default function ItemWidget(props: ItemWidgetProps) {
+    const [cookies, setCookie, removeCookie] = useCookies(['token', 'given_name', 'pictureURL', 'credits']);
+    const authContext = useContext(AuthContext);
 
     const boxStyle = {
       height: '400px',
@@ -41,7 +46,7 @@ export default function ItemWidget(props: ItemWidgetProps) {
     }
 
     async function handleBuyButtonClick() {
-        const response: any = await createCreditCheckoutSession(props.credits, "email")
+        const response: any = await createCreditCheckoutSession(props.credits, cookies.token)
         const sessionId = response.data.sessionId
         const stripe = await loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 

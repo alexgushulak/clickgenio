@@ -154,9 +154,9 @@ export const deductCredits = async (token: string) => {
   }
 }
 
-export const createCreditCheckoutSession = async (credits: number, email: string) => {
+export const createCreditCheckoutSession = async (credits: number, token: string) => {
   try {
-    const response = await axios.post(`${import.meta.env.VITE_APISERVER}/create-checkout-session?credits=${credits}&email=${email}`);
+    const response = await axios.post(`${import.meta.env.VITE_APISERVER}/create-checkout-session?credits=${credits}&token=${token}`);
     return response
   } catch (error) {
     console.error('Update isEmailOk Error', error);
