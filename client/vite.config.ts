@@ -2,6 +2,7 @@ import { defineConfig } from 'vite';
 import dns from 'dns'
 import react from '@vitejs/plugin-react';
 import { NodeGlobalsPolyfillPlugin } from '@esbuild-plugins/node-globals-polyfill'
+import rollupNodePolyFill from 'rollup-plugin-node-polyfills'
 
 dns.setDefaultResultOrder('verbatim')
 
@@ -25,5 +26,12 @@ export default defineConfig({
             })
         ]
     }
-}
+  },
+  build: {
+    rollupOptions: {
+        plugins: [
+            rollupNodePolyFill(),
+        ]
+    }
+  }
 });
