@@ -4,6 +4,7 @@ import { useCookies } from 'react-cookie';
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import { Buffer } from "buffer";
+globalThis.Buffer = Buffer
 
 
 const AuthContext = createContext<any>(null)
