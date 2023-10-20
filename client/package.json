@@ -21,6 +21,7 @@
     "@stripe/stripe-js": "^2.1.9",
     "@types/styled-components": "^5.1.28",
     "axios": "^1.2.1",
+    "Buffer": "^0.0.0",
     "dotenv": "^16.3.1",
     "gapi-script": "^1.2.0",
     "jwt-decode": "^3.1.2",
