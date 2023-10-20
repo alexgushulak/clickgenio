@@ -14,6 +14,7 @@ import Button from '@mui/material/Button';
 import { useCookies } from 'react-cookie';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
+import { useAuth } from '../../auth';
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -33,11 +34,11 @@ export default function HomePage2() {
     const [isLoading, setIsLoading] = useState(false);
     const [imageIsDisplayed, setImageIsDisplayed] = useState(false);
     const [imageId, setImageId] = useState("");
-    const [isEmptyTextBox, setIsEmptyTextBox] = useState(false);
     const [isIdLink, setIsIdLink] = useState(false);
     const [searchParams, setSearchParams] = useSearchParams();
     const [myImageURL, setMyImageURL] = useState('');
     const [cookies, setCookie, removeCookie] = useCookies(['token', 'given_name', 'pictureURL', 'credits']);
+    const auth = useAuth()
     
     useEffect(() => {
         if (searchParams.get('image')) {
@@ -65,6 +66,7 @@ export default function HomePage2() {
     };
   
     const onGenerateThumbnail = async () => {
+      auth.isAuthorized()
       if (thumbnailText.length <= 0) {
         toast.error("Please Describe Your Thumbnail")
         return

@@ -4,7 +4,7 @@ import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import { loadStripe } from '@stripe/stripe-js';
 import { createCreditCheckoutSession } from '../../../services/apiLayer';'../../../services/apiLayer.tsx';
-import { AuthContext } from '../../../main';
+// import { AuthContext } from '../../../main';
 import { useCookies } from 'react-cookie';
 import { useContext } from 'react';
 
@@ -17,7 +17,6 @@ interface ItemWidgetProps {
 
 export default function ItemWidget(props: ItemWidgetProps) {
     const [cookies, setCookie, removeCookie] = useCookies(['token', 'given_name', 'pictureURL', 'credits']);
-    const authContext = useContext(AuthContext);
 
     const boxStyle = {
       height: '400px',

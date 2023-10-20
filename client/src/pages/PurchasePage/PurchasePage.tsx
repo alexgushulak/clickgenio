@@ -6,18 +6,16 @@ import diamondIcon from '../../assets/diamond.webp';
 import goldIcon from '../../assets/gold.webp';
 import ironIcon from '../../assets/iron.webp';
 import Container from '@mui/material/Container';
-import { AuthContext } from '../../main';
+import { useAuth } from '../../auth';
 import { useNavigate } from "react-router-dom";
 import React, { useState, useEffect, useContext } from 'react';
 
 export default function PurchasePage() {
-  const authContext = useContext(AuthContext);
   const navigate = useNavigate();
+  const auth = useAuth();
 
   React.useEffect(() => {
-    if (authContext?.isLoggedIn == false) {
-      navigate('/')
-    }
+  
   }, [])
 
   const refundPolicyStyle = {
@@ -30,7 +28,7 @@ export default function PurchasePage() {
   }
 
   return (
-    <Container sx={{mt: '30px', mb: '30px'}}>
+    <Container sx={{mt: '30px', mb: '0px'}}>
       <Grid container spacing={4}>
         <Grid item xs={12}>
           <Box sx={refundPolicyStyle}>
