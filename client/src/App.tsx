@@ -72,9 +72,9 @@ export default function App() {
       <ResponsiveAppBar />
       <Routes>
         <Route path="/" element={<Splash />} />
-        {/* <Route path="/generate" element={<HomePage2 />} />
+        <Route path="/generate" element={<HomePage2 />} />
         <Route path="/purchase" element={<PurchasePage />} />
-        <Route path="/home" element={<HomePage />} /> */}
+        <Route path="/home" element={<HomePage />} />
       </Routes>
     </ThemeProvider>
   );

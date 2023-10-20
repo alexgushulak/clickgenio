@@ -17,7 +17,6 @@ interface ItemWidgetProps {
 
 export default function ItemWidget(props: ItemWidgetProps) {
     const [cookies, setCookie, removeCookie] = useCookies(['token', 'given_name', 'pictureURL', 'credits']);
-    const authContext = useContext(AuthContext);
 
     const boxStyle = {
       height: '400px',
