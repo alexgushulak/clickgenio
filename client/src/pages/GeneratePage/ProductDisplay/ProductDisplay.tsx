@@ -55,6 +55,7 @@ export default function ProductDisplay(props: {isIdLink: boolean, isClicked: boo
                         display: props.isClicked && !props.isLoading ? "inline-flex" : "none",
                         textAlign: "center",
                         margin: "0 10px",
+                        width: '300px',
                         bottom: '0px',
                         mt: 1,
                         fontSize: '12px',
@@ -65,7 +66,7 @@ export default function ProductDisplay(props: {isIdLink: boolean, isClicked: boo
                     onClick={props.onPurchase}
                     type="submit"
                 >
-                    <strong>Download Image</strong>
+                    <b>Download Image</b>
                 </Button>
             <IconButton
                 className="btn-hover color-9"

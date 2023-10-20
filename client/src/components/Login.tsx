@@ -16,7 +16,7 @@ import { getCredits } from '../services/apiLayer';
 export default function Login() {
     const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
     const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
-    const [credits, setCredits] = React.useState<null | number>(null);
+    const [credits, setCredits] = React.useState<null | number>(0);
     const [cookies, setCookie, removeCookie] = useCookies(['token', 'given_name', 'pictureURL', 'credits', 'isLoggedIn']);
     const navigate = useNavigate();
     const auth = useAuth()
@@ -49,6 +49,7 @@ export default function Login() {
     }
 
     const creditsStyle = {
+        display: cookies.isLoggedIn ? 'flex' : 'none',
         height: '35px',
         mr: '10px',
         padding: {xs: '0px 2px', sm: '0px 10px'},
@@ -83,6 +84,8 @@ export default function Login() {
             <Button
                 sx={{
                     width: '100px',
+                    mr: '20px',
+                    height: '40px',
                     display: cookies.isLoggedIn ? 'none' : 'flex'
                 }}
                 className="btn-hover color-12"
@@ -92,7 +95,7 @@ export default function Login() {
                 Sign in
             </Button>
                 <Chip sx={creditsStyle} label={credits + " CREDITS"} />
-                <Button variant="contained" onClick={buyTokens} sx={buttonStyle}>
+                <Button variant="contained" className="btn-hover color-2" onClick={buyTokens} sx={buttonStyle}>
                     Buy Credits
                 </Button>
                 <Tooltip title="" sx={{display: 'flex'}}>

@@ -188,9 +188,9 @@ export default function GeneratePage() {
           </Item>
           <Item>
             <Box>
-            Want to see your face in the thumbnail like these photos?
+            <b style={{'fontSize': '20px', 'width': '500px', 'margin': '0 auto'}}>Create AI Thumbnails using your AI Avatar:</b>
             <Button 
-              sx={{margin: '10px'}}
+              sx={{margin: '10px auto', width: '90%'}}
               onClick={onEarlyAccess}
               variant="contained" >
             Register for Early Access

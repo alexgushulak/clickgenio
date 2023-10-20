@@ -29,13 +29,13 @@ export default function GalleryComponent() {
 
     return (
         <div>
-            <Typography variant='h4' sx={{mb: '0px'}}>Recent Thumbnails</Typography>
-            <ImageList sx={{ display: 'inline-block', width: '100%', height: '80vh' }}>
-            <Grid container spacing={2}>
-            {myImageData.map((item: any) => (
-                <YouTubeThumbnail key={item.previewUrl} imageSrc={item.previewUrl} title={item.userPrompt} viewCount={item.viewCount} />
-            ))}
-            </Grid>
+            <Typography variant='h4' sx={{mb: '0px'}}><b>Community Thumbnails</b></Typography>
+            <ImageList sx={{ display: 'inline-block', width: '100%', height: '80vh'}}>
+                <Grid container spacing={2}>
+                {myImageData.map((item: any) => (
+                    <YouTubeThumbnail key={item.previewUrl} imageSrc={item.previewUrl} title={item.userPrompt} viewCount={item.viewCount} />
+                ))}
+                </Grid>
             </ImageList>
         </div>
     )
