@@ -23,6 +23,12 @@ function AuthProvider({children}: any) {
     )
 }
 
+// const AuthWrapper = () => {
+//     return isExpired(localStorage.getItem('token')
+//       ? <Navigate to="/login" replace />
+//       : <Outlet />;
+//   };
+
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
     <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
         <CookiesProvider defaultSetOptions={{ path: '/' }} />

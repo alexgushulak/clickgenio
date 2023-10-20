@@ -28,7 +28,7 @@ export default function PromptInput(props: {thumbnailText: string, handleTextbar
               sx={{
                   display: props.isLoading ? "none" : "block",
                   textAlign: "center",
-                  fontSize: '18px',
+                  fontSize: '12px',
                   margin: "0 auto",
                   width: '100%',
                   mt: 1,

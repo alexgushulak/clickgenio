@@ -46,9 +46,14 @@ const openai = new OpenAI({
 });
 
 export async function promptEngineChatGPT(user_prompt, yt_thumbnail) {
-  const completion = await openai.chat.completions.create({
-    messages: [{ role: "system", content: prompt+yt_thumbnail+user_prompt }],
-    model: "gpt-3.5-turbo",
-  });
-  return completion.choices[0].message.content
+  try {
+    const completion = await openai.chat.completions.create({
+      messages: [{ role: "system", content: prompt+yt_thumbnail+user_prompt }],
+      model: "gpt-3.5-turbo",
+    });
+    return completion.choices[0].message.content
+  } catch (err) {
+    console.log("ChatGPT is broken", err)
+    return user_prompt
+  }
 }

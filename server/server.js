@@ -23,7 +23,7 @@ app.use(cors());
 const port = 5001;
 const jsonParser = bodyParser.json();
 const CACHE_REFRESH_TIME_IN_MINS = 480;
-const NUMBER_OF_IMAGES_TO_CACHE = 50;
+const NUMBER_OF_IMAGES_TO_CACHE = 1;
 const imageCacheJob = new ImagePreviewCacheJob(CACHE_REFRESH_TIME_IN_MINS, NUMBER_OF_IMAGES_TO_CACHE);
 imageCacheJob.start()
 
@@ -93,6 +93,7 @@ app.post('/user/emailOK', jsonParser, async (req, res) => {
 
 app.post('/auth/google', jsonParser, async (req, res) => {
   try {
+    console.log("Trying to authorize with google")
     const { tokens } = await oAuth2Client.getToken(req.body.code);
     const ticket = await oAuth2Client.verifyIdToken({
       idToken: tokens.id_token,
@@ -132,6 +133,7 @@ app.post('/metadata', jsonParser, async (req, res) => {
 })
 
 app.post('/generateImage', jsonParser, async (req, res) => {
+    console.log("Generate Image Route")
     const thumbnail_image_text = req.body.message;
     const generation_steps = 40;
   
@@ -146,12 +148,14 @@ app.post('/generateImage', jsonParser, async (req, res) => {
         // Save images on S3 and upload data to the database
         imageEngine.saveImagesOnS3();
         await uploadImageDataToDB(imageEngine.ID, imageEngine.userPrompt, imageEngine.stableDiffusionPrompt);
+      } else {
+        console.error("No base 64 image")
       }
       // Convert to base64 and send the response
-      const imageBase64 = await imageEngine.convertToBase64();
+      // const imageBase64 = await imageEngine.convertToBase64();
 
       res.status(200).send({
-        imageBase64: imageBase64,
+        imageBase64: imageEngine.base64,
         imageId: imageEngine.ID
       });
     } catch (err) {
@@ -199,6 +203,7 @@ app.get('/gallery', jsonParser, async (req, res) => {
 })
 
 app.get('/download/:imagetype', jsonParser, async (req, res) => {
+    console.log("Inside Download Route")
     const uuidRegex = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
     if (!uuidRegex.test(req.query.id)) {
         res.status(400).send({ message: 'Invalid UUID format' });
@@ -262,6 +267,8 @@ app.post('/updateImageData', async (req, res) => {
 })
 
 app.post('/create-checkout-session', async (req, res) => {
+
+  console.log("Trying to create a checkout session")
   const imageId = req.query.imgid;
   const sessionId = "FAKE_ID_1000";
   const credits = req.query.credits;
@@ -335,7 +342,7 @@ app.get('/user/get-credits', (req, res) => {
 
 app.post('/user/deduct-credits', async (req, res) => {
   const id_token = req.query.token;
-
+  console.log("Attempting to deduct credits")
   const ticket = await oAuth2Client.verifyIdToken({
     idToken: id_token,
     audience: process.env.GOOGLE_CLIENT_ID
@@ -349,7 +356,7 @@ app.post('/user/deduct-credits', async (req, res) => {
     console.log("Deduct Credits DB Error: ", err)
   }
 
-  res.send(200)
+  res.sendStatus(200)
 });
 
 app.get('*', function (req, res) {

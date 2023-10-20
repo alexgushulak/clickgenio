@@ -49,7 +49,6 @@ export default function ProductDisplay(props: {isIdLink: boolean, isClicked: boo
                 sm: "row",
                 md: "row" }
         }}>
-            <form action={`${import.meta.env.VITE_APISERVER}/create-checkout-session/?imgid=${props.imageId}`} method="POST">
                 <Button
                     className="btn-hover color-1"
                     sx={{
@@ -68,7 +67,6 @@ export default function ProductDisplay(props: {isIdLink: boolean, isClicked: boo
                 >
                     <strong>Download Image</strong>
                 </Button>
-            </form>
             <IconButton
                 className="btn-hover color-9"
                 sx={{
