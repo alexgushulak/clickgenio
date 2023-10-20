@@ -80,9 +80,8 @@ const submitDownloadData = async (thumbnailText: string) => {
         Accept: 'application/json',
       }
     });
-    console.log("metadata successful")
-  } catch (error) {
-    console.error("metadata error")
+  } catch (err) {
+    console.error("submitDownloadData Error", err)
   }
 }
 
@@ -96,9 +95,8 @@ const submitBuyData = async (thumbnailText: string) => {
         Accept: 'application/json',
       }
     });
-    console.log("metadata successful")
-  } catch (error) {
-    console.error("metadata error")
+  } catch (err) {
+    console.error("submitBuyData Error: ", err)
   }
 }
 
@@ -123,7 +121,6 @@ export const getImageCount = async () => {
 
 export const updateIsEmailOk = async (token: string) => {
   try {
-    console.log(token)
     const data = {token: token}
     const response = await axios.post(`${import.meta.env.VITE_APISERVER}/user/emailOK`, data);
     return response.data

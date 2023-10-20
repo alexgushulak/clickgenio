@@ -6,7 +6,7 @@ import Container from '@mui/material/Container';
 import CachedIcon from '@mui/icons-material/Cached';
 import DownloadIcon from '@mui/icons-material/Download';
 import Stack from '@mui/material/Stack';
-import './style.css';
+import '../../../style.css';
 import LoadingPreview from './LoadingPreview';
 
 export default function ProductDisplay(props: {isIdLink: boolean, isClicked: boolean, isLoading: boolean, imageUrl: string, imageId: string, onRefreshThumbnail: any, onDownloadWatermark: any, onPurchase: any}) {

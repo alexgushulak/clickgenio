@@ -12,9 +12,9 @@ import "./App.css";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import PurchasePage from "./pages/PurchasePage/PurchasePage";
 import HomePage from "./pages/HomePage/HomePage";
-import HomePage2 from './pages/HomePage2/HomePage2';
-import ResponsiveAppBar from "./pages/ResponsiveAppBar";
-import Splash from "./pages/Splash/Splash";
+import GeneratePage from './pages/GeneratePage/GeneratePage';
+import ResponsiveAppBar from "./components/ResponsiveAppBar";
+import SplashPage from "./pages/SplashPage/SplashPage";
 import { gapi } from 'gapi-script';
 
 
@@ -71,8 +71,8 @@ export default function App() {
       <CssBaseline />
       <ResponsiveAppBar />
       <Routes>
-        <Route path="/" element={<Splash />} />
-        <Route path="/generate" element={<HomePage2 />} />
+        <Route path="/" element={<SplashPage />} />
+        <Route path="/generate" element={<GeneratePage />} />
         <Route path="/purchase" element={<PurchasePage />} />
         <Route path="/home" element={<HomePage />} />
       </Routes>

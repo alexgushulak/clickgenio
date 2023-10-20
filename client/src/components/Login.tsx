@@ -1,7 +1,7 @@
 import Button from '@mui/material/Button';
 import { Cookies, useCookies } from 'react-cookie';
 import React, { useState, useEffect } from 'react';
-import Box from '@mui/material/Box';
+import Chip from '@mui/material/Chip';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
@@ -38,6 +38,24 @@ export default function Login() {
         handleCloseUserMenu()
     }
 
+    const buttonStyle = {
+        cursor: 'pointer',
+        display: cookies.isLoggedIn ? 'flex' : 'none',
+        marginRight: '10px',
+        height: '35px',
+        fontSize: {xs: '12px', sm: '16px'},
+        padding: {xs: '0px 10px', sm: '10px 20px'},
+        mt: '2px'
+    }
+
+    const creditsStyle = {
+        height: '35px',
+        mr: '10px',
+        padding: {xs: '0px 2px', sm: '0px 10px'},
+        fontSize: {xs: '12px', sm: '16px'},
+        mt: '2px'
+    }
+
     useEffect(() => {
         if (!auth.isAuthorized()) {
             navigate('/')
@@ -61,7 +79,7 @@ export default function Login() {
       
     
     return (
-        <div id="signInButton" style={{float: 'right'}}>
+        <div id="signInButton" style={{display: 'flex', float: 'right', flexGrow: -1}}>
             <Button
                 sx={{
                     width: '100px',
@@ -73,14 +91,11 @@ export default function Login() {
             >
                 Sign in
             </Button>
-            <Box sx={{ display: cookies.isLoggedIn ? 'flex' : 'none'}}>
-                <Button variant="outlined" sx={{cursor: 'default', display: cookies.isLoggedIn ? 'flex' : 'none', marginRight: '20px'}}>
-                    Credits: {credits}
-                </Button>
-                <Button variant="contained" onClick={buyTokens} sx={{display: cookies.isLoggedIn ? 'flex' : 'none', marginRight: '20px'}}>
+                <Chip sx={creditsStyle} label={credits + " CREDITS"} />
+                <Button variant="contained" onClick={buyTokens} sx={buttonStyle}>
                     Buy Credits
                 </Button>
-                <Tooltip title="">
+                <Tooltip title="" sx={{display: 'flex'}}>
                     <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                         <Avatar alt="AI" imgProps={{ referrerPolicy: "no-referrer"}} src={cookies.pictureURL} />
                     </IconButton>
@@ -108,7 +123,6 @@ export default function Login() {
                         <Typography textAlign="center">Logout</Typography>
                     </MenuItem>
                 </Menu>
-            </Box>
         </div>
     )
 

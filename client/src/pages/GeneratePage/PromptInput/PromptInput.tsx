@@ -1,7 +1,6 @@
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import CircularProgress from "@mui/material/CircularProgress";
-import CustomizedSnackbars from '../SnackBar';
 
 
 export default function PromptInput(props: {thumbnailText: string, handleTextbarChange: any, handleKeyPress: any, onGenerateThumbnail: any, isLoading: boolean}) {

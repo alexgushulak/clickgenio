@@ -4,7 +4,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import logo from '../assets/logo.png';
-import Login from '../components/Login';
+import Login from './Login';
 import Box from '@mui/material/Box';
 
 export default function ResponsiveAppBar() {
@@ -12,9 +12,9 @@ export default function ResponsiveAppBar() {
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
-        <Toolbar sx={{height: '64px'}}>
+        <Toolbar sx={{height: '64px', display: {xs: 'inline-flex', sm: 'inline-flex', md: 'flex'}}}>
         <img src={logo} style={{'height': '50px', 'borderRadius': '13px'}}></img>
-          <Container sx={{
+          <Container maxWidth="xl" sx={{
             display: { xs: 'none', md: 'inline-flex' },
             ml: 'none',
             margin: '0'
@@ -34,12 +34,15 @@ export default function ResponsiveAppBar() {
                 color: 'white',
                 textDecoration: 'none',
               }}
-            > CLICKGEN.IO
+            >
+              CLICKGEN.IO
             </Typography>
             <Login />
           </Container>
           <Container sx={{
-            display: { xs: 'block', md: 'none' },
+            display: { xs: 'inline-flex', md: 'none' },
+            mt: '20px',
+            mb: '20px'
           }}>
             <Login />
           </Container>

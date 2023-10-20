@@ -25,7 +25,7 @@ const Item = styled(Paper)(({ theme }) => ({
     color: theme.palette.text.secondary,
 }));
 
-export default function HomePage2() {
+export default function GeneratePage() {
     const engineId = import.meta.env.VITE_ENGINEID
     const apiHost = import.meta.env.VITE_APIHOST
     const apiKey = import.meta.env.VITE_APIKEY
