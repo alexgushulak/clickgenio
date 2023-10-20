@@ -12,7 +12,6 @@ import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { Routes, Route } from "react-router-dom";
 import { generateImage, submitIPData } from "../../services/apiLayer";
 import RainbowTesla from "../../assets/rainbow_tesla.png";
-import Tsunami from "../../assets/tsunami.png";
 import CircularProgress from "@mui/material/CircularProgress";
 import "../../App.css";
 
@@ -212,7 +211,6 @@ export default function App() {
             margin: '0 auto',
             padding: '10px'
           }}
-          src={Tsunami}
         />
       </Container>
     </div>

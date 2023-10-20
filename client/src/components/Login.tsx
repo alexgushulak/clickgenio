@@ -95,7 +95,7 @@ export default function Login() {
         };
 
         fetchData()
-    }, [setCookie, removeCookie, cookies.credits])
+    }, [setCookie, removeCookie])
       
     
     return (
