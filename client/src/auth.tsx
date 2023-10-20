@@ -34,7 +34,6 @@ export const AuthProvider = ({children}: any) => {
         const segments = cookies.token.split('.');
         var payloadSeg = segments[1];
         var payload = JSON.parse(_base64Decode(payloadSeg));
-        console.log(payload)
         if (payload.exp*1000 < Date.now()) {
             setCookie('isLoggedIn', false)
             navigate('/')

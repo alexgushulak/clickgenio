@@ -57,7 +57,7 @@ export default function Login() {
 
         fetchData()
 
-    }, [setCookie, removeCookie, cookies.isLoggedIn, cookies.credits])
+    }, [cookies.credits])
       
     
     return (
