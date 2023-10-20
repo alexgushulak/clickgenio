@@ -149,15 +149,15 @@ export class ImageEngine {
     }
 
     convertToBase64 = async () => {
-        try {
-          const data = await fs.promises.readFile(this.fullResolutionFilePath);
-          const imageBuffer = Buffer.from(data);
-          this.base64 = imageBuffer.toString('base64');
-          console.log("Base64 Conversion Completed")
-          return this.base64
-        } catch (err) {
-          console.error("Convert To Base64 Error: ", err)
-        }
+      try {
+        const data = await fs.promises.readFile(this.watermarkedFilePath);
+        const imageBuffer = Buffer.from(data);
+        this.base64_watermark = imageBuffer.toString('base64');
+        console.log("Base64 Conversion Completed")
+        return this.base64_watermark
+      } catch (err) {
+        console.error("Convert To Base64 Error: ", err)
+      }
     }
     
 
