@@ -19,6 +19,7 @@ export default function Login() {
     const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
     const [credits, setCredits] = React.useState<null | number>(0);
     const [cookies, setCookie, removeCookie] = useCookies(['token', 'given_name', 'pictureURL', 'credits', 'isLoggedIn']);
+    const [isLoading, setIsLoading ] = React.useState<boolean>(true);
     const navigate = useNavigate();
     const auth = useAuth()
 
@@ -78,6 +79,8 @@ export default function Login() {
                     const response = await getCredits(cookies.token);
                     setCredits(response.credits);
                     setCookie('credits', response.credits)
+                    setIsLoading(false)
+
                 } catch (error) {
                     console.error('Error fetching credits:', error);
                 }
@@ -91,63 +94,69 @@ export default function Login() {
         }
     }, [cookies.credits])
       
-    
     return (
-        <div id="signInButton" style={{display: 'flex', float: 'right', flexGrow: -1}}>
-            <Button
+        <div id="signInButton" style={{ display: 'flex', float: 'right', flexGrow: -1 }}>
+            <>
+              <Button
                 sx={{
-                    width: '100px',
-                    mr: '20px',
-                    height: '40px',
-                    display: cookies.isLoggedIn ? 'none' : 'flex'
+                  width: '100px',
+                  mr: '20px',
+                  height: '40px',
+                  display: cookies.isLoggedIn ? 'none' : 'flex'
                 }}
                 className="btn-hover color-12"
                 variant='contained'
                 onClick={() => auth.login()}
-            >
+              >
                 Sign in
-            </Button>
-            <Button variant="contained" className="btn-hover color-2" onClick={buyTokens} sx={buttonStyle2}>
+              </Button>
+              <Button variant="contained" className="btn-hover color-2" onClick={buyTokens} sx={buttonStyle2}>
                 Pricing
-            </Button>
-                <Box sx={{display: cookies.isLoggedIn ? 'flex' : 'none'}}>
-                    <Chip sx={creditsStyle} label={credits + " CREDITS"} />
-                    <Button variant="contained" className="btn-hover color-2" onClick={buyTokens} sx={buttonStyle}>
-                        Buy Credits
-                    </Button>
-                    <Tooltip title="" sx={{
-                    }}>
-                        <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                            <Avatar alt="AI" imgProps={{ referrerPolicy: "no-referrer"}} src={cookies.pictureURL} />
-                        </IconButton>
-                    </Tooltip>
-                    <Menu
-                    sx={{ 
-                        mt: '45px',
-                    }}
-                    id="menu-appbar"
-                    anchorEl={anchorElUser}
-                    anchorOrigin={{
-                        vertical: 'top',
-                        horizontal: 'right',
-                    }}
-                    keepMounted
-                    transformOrigin={{
-                        vertical: 'top',
-                        horizontal: 'right',
-                    }}
-                    open={Boolean(anchorElUser)}
-                    onClose={handleCloseUserMenu}
-                    >
-                        <MenuItem key="1">
-                            <Typography textAlign="center">Support: clickgenio11@gmail.com</Typography>
-                        </MenuItem>
-                        <MenuItem key="2" onClick={handleLogout}>
-                            <Typography textAlign="center">Logout</Typography>
-                        </MenuItem>
-                    </Menu>
-                </Box>
+              </Button>
+              <Box sx={{ display: cookies.isLoggedIn ? 'flex' : 'none' }}>
+              {isLoading ? (
+                <> {/* Render nothing */}
+                </>
+                ) : (
+                <Chip sx={creditsStyle} label={credits + " CREDITS"} />
+                )}
+                <Button variant="contained" className="btn-hover color-2" onClick={buyTokens} sx={buttonStyle}>
+                  Buy Credits
+                </Button>
+                <Tooltip title="" sx={{}}>
+                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                    <Avatar alt="AI" imgProps={{ referrerPolicy: "no-referrer" }} src={cookies.pictureURL} />
+                  </IconButton>
+                </Tooltip>
+                <Menu
+                  sx={{
+                    mt: '45px',
+                  }}
+                  id="menu-appbar"
+                  anchorEl={anchorElUser}
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  open={Boolean(anchorElUser)}
+                  onClose={handleCloseUserMenu}
+                >
+                  <MenuItem key="1">
+                    <Typography textAlign="center">Support: clickgenio11@gmail.com</Typography>
+                  </MenuItem>
+                  <MenuItem key="2" onClick={handleLogout}>
+                    <Typography textAlign="center">Logout</Typography>
+                  </MenuItem>
+                </Menu>
+              </Box>
+            </>
         </div>
-    )
+      );
+      
 
 }

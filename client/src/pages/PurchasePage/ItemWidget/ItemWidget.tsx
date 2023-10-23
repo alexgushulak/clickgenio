@@ -7,6 +7,7 @@ import { createCreditCheckoutSession } from '../../../services/apiLayer';'../../
 // import { AuthContext } from '../../../main';
 import { useCookies } from 'react-cookie';
 import { useContext } from 'react';
+import toast, { Toaster } from 'react-hot-toast';
 
 interface ItemWidgetProps {
     image: string;
@@ -32,7 +33,7 @@ export default function ItemWidget(props: ItemWidgetProps) {
     }
 
     const buttonStyle = {
-        width: '130px',
+        width: '180px',
         fontSize: '20px',
         margin: '20px 0px'
     }
@@ -45,6 +46,12 @@ export default function ItemWidget(props: ItemWidgetProps) {
     }
 
     async function handleBuyButtonClick() {
+
+        if (!cookies.token) {
+            toast.error("Please Login To Purchase");
+            return;
+        }
+
         const response: any = await createCreditCheckoutSession(props.credits, cookies.token)
         const sessionId = response.data.sessionId
         const stripe = await loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
@@ -70,9 +77,10 @@ export default function ItemWidget(props: ItemWidgetProps) {
                         {props.credits} THUMBNAILS
                     </strong>
                 </Typography>
-                <Button variant="contained" sx={buttonStyle} onClick={handleBuyButtonClick}>${props.price}</Button>
+                <Button variant="contained" sx={buttonStyle} onClick={handleBuyButtonClick}>Buy for ${props.price}</Button>
                 <Typography variant="body1">${(props.price/props.credits).toFixed(2)} per Thumbnail</Typography>
             </Box>
+            <Toaster />
         </Grid>
     );
 }
