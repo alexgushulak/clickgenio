@@ -52,7 +52,7 @@ export default function App() {
     setIsLoading(true);
     const textToUse = useFinalText && thumbnailText !== "" ? finalText : thumbnailText;
     await submitIPData(textToUse);
-    const my_imageId = await generateImage(textToUse, apiHost, engineId, apiKey, setImageUrl);
+    const my_imageId = await generateImage(textToUse, apiHost, engineId, apiKey, 'token', setImageUrl);
     setImageId(my_imageId)
     setImageDownloadUrl(`${import.meta.env.VITE_APISERVER}/download/?id=${my_imageId}`)
     setIsLoading(false);
