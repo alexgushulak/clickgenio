@@ -92,7 +92,7 @@ export default function Login() {
         } else {
             fetchData()
         }
-    }, [cookies.credits])
+    }, [])
       
     return (
         <div id="signInButton" style={{ display: 'flex', float: 'right', flexGrow: -1 }}>
@@ -118,7 +118,7 @@ export default function Login() {
                 <> {/* Render nothing */}
                 </>
                 ) : (
-                <Chip sx={creditsStyle} label={credits + " CREDITS"} />
+                <Chip sx={creditsStyle} label={cookies.credits + " CREDITS"} />
                 )}
                 <Button variant="contained" className="btn-hover color-2" onClick={buyTokens} sx={buttonStyle}>
                   Buy Credits

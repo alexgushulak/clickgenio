@@ -89,6 +89,7 @@ export default function GeneratePage() {
       setIsIdLink(false);
       setImageIsDisplayed(true);
       setIsLoading(true);
+      setCookie('credits', cookies.credits-1)
       await submitThumbnailData(thumbnailText);
       const response = await generateImage(thumbnailText, apiHost, engineId, apiKey, cookies.token, setImageUrl);
       if (response.message == "Insufficient Credits") {
@@ -103,27 +104,7 @@ export default function GeneratePage() {
     };
 
     const onRefreshThumbnail = async () => {
-      const response = await getCredits(cookies.token)
-      if (response.credits <= 0) {
-        toast.error("Please Purchase More Credits →")
-        return
-      }
-
-      const creditResponse: any = await deductCredits(cookies.token)
-      if (creditResponse.success != 'true') {
-        toast.error("Could not deduct credits")
-        return
-      } else {
-        setCookie('credits', response.credits-1)
-      }
-
-      setIsIdLink(false);
-      setImageIsDisplayed(true);
-      setIsLoading(true);
-      await submitIPData(thumbnailText);
-      const my_imageId = await generateImage(thumbnailText, apiHost, engineId, apiKey, cookies.token, setImageUrl);
-      setImageId(my_imageId)
-      setIsLoading(false);
+      onGenerateThumbnail()
     };
 
     const onEarlyAccess = async () => {
