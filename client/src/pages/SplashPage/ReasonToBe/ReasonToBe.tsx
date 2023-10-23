@@ -47,7 +47,7 @@ export default function ReasonToBe() {
             </Grid>
             <Grid item md={12} sx={itemContainer}>
                 <LocalFireDepartmentIcon sx={iconStyle}/>
-                <Typography variant='body1' sx={descriptionText}>Guaranteed to attract viewers to your content</Typography>
+                <Typography variant='body1' sx={descriptionText}>Create thumbnails that will attract viewers to your videos</Typography>
             </Grid>
             <Grid item md={12} sx={itemContainer}>
                 <ElectricBoltIcon sx={iconStyle} />
