@@ -21,16 +21,24 @@ const updateImageData = async (id: string, updateType: "download" | "purchase") 
   }
 }
 
-const generateImage = async (thumbnailText: string, apiHost: string, engineId: string, apiKey: string, setImageUrl: (url: string) => void) => {
+const generateImage = async (thumbnailText: string, apiHost: string, engineId: string, apiKey: string, token: string, setImageUrl: (url: string) => void) => {
   try {
     const response = await axios.post(`${import.meta.env.VITE_APISERVER}/generateImage`, {
-      message: thumbnailText
+      message: thumbnailText,
+      token: token
     }, {
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',
       }
     });
+
+    if (response.data.message == "Not Authorized") {
+      return response.data;
+    } else if (response.data.message == "Insufficient Credits") {
+      return response.data;
+    }
+
     const image = decodeImage(response.data.imageBase64);
     setImageUrl(URL.createObjectURL(image));
     console.log("Generate Image Successful");

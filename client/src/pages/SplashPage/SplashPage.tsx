@@ -11,13 +11,15 @@ import '@fontsource/roboto/700.css';
 import Button from '@mui/material/Button'
 import { createTheme } from '@mui/material/styles';
 import GalleryGrid from './GalleryGrid/GalleryGrid';
+import CardMedia from '@mui/material/CardMedia';
 import { useNavigate } from "react-router-dom";
 import ReasonToBe from './ReasonToBe/ReasonToBe';
 import { getImageCount } from '../../services/apiLayer';
 import React from 'react';
 import { useCookies } from 'react-cookie';
-import { useAuth } from '../../auth';
+import { useAuth } from '../../context/authContext';
 import '../../style.css'
+import video from '../../assets/splashvid.mp4';
 
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -162,7 +164,14 @@ export default function SplashPage() {
                 </Grid>
                 <Grid item sm={12} md={7} sx={{margin: '0 auto'}}>
                     <Container sx={{width: '100%'}}>
-                        <Typography sx={{"fontSize": '22px'}}>
+                        <CardMedia
+                            sx={{mb: '40px'}}
+                            component='video'
+                            src={video}
+                            autoPlay
+                            controls
+                        />
+                        <Typography sx={{"fontSize": '22px', mb: '20px'}}>
                             Over <div style={numberOfThumbnailsStyle}>{numberOfThumbnailsCreated} Thumbnails</div> Created!
                         </Typography>
                         <GalleryGrid />

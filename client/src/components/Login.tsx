@@ -2,6 +2,7 @@ import Button from '@mui/material/Button';
 import { Cookies, useCookies } from 'react-cookie';
 import React, { useState, useEffect } from 'react';
 import Chip from '@mui/material/Chip';
+import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
@@ -9,7 +10,7 @@ import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import { useNavigate } from "react-router-dom";
-import { useAuth } from '../auth';
+import { useAuth } from '../context/authContext';
 import { getCredits } from '../services/apiLayer';
 
 
@@ -35,17 +36,30 @@ export default function Login() {
 
     const handleLogout = () => {
         auth.logout()
+        removeCookie('token')
+        removeCookie('pictureURL')
+        removeCookie('credits')
         handleCloseUserMenu()
     }
 
     const buttonStyle = {
         cursor: 'pointer',
-        display: cookies.isLoggedIn ? 'flex' : 'none',
         marginRight: '10px',
+        display: cookies.isLoggedIn ? 'flex' : 'none',
         height: '35px',
         fontSize: {xs: '12px', sm: '16px'},
         padding: {xs: '0px 10px', sm: '10px 20px'},
         mt: '2px'
+    }
+
+    const buttonStyle2 = {
+        cursor: 'pointer',
+        marginRight: '10px',
+        display: cookies.isLoggedIn ? 'none' : 'flex',
+        height: '40px',
+        fontSize: {xs: '12px', sm: '16px'},
+        padding: {xs: '0px 10px', sm: '10px 20px'},
+        mt: '0px'
     }
 
     const creditsStyle = {
@@ -58,10 +72,6 @@ export default function Login() {
     }
 
     useEffect(() => {
-        if (!auth.isAuthorized()) {
-            navigate('/')
-        }
-        
         const fetchData = async () => {
             if (cookies.token) {
                 try {
@@ -74,8 +84,11 @@ export default function Login() {
             }
         };
 
-        fetchData()
-
+        if (!auth.isAuthorized()) {
+            navigate('/')
+        } else {
+            fetchData()
+        }
     }, [cookies.credits])
       
     
@@ -94,38 +107,46 @@ export default function Login() {
             >
                 Sign in
             </Button>
-                <Chip sx={creditsStyle} label={credits + " CREDITS"} />
-                <Button variant="contained" className="btn-hover color-2" onClick={buyTokens} sx={buttonStyle}>
-                    Buy Credits
-                </Button>
-                <Tooltip title="" sx={{display: 'flex'}}>
-                    <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                        <Avatar alt="AI" imgProps={{ referrerPolicy: "no-referrer"}} src={cookies.pictureURL} />
-                    </IconButton>
-                </Tooltip>
-                <Menu
-                sx={{ mt: '45px' }}
-                id="menu-appbar"
-                anchorEl={anchorElUser}
-                anchorOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                }}
-                keepMounted
-                transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                }}
-                open={Boolean(anchorElUser)}
-                onClose={handleCloseUserMenu}
-                >
-                    <MenuItem key="1">
-                        <Typography textAlign="center">Support: clickgenio11@gmail.com</Typography>
-                    </MenuItem>
-                    <MenuItem key="2" onClick={handleLogout}>
-                        <Typography textAlign="center">Logout</Typography>
-                    </MenuItem>
-                </Menu>
+            <Button variant="contained" className="btn-hover color-2" onClick={buyTokens} sx={buttonStyle2}>
+                Pricing
+            </Button>
+                <Box sx={{display: cookies.isLoggedIn ? 'flex' : 'none'}}>
+                    <Chip sx={creditsStyle} label={credits + " CREDITS"} />
+                    <Button variant="contained" className="btn-hover color-2" onClick={buyTokens} sx={buttonStyle}>
+                        Buy Credits
+                    </Button>
+                    <Tooltip title="" sx={{
+                    }}>
+                        <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                            <Avatar alt="AI" imgProps={{ referrerPolicy: "no-referrer"}} src={cookies.pictureURL} />
+                        </IconButton>
+                    </Tooltip>
+                    <Menu
+                    sx={{ 
+                        mt: '45px',
+                    }}
+                    id="menu-appbar"
+                    anchorEl={anchorElUser}
+                    anchorOrigin={{
+                        vertical: 'top',
+                        horizontal: 'right',
+                    }}
+                    keepMounted
+                    transformOrigin={{
+                        vertical: 'top',
+                        horizontal: 'right',
+                    }}
+                    open={Boolean(anchorElUser)}
+                    onClose={handleCloseUserMenu}
+                    >
+                        <MenuItem key="1">
+                            <Typography textAlign="center">Support: clickgenio11@gmail.com</Typography>
+                        </MenuItem>
+                        <MenuItem key="2" onClick={handleLogout}>
+                            <Typography textAlign="center">Logout</Typography>
+                        </MenuItem>
+                    </Menu>
+                </Box>
         </div>
     )
 

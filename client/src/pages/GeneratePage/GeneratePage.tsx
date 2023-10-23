@@ -6,7 +6,7 @@ import { generateImage, submitDownloadData, submitIPData, submitThumbnailData, s
 import ProductDisplay from "./ProductDisplay/ProductDisplay";
 import TipsAndTricks from "./TipsAndTricks/TipsAndTricks";
 import PromptInput from "./PromptInput/PromptInput";
-import GalleryComponent from "../GalleryComponent/GalleryComponent";
+import GalleryComponent from "../../components/GalleryComponent";
 import { useSearchParams } from 'react-router-dom'
 import toast, { Toaster } from 'react-hot-toast';
 import words from 'profane-words';
@@ -14,7 +14,7 @@ import Button from '@mui/material/Button';
 import { useCookies } from 'react-cookie';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
-import { useAuth } from '../../auth';
+import { useAuth } from '../../context/authContext';
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -42,7 +42,7 @@ export default function GeneratePage() {
     
     useEffect(() => {
         if (searchParams.get('image')) {
-            setImageUrl(`${import.meta.env.VITE_APISERVER}/download/watermark?id=${searchParams.get('image')}`)
+            setImageUrl(`${import.meta.env.VITE_APISERVER}/download/full?id=${searchParams.get('image')}`)
             setImageId(`${searchParams.get('image')}`)
             setIsIdLink(true)
             setImageIsDisplayed(true)
@@ -85,28 +85,20 @@ export default function GeneratePage() {
         return
       }
 
-      const response = await getCredits(cookies.token)
-      if (response.credits <= 0) {
-        toast.error("Please Purchase More Credits →")
-        return
-      }
-
-      const creditResponse: any = await deductCredits(cookies.token)
-      if (creditResponse.success != 'true') {
-        toast.error("Could not deduct credits")
-        return
-      } else {
-        setCookie('credits', response.credits-1)
-      }
-
       toast.success('Thumbnail Generating');
       setIsIdLink(false);
       setImageIsDisplayed(true);
       setIsLoading(true);
       await submitThumbnailData(thumbnailText);
-      const my_imageId = await generateImage(thumbnailText, apiHost, engineId, apiKey, setImageUrl);
-      setImageId(my_imageId)
-      setSearchParams({"image": my_imageId})
+      const response = await generateImage(thumbnailText, apiHost, engineId, apiKey, cookies.token, setImageUrl);
+      if (response.message == "Insufficient Credits") {
+        toast.error("Please Purchase More Credits -->")
+      } else if (response.message == "Not Authorized" ) {
+        toast.error("Please Try Signing in Again")
+      } else {
+        setImageId(response)
+        setSearchParams({"image": response})
+      }
       setIsLoading(false);
     };
 
@@ -129,7 +121,7 @@ export default function GeneratePage() {
       setImageIsDisplayed(true);
       setIsLoading(true);
       await submitIPData(thumbnailText);
-      const my_imageId = await generateImage(thumbnailText, apiHost, engineId, apiKey, setImageUrl);
+      const my_imageId = await generateImage(thumbnailText, apiHost, engineId, apiKey, cookies.token, setImageUrl);
       setImageId(my_imageId)
       setIsLoading(false);
     };

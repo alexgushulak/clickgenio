@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from 'react'
+import React, { createContext, useContext, useState } from 'react'
 import { useGoogleLogin } from '@react-oauth/google';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
@@ -58,6 +58,13 @@ export const AuthProvider = ({children}: any) => {
         setCookie('isLoggedIn', false)
         navigate('/')
     }
+
+    React.useEffect(() => {
+        if (!cookies.token) {
+            setCookie('isLoggedIn', false)
+            navigate('/')
+        }
+    }, [cookies])
 
     return (
         <AuthContext.Provider value={{ login, logout, isAuthorized }}>

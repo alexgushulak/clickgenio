@@ -5,7 +5,7 @@ import './index.css'
 import { BrowserRouter as Router } from 'react-router-dom'
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { CookiesProvider } from 'react-cookie';
-import { AuthProvider } from './auth';
+import { AuthProvider } from './context/authContext';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
     <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>

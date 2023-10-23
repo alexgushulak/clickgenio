@@ -15,6 +15,7 @@ import HomePage from "./pages/HomePage/HomePage";
 import GeneratePage from './pages/GeneratePage/GeneratePage';
 import ResponsiveAppBar from "./components/ResponsiveAppBar";
 import SplashPage from "./pages/SplashPage/SplashPage";
+import ImageEditor from "./pages/ImageEditor/ImageEditor";
 import { gapi } from 'gapi-script';
 
 
@@ -75,6 +76,7 @@ export default function App() {
         <Route path="/generate" element={<GeneratePage />} />
         <Route path="/purchase" element={<PurchasePage />} />
         <Route path="/home" element={<HomePage />} />
+        <Route path="/editor" element={<ImageEditor />} />
       </Routes>
     </ThemeProvider>
   );

@@ -13,8 +13,10 @@ import { getImageCount, uploadImageDataToDB, markImageAsDownloaded, markImageAsP
 import { ImageEngine } from './utils/ImageEngine.js';
 import { promptEngineChatGPT } from './openai.js';
 import { stripeWebHook } from './payments/stripeWebHook.js';
-import ImagePreviewCacheJob from './utils/ImagePreviewCache.js'
-import 'dotenv/config'
+import { googleProtect } from './middleware/googleAuth.js';
+import { deductCredits } from './middleware/creditLogic.js';
+import ImagePreviewCacheJob from './utils/ImagePreviewCache.js';
+import 'dotenv/config';
 
 
 
@@ -132,10 +134,9 @@ app.post('/metadata', jsonParser, async (req, res) => {
     }
 })
 
-app.post('/generateImage', jsonParser, async (req, res) => {
-    console.log("Generate Image Route")
-    const thumbnail_image_text = req.body.message;
-    const generation_steps = 40;
+app.post('/generateImage', jsonParser, googleProtect(oAuth2Client), deductCredits, async (req, res, next) => {
+  const thumbnail_image_text = req.body.message;
+  const generation_steps = 40;
   
     try {
       const imageEngine = new ImageEngine('generated-images', 'full-images', generation_steps);
@@ -144,15 +145,11 @@ app.post('/generateImage', jsonParser, async (req, res) => {
       await imageEngine.fetchImage(thumbnail_image_text, promptEngineChatGPT);
       if (imageEngine.base64) {
         await imageEngine.saveImagesOnServer();
-    
-        // Save images on S3 and upload data to the database
         imageEngine.saveImagesOnS3();
         await uploadImageDataToDB(imageEngine.ID, imageEngine.userPrompt, imageEngine.stableDiffusionPrompt);
       } else {
         console.error("No base 64 image")
       }
-      // Convert to base64 and send the response
-      // const imageBase64 = await imageEngine.convertToBase64();
 
       res.status(200).send({
         imageBase64: imageEngine.base64,
@@ -185,15 +182,12 @@ app.get('/gallery', jsonParser, async (req, res) => {
         return combinedList;
       }
     
-      const images = combineListsIntoObjects(imageCacheJob.IDList, imageCacheJob.userPromptsList);
+    const images = combineListsIntoObjects(imageCacheJob.IDList, imageCacheJob.userPromptsList);
 
 
     try {
         console.log("Getting Gallery Images")
-        // const images = await getLastNImages(16);
-        res.status(200).send({
-            images
-        })
+        res.status(200).send({images})
     } catch (err) {
         console.log("Gallery Error:", err)
         res.status(500).send({
