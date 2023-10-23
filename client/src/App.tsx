@@ -17,6 +17,7 @@ import ResponsiveAppBar from "./components/ResponsiveAppBar";
 import SplashPage from "./pages/SplashPage/SplashPage";
 import ImageEditor from "./pages/ImageEditor/ImageEditor";
 import { gapi } from 'gapi-script';
+import Footer from "./components/Footer";
 
 
 let id: any = null
@@ -78,6 +79,7 @@ export default function App() {
         <Route path="/home" element={<HomePage />} />
         <Route path="/editor" element={<ImageEditor />} />
       </Routes>
+      <Footer />
     </ThemeProvider>
   );
 }
