@@ -1,18 +1,18 @@
-import Grid from '@mui/material/Grid';
+import {Grid, Box} from '@mui/material';
 import React from 'react';
 import styled from 'styled-components';
 
-const YoutubeThumbnail = styled.img`
-  float: left;
-  border-radius: 7px;
-  object-fit: cover;
-  width: 100px;
-  padding: 3px;
-  height: 67px;`;
+const YoutubeThumbnail = {
+    borderRadius: '7px',
+    objectFit: 'cover',
+    width: {xs: '100%', sm: '250px', md: '33.3%'},
+    padding: '3px',
+}
 
 const containerStyle = {
-    width: {xs: '300px', sm: '400px', md: '520px'},
-    margin: '0 auto'
+    width: '100%',
+    margin: '0 auto',
+    justifyContent: 'center'
 }
 
 interface imageData {
@@ -39,7 +39,7 @@ export default function GalleryGrid() {
     return (
         <Grid container spacing={2} sx={containerStyle}>
             {myImageData.map((item: imageData) => (
-                <YoutubeThumbnail key={item.previewUrl} src={item.previewUrl} />
+                <Box sx={YoutubeThumbnail} component="img" src={item.previewUrl} />
             ))}
         </Grid>
     )
