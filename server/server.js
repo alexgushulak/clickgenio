@@ -142,17 +142,18 @@ app.post('/generateImage', jsonParser, googleProtect(oAuth2Client), deductCredit
       const imageEngine = new ImageEngine('generated-images', 'full-images', generation_steps);
   
       // Fetch the image and save it on the server
-      await imageEngine.fetchImage(thumbnail_image_text, promptEngineChatGPT);
-      if (imageEngine.base64) {
-        await imageEngine.saveImagesOnServer();
-        imageEngine.saveImagesOnS3();
-        await uploadImageDataToDB(imageEngine.ID, imageEngine.userPrompt, imageEngine.stableDiffusionPrompt);
-      } else {
-        console.error("No base 64 image")
-      }
+      await imageEngine.fetchImageOpenAI(thumbnail_image_text, promptEngineChatGPT);
+
+      // if (imageEngine.base64) {
+      //   await imageEngine.saveImagesOnServer();
+      //   imageEngine.saveImagesOnS3();
+      //   await uploadImageDataToDB(imageEngine.ID, imageEngine.userPrompt, imageEngine.stableDiffusionPrompt);
+      // } else {
+      //   console.error("No base 64 image")
+      // }
 
       res.status(200).send({
-        imageBase64: imageEngine.base64,
+        imageUrl: imageEngine.imageUrl,
         imageId: imageEngine.ID
       });
     } catch (err) {

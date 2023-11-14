@@ -24,7 +24,7 @@ const updateImageData = async (id: string, updateType: "download" | "purchase") 
 const generateImage = async (thumbnailText: string, apiHost: string, engineId: string, apiKey: string, token: string, setImageUrl: (url: string) => void) => {
   try {
     const response = await axios.post(`${import.meta.env.VITE_APISERVER}/generateImage`, {
-      message: thumbnailText,
+      message: thumbnailText + " In the style of a youtube thumbnail",
       token: token
     }, {
       headers: {
@@ -39,10 +39,10 @@ const generateImage = async (thumbnailText: string, apiHost: string, engineId: s
       return response.data;
     }
 
-    const image = decodeImage(response.data.imageBase64);
-    setImageUrl(URL.createObjectURL(image));
+    // const image = decodeImage(response.data.imageBase64);
+    setImageUrl(response.data.imageUrl);
     console.log("Generate Image Successful");
-    return response.data.imageId;
+    return response.data;
   } catch (error) {
     console.error("Generate Image Error:", error);
   }

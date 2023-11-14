@@ -3,6 +3,8 @@ import axios from 'axios';
 import sharp from 'sharp';
 import fs from 'fs';
 import { uploadToS3 } from './s3Handler.js';
+import OpenAI from "openai";
+import 'dotenv/config'
 
 export class ImageEngine {
 
@@ -25,6 +27,7 @@ export class ImageEngine {
         this.base64_watermark = null
         this.userPrompt = null
         this.stableDiffusionPrompt = null
+        this.imageUrl = null
 
         this.fullResolutionFileName = `${this.ID}.jpg`
         this.watermarkedFileName = `${this.ID}.jpg`
@@ -33,6 +36,33 @@ export class ImageEngine {
         this.fullResolutionFilePath = `${this.serverFolder}/full/${this.fullResolutionFileName}`
         this.watermarkedFilePath = `${this.serverFolder}/watermark/${this.watermarkedFileName}`
         this.previewFilePath = `${this.serverFolder}/preview/${this.previewFileName}`
+    }
+
+    fetchImageOpenAI = async (thumbnailDescription, promptEngine) => {
+      try {
+        this.userPrompt = thumbnailDescription
+        this.stableDiffusionPrompt = this.userPrompt
+        console.log(this.stableDiffusionPrompt)
+
+        const openai = new OpenAI({
+          apiKey: process.env.OPENAI_API_KEY,
+        });
+
+        const response = await openai.images.generate({
+          model: "dall-e-3",
+          prompt: this.stableDiffusionPrompt,
+          n: 1,
+          size: "1792x1024",
+        });
+
+        console.log("Yeezy Breezy Beautiful")
+
+        this.imageUrl = response.data[0].url
+        console.log(response.data[0].url)
+
+      } catch (err) {
+        console.log("fetchImageOpenAI Error: ", err)
+      }
     }
 
     fetchImage = async (thumbnailDescription, promptEngine) => {
@@ -160,7 +190,6 @@ export class ImageEngine {
       }
     }
     
-
     saveImagesOnServer = async () => {
       console.log("Saving Images on The Server")
       await this._createFullResolutionJPG()
