@@ -41,7 +41,7 @@ export class ImageEngine {
     fetchImageOpenAI = async (thumbnailDescription) => {
       try {
         this.userPrompt = thumbnailDescription
-        this.stableDiffusionPrompt = this.userPrompt + " in the style of a youtube thumbnail"
+        this.stableDiffusionPrompt = this.userPrompt + " in the style of a video thumbnail"
 
         const openai = new OpenAI({
           apiKey: process.env.OPENAI_API_KEY,
