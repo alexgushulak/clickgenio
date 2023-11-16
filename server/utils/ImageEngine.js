@@ -226,9 +226,3 @@ export class ImageEngine {
       return this.ID
     }
 }
-
-// const myImageEngine = new ImageEngine('generated-images', 'full-images', 0);
-
-// myImageEngine.convertToBase64()
-// myImageEngine._createFullResolutionJPG()
-// // myImageEngine._createPreviewJPG(0.40)

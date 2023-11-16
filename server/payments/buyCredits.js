@@ -27,11 +27,11 @@ export async function checkoutSession(stripeSession, credits, userEmail) {
 };
 
 export function getProductPrice(credits) {
-  if (credits == 50) {
+  if (credits == 25) {
     var product = process.env.PRODUCT_CODE_50
-  } else if (credits == 100) {
+  } else if (credits == 50) {
     var product = process.env.PRODUCT_CODE_100
-  } else if (credits == 250) {
+  } else if (credits == 125) {
     var product = process.env.PRODUCT_CODE_250
   } else {
       throw Error("Invalid Product Requested")

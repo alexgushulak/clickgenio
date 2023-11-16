@@ -31,7 +31,7 @@ model UserData {
   emailAddress  String  @db.VarChar(255) @unique
   city          String  @db.VarChar(255)
   country       String  @db.VarChar(255)
-  credits       Int     @default(3)
+  credits       Int     @default(2)
   isCTAClicked  Boolean @default(false)
   isEmailOk     Boolean @default(false)
 }
