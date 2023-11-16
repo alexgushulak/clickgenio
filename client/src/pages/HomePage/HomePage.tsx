@@ -33,7 +33,6 @@ export default function App() {
 
   const handleTextbarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setThumbnailText(event.target.value);
-    console.log(event.target.value);
   };
 
 
@@ -101,7 +100,6 @@ export default function App() {
     if (id) {
       try {
         setImageId(id);
-        console.log(id);
       } catch {
         console.log("Error");
       }

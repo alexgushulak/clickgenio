@@ -25,7 +25,7 @@ export const AuthProvider = ({children}: any) => {
             setCookie('isLoggedIn', true)
             navigate('/generate')
         },
-        onError: errorResponse => console.log("Google Login Error: ", errorResponse),
+        onError: errorResponse => console.error("Google Login Error: ", errorResponse),
     });
 
     const _isTokenExpired = () => {

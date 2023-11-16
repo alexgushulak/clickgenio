@@ -37,9 +37,9 @@ export default function PurchasePage() {
             </Typography>
           </Box>
         </Grid>
-        <ItemWidget image={ironIcon} credits={50} price={5.00} color={"#1a1a1a"}/>
-        <ItemWidget image={goldIcon} credits={100} price={9.00} color={"#171612"}/>
-        <ItemWidget image={diamondIcon} credits={250} price={20.00} color={"#12161c"}/>
+        <ItemWidget image={ironIcon} credits={25} price={10.00} color={"#1a1a1a"}/>
+        <ItemWidget image={goldIcon} credits={50} price={18.00} color={"#171612"}/>
+        <ItemWidget image={diamondIcon} credits={125} price={40.00} color={"#12161c"}/>
       </Grid>
     </Container>
   );

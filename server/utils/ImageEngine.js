@@ -4,10 +4,10 @@ import sharp from 'sharp';
 import fs from 'fs';
 import { uploadToS3 } from './s3Handler.js';
 import OpenAI from "openai";
+import https from 'https';
 import 'dotenv/config'
 
 export class ImageEngine {
-
     static API_HOST = "https://api.stability.ai";
     static STABILITY_AI_API_KEY = process.env.STABILITY_AI_API_KEY
     static ENGINE_ID = 'stable-diffusion-xl-1024-v1-0';
@@ -38,28 +38,26 @@ export class ImageEngine {
         this.previewFilePath = `${this.serverFolder}/preview/${this.previewFileName}`
     }
 
-    fetchImageOpenAI = async (thumbnailDescription, promptEngine) => {
+    fetchImageOpenAI = async (thumbnailDescription) => {
       try {
         this.userPrompt = thumbnailDescription
-        this.stableDiffusionPrompt = this.userPrompt
-        console.log(this.stableDiffusionPrompt)
+        this.stableDiffusionPrompt = this.userPrompt + " in the style of a youtube thumbnail"
 
         const openai = new OpenAI({
           apiKey: process.env.OPENAI_API_KEY,
         });
 
-        const response = await openai.images.generate({
+        const openaiOptions = {
           model: "dall-e-3",
           prompt: this.stableDiffusionPrompt,
           n: 1,
           size: "1792x1024",
-        });
+        }
 
-        console.log("Yeezy Breezy Beautiful")
+        const response = await openai.images.generate(openaiOptions);
 
         this.imageUrl = response.data[0].url
-        console.log(response.data[0].url)
-
+        return
       } catch (err) {
         console.log("fetchImageOpenAI Error: ", err)
       }
@@ -170,41 +168,67 @@ export class ImageEngine {
             .toFormat('jpg')
             .toBuffer();
 
+          console.log(this.previewFilePath)
+
           fs.writeFileSync(this.previewFilePath, outputImageBuffer);
-    
-          console.log('Preview image created.');
         } catch (err) {
           console.error('createPreview Error:', err);
         }
     }
 
-    convertToBase64 = async () => {
-      try {
-        const data = await fs.promises.readFile(this.watermarkedFilePath);
-        const imageBuffer = Buffer.from(data);
-        this.base64_watermark = imageBuffer.toString('base64');
-        console.log("Base64 Conversion Completed")
-        return this.base64_watermark
-      } catch (err) {
-        console.error("Convert To Base64 Error: ", err)
-      }
+    fetchImageAndReadToBuffer = async (imageLink) => {
+      return new Promise((resolve, reject) => {
+        // Need to wait until the HTTPS request is finished before trying to read the image to a buffer
+        const filepath = `generated-images/full/${this.ID}.png`
+        fs.openSync(filepath, 'w')
+        const file = fs.createWriteStream(filepath);
+  
+        const request = https.get(imageLink, (res) => {
+          res.pipe(file);
+  
+          res.on('end', () => {
+            // The file has been written, now read it to a buffer
+            const imageBuffer = fs.readFileSync(filepath);
+            this.base64 = imageBuffer.toString('base64');
+  
+            // Resolve the promise indicating that the operation is complete
+            resolve();
+          });
+  
+          res.on('error', (error) => {
+            // Reject the promise in case of an error
+            reject(error);
+          });
+        });
+  
+        // Handle possible errors with the request
+        request.on('error', (error) => {
+          // Reject the promise in case of an error
+          reject(error);
+        });
+      });
     }
     
-    saveImagesOnServer = async () => {
-      console.log("Saving Images on The Server")
+    saveImagesOnServer = async (imageLink) => {
+      await this.fetchImageAndReadToBuffer(imageLink)
       await this._createFullResolutionJPG()
-      await this._createWatermarkJPG('./assets/CLICKGENIO_watermark.png')
+      await this._createFullResolutionJPG()
       await this._createPreviewJPG(0.4)
     }
 
     saveImagesOnS3 = () => {
-      console.log("Saving the images on S3")
       uploadToS3(this.fullResolutionFileName, `./${this.serverFolder}/full/${this.fullResolutionFileName}`, 'full');
       uploadToS3(this.previewFileName, `./${this.serverFolder}/preview/${this.previewFileName}`, 'preview');
-      uploadToS3(this.watermarkedFileName, `./${this.serverFolder}/watermark/${this.watermarkedFileName}`, 'watermark');
+      // uploadToS3(this.watermarkedFileName, `./${this.serverFolder}/watermark/${this.watermarkedFileName}`, 'watermark');
     }
 
     getImageId = () => {
       return this.ID
     }
 }
+
+// const myImageEngine = new ImageEngine('generated-images', 'full-images', 0);
+
+// myImageEngine.convertToBase64()
+// myImageEngine._createFullResolutionJPG()
+// // myImageEngine._createPreviewJPG(0.40)

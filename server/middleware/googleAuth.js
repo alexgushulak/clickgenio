@@ -11,9 +11,9 @@ const googleProtect = (oAuth) => async (req, res, next) => {
 
         isAuthenticated = true;
         req.email = ticket.payload.email
-        console.log("Email From googleProtect ", req.email)
+        res.locals.email = ticket.payload.email
     } catch (err) {
-        console.log("Route Protection Error (googleProtect) : ", err);
+        console.error("Route Protection Error (googleProtect) : ", err);
         res.json({message: "Not Authorized"}); // Use res.sendStatus(403) to send a 403 status code.
         return;
     }

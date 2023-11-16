@@ -6,12 +6,10 @@ import cors from 'cors';
 import geoip from 'geoip-lite';
 import bodyParser from 'body-parser';
 import { OAuth2Client } from 'google-auth-library'
-import { checkoutAction } from './payments/removeWatermark.js';
 import { checkoutActionBuyCredits } from './payments/buyCredits.js';
 import { upload, downloadFromS3 } from './utils/s3Handler.js';
 import { getImageCount, uploadImageDataToDB, markImageAsDownloaded, markImageAsPurchased, markCTAClicked, createUserAccount, updateIsEmailOk, getCreditsByEmail, updateCredits } from './db.js';
 import { ImageEngine } from './utils/ImageEngine.js';
-import { promptEngineChatGPT } from './openai.js';
 import { stripeWebHook } from './payments/stripeWebHook.js';
 import { googleProtect } from './middleware/googleAuth.js';
 import { deductCredits } from './middleware/creditLogic.js';
@@ -57,13 +55,12 @@ app.post('/webhook', jsonParser, async (req, res) => {
   try {
     stripeWebHook(req, res)
   } catch (err) {
-    console.log("/webhook route error")
+    console.error("/webhook route error")
   }
 })
 
 app.post('/user/emailOK', jsonParser, async (req, res) => {
   try {
-    console.log(req.body.token)
     const id_token = req.body.token
     const segments = id_token.split('.');
 
@@ -137,12 +134,24 @@ app.post('/metadata', jsonParser, async (req, res) => {
 app.post('/generateImage', jsonParser, googleProtect(oAuth2Client), deductCredits, async (req, res, next) => {
   const thumbnail_image_text = req.body.message;
   const generation_steps = 40;
+  const emailAddress = res.locals.email
   
     try {
       const imageEngine = new ImageEngine('generated-images', 'full-images', generation_steps);
   
-      // Fetch the image and save it on the server
-      await imageEngine.fetchImageOpenAI(thumbnail_image_text, promptEngineChatGPT);
+      await imageEngine.fetchImageOpenAI(thumbnail_image_text);
+
+      // imageEngine.imageUrl = 'https://oaidalleapiprodscus.blob.core.windows.net/private/org-wPHuywcLXRw3yqRgZGYlb9cN/user-3vJutdZAHIXatPWzTwSmw0lM/img-pn6AA8TimHsykoEhjbxXwhFT.png?st=2023-11-16T16%3A50%3A13Z&se=2023-11-16T18%3A50%3A13Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2023-11-16T17%3A44%3A13Z&ske=2023-11-17T17%3A44%3A13Z&sks=b&skv=2021-08-06&sig=3f69ErSdzul0Iqz1lunjc7C8Bt5N0BNKWZuqh5wX4TU%3D'
+      // imageEngine.userPrompt = 'user prompt'
+      // imageEngine.stableDiffusionPrompt = 'sd prompt'
+      if (imageEngine.imageUrl) {
+          console.log(`Saving Image with URL: ${imageEngine.imageUrl}, and ID: ${imageEngine.ID}`)
+          await imageEngine.saveImagesOnServer(imageEngine.imageUrl)
+          await uploadImageDataToDB(emailAddress, imageEngine.ID, imageEngine.userPrompt, imageEngine.stableDiffusionPrompt);
+          imageEngine.saveImagesOnS3(imageEngine.imageUrl);
+      } else {
+        console.log("No Image Url Available")
+      }
 
       // if (imageEngine.base64) {
       //   await imageEngine.saveImagesOnServer();
@@ -280,7 +289,6 @@ app.post('/create-checkout-session', async (req, res) => {
     if (credits) {
       var session = await checkoutActionBuyCredits(credits, email)
     } else {
-      var session = await checkoutAction(imageId, sessionId)
     }
   } catch(err) {
     console.error("Could not Complete /create-checkout-session", err)

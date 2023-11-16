@@ -24,7 +24,7 @@ const updateImageData = async (id: string, updateType: "download" | "purchase") 
 const generateImage = async (thumbnailText: string, apiHost: string, engineId: string, apiKey: string, token: string, setImageUrl: (url: string) => void) => {
   try {
     const response = await axios.post(`${import.meta.env.VITE_APISERVER}/generateImage`, {
-      message: thumbnailText + " In the style of a youtube thumbnail",
+      message: thumbnailText,
       token: token
     }, {
       headers: {
@@ -41,7 +41,6 @@ const generateImage = async (thumbnailText: string, apiHost: string, engineId: s
 
     // const image = decodeImage(response.data.imageBase64);
     setImageUrl(response.data.imageUrl);
-    console.log("Generate Image Successful");
     return response.data;
   } catch (error) {
     console.error("Generate Image Error:", error);
@@ -111,9 +110,8 @@ const submitBuyData = async (thumbnailText: string) => {
 const downloadImage = async (imageUrl: string, setImageDownloadUrl: (url: string) => void) => {
   try {
     setImageDownloadUrl(`${import.meta.env.VITE_APISERVER}/download/?id=${imageUrl}`)
-    console.log("Download Successful")
   } catch (err) {
-    console.log("Download Error:", err)
+    console.error("Download Error:", err)
   }
 }
 
@@ -150,7 +148,6 @@ export const getCredits = async (token: string) => {
 
 export const deductCredits = async (token: string) => {
   try {
-    console.log(token)
     const response = await axios.post(`${import.meta.env.VITE_APISERVER}/user/deduct-credits?token=${token}`);
     return {success: 'true'}
   } catch (error) {

@@ -71,7 +71,7 @@ async function downloadFromS3(file_name) {
   
       // Attach an error event listener to the stream
       fileStream.on('error', (err) => {
-        console.log("S3 Download Error: ", err.code, fileKey)
+        console.error("S3 Download Error: ", err.code, fileKey)
         reject(err); // Reject the promise with the error
       });
   

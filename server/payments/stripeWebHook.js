@@ -4,23 +4,6 @@ import 'dotenv/config'
 
 export async function stripeWebHook(req, res) {
     let event = req.body;
-    // if (endpointSecret) {
-    //   const signature = req.headers['stripe-signature'];
-    //   try {
-    //     event = stripe.webhooks.constructEvent(
-    //       request.body,
-    //       signature,
-    //       endpointSecret
-    //     );
-    //   } catch (err) {
-    //     console.log(`⚠️  Webhook signature verification failed.`, err.message);
-    //     return res.sendStatus(400);
-    //   }
-    // }
-  
-    // Handle the event
-
-    console.log(event)
 
     switch (event.type) {
       case 'checkout.session.completed':

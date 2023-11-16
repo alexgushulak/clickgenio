@@ -2,12 +2,13 @@ import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
-export async function uploadImageDataToDB(imageId, userPrompt, stableDiffusionPrompt) {
+export async function uploadImageDataToDB(emailAddress, imageId, userPrompt, stableDiffusionPrompt) {
     try {
         await prisma.image.create({
             data: {
                 imageId: imageId,
                 userPrompt: userPrompt,
+                emailAddress: emailAddress,
                 stableDiffusionPrompt: stableDiffusionPrompt,
                 downloadUrl: `https://clickgenio-production.up.railway.app/download/full?id=${imageId}`,
                 previewUrl: `https://clickgenio-production.up.railway.app/download/preview?id=${imageId}`,
@@ -99,7 +100,6 @@ export async function updateCredits(email, creditAmount) {
 
 export async function markImageAsDownloaded(imageID) {
   try {
-    console.log(imageID)
     // Find the image by its imageID
     const image = await prisma.image.findUnique({
       where: { imageId: imageID },
@@ -141,7 +141,6 @@ export async function markCTAClicked(emailAddress) {
       },
     });
 
-    console.log(`Session with Session ID ${imageID} marked as clicked.`);
   } catch (error) {
     console.error(`Error: ${error.message}`);
   }
@@ -175,7 +174,7 @@ export async function createUserAccount(emailAddress, fullName) {
     })
     }
   } catch (err) {
-    console.log("Create User Account Error", err)
+    console.error("Create User Account Error", err)
   }
 }
 
@@ -195,7 +194,6 @@ export async function updateIsEmailOk(emailAddress) {
       },
     });
 
-    console.log(`User with email address ${emailAddress} has signed up for updates`);
   } catch (error) {
     console.error(`updateIsEmailOk DB Error: ${error.message}`);
   }

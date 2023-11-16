@@ -97,9 +97,10 @@ export default function GeneratePage() {
       } else if (response.message == "Not Authorized" ) {
         toast.error("Please Try Signing in Again")
       } else {
-        setImageId(response.imageId)
-        setImageUrl(response.imageUrl)
-        setSearchParams({"image": response})
+        console.log(response)
+        setImageId(response.imageId) // not waiting long enough set set image ID, set it directly.
+        setImageUrl(response.imageUrl) 
+        setSearchParams({"image": response.imageId})
       }
       setIsLoading(false);
     };
@@ -124,7 +125,7 @@ export default function GeneratePage() {
     const onBuyImage = async () => {
       await updateImageData(imageId, "purchase");
       const link = document.createElement("a");
-      link.href = imageUrl;
+      link.href = `${import.meta.env.VITE_APISERVER}/download/full?id=${imageId}`;
       link.click();
     }
 

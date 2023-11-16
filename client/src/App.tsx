@@ -41,9 +41,8 @@ export default function App() {
     if (id) {
       try {
         setImageId(id);
-        console.log(id);
       } catch {
-        console.log("Error");
+        console.error("Could not set ID");
       }
     }
   }
