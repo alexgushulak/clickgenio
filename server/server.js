@@ -207,7 +207,6 @@ app.get('/gallery', jsonParser, async (req, res) => {
 })
 
 app.get('/download/:imagetype', jsonParser, async (req, res) => {
-    console.log("Inside Download Route")
     const uuidRegex = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
     if (!uuidRegex.test(req.query.id)) {
         res.status(400).send({ message: 'Invalid UUID format' });
