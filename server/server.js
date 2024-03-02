@@ -175,10 +175,9 @@ app.post('/generateImage', jsonParser, googleProtect(oAuth2Client), deductCredit
   
 app.get('/gallery', jsonParser, async (req, res) => {
     function combineListsIntoObjects(list1, list2) {
-        if (list1.length !== list2.length) {
-          throw new Error("Lists must have the same length");
-        }
-      
+      if (list1.length !== list2.length) {
+        console.error("Lists must have the same length");
+      } else {
         const combinedList = [];
       
         for (let i = 0; i < list1.length; i++) {
@@ -191,6 +190,7 @@ app.get('/gallery', jsonParser, async (req, res) => {
       
         return combinedList;
       }
+    }
     
     const images = combineListsIntoObjects(imageCacheJob.IDList, imageCacheJob.userPromptsList);
 
@@ -295,6 +295,10 @@ app.post('/create-checkout-session', async (req, res) => {
 
   res.json({"sessionId": session.id});
 });
+
+app.post('/create-paddle-checkout', async (req, res) => {
+  
+})
 
 app.get('/imageCount', async (req, res) => {
   try {
