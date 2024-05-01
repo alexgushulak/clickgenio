@@ -27,7 +27,7 @@ export default function Footer() {
             }}
           >
             <Typography variant="caption" color="white">
-              clickgen.io 2023 | <a href="https://www.freeprivacypolicy.com/live/03433b0f-d213-4d04-a08d-d9602037db32">Privacy Policy</a> | <a href="../../tos.html">Terms of Service</a> | <a href="mailto:clickgenio11@gmail.com">Support</a>
+              clickgen.io 2024 | <a href="https://www.freeprivacypolicy.com/live/03433b0f-d213-4d04-a08d-d9602037db32">Privacy Policy</a> | <a href="../../tos.html">Terms of Service</a> | <a href="mailto:clickgenio11@gmail.com">Support</a>
             </Typography>
           </Box>
         </Container>

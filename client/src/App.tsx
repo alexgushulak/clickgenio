@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import {
   CssBaseline,
-  Container
+  Alert
 } from "@mui/material";
 import { 
   Routes,
-  Route
+  Route,
 } from "react-router-dom";
 import { submitIPData } from "./services/apiLayer";
 import "./App.css";
@@ -69,6 +69,9 @@ export default function App() {
 
   return (
     <ThemeProvider theme={darkTheme}>
+      <Alert severity="warning" sx={{margin: "0 auto", textAlign: "center"}} >
+        We will be shutting down clickgen.io on May 15th, 2024. The website source code will be open-sourced on GitHub. Please use all credits by May 15th, 2024.
+     </Alert>
       <CssBaseline />
       <ResponsiveAppBar />
       <Routes>
