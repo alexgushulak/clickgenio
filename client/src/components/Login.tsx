@@ -120,9 +120,9 @@ export default function Login() {
                 ) : (
                 <Chip sx={creditsStyle} label={cookies.credits + " CREDITS"} />
                 )}
-                <Button variant="contained" className="btn-hover color-2" onClick={buyTokens} sx={buttonStyle}>
+                {/* <Button variant="contained" className="btn-hover color-2" onClick={buyTokens} sx={buttonStyle}>
                   Buy Credits
-                </Button>
+                </Button> */}
                 <Tooltip title="" sx={{}}>
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                     <Avatar alt="AI" imgProps={{ referrerPolicy: "no-referrer" }} src={cookies.pictureURL} />
