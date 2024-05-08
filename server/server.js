@@ -192,6 +192,9 @@ app.get('/gallery', jsonParser, async (req, res) => {
       }
     }
     
+    console.log(imageCacheJob.IDList)
+    console.log("#######")
+    console.log(imageCacheJob.userPromptsList)
     const images = combineListsIntoObjects(imageCacheJob.IDList, imageCacheJob.userPromptsList);
 
 

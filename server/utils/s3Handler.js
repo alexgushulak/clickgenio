@@ -72,12 +72,27 @@ async function downloadFromS3(file_name) {
       // Attach an error event listener to the stream
       fileStream.on('error', (err) => {
         console.error("S3 Download Error: ", err.code, fileKey)
-        reject(err); // Reject the promise with the error
+        reject(new Error(`fuck`)); // Reject the promise with the error
       });
   
       // Return the stream
       resolve(fileStream);
     });
 };
+
+// async function downloadFromS3(file_name) {
+//   return new Promise((resolve, reject) => {
+//     try {
+//         if (true) {
+//           setTimeout(() => {
+//             throw new Error(`Custom Error for ${file_name}`);
+//           }, 1000);
+//         }
+//     } catch (err) {
+//         console.error('Error downloading file:', err);
+//         reject(err);
+//     }
+// });
+// }
 
 export { upload, downloadFromS3, uploadToS3 };

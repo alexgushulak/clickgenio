@@ -32,18 +32,26 @@ class ImagePreviewCacheJob {
 
     // this took 6 months to do correctly lol
     for (const item of data) {
+      let stream;
         try {
-          // download images
-          let fileStream = await downloadFromS3(`preview/${item.imageId}.jpg`);
+          stream = await downloadFromS3(`preview/${item.imageId}.jpg`)
+        } catch {
+          console.log("Error FUCK FUCK")
+        }
+        if (stream instanceof Error) {
+            print(stream)
+            console.error('Error downloading file:', stream);
+        } else {
           const localFilePath = `image-cache/${item.imageId}.jpg`;
           const writeStream = fs.createWriteStream(localFilePath);
-          fileStream.pipe(writeStream);
+          stream.pipe(writeStream);
+          // const localFilePath = `image-cache/${item.imageId}.jpg`;
+          // const writeStream = fs.createWriteStream(localFilePath);
+          // fileStream.pipe(writeStream);
           // add image info to local list
           this.userPromptsList.push(item.userPrompt);
           this.previewUrlsList.push(item.previewUrl);
           this.IDList.push(item.imageId);
-        } catch (err) {
-          console.error('Error downloading image:', err);
         }
     }
   }
@@ -52,6 +60,7 @@ class ImagePreviewCacheJob {
     const imageCachePath = 'image-cache'; // Replace with the actual path to your image-cache folder
     this.userPromptsList = [];
     this.previewUrlsList = [];
+    this.IDList = [];
     try {
       const files = await fs.promises.readdir(imageCachePath);
       console.log("Files: ", files)
