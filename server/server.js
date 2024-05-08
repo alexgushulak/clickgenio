@@ -8,7 +8,16 @@ import bodyParser from 'body-parser';
 import { OAuth2Client } from 'google-auth-library'
 import { checkoutActionBuyCredits } from './payments/buyCredits.js';
 import { upload, downloadFromS3 } from './utils/s3Handler.js';
-import { getImageCount, uploadImageDataToDB, markImageAsDownloaded, markImageAsPurchased, markCTAClicked, createUserAccount, updateIsEmailOk, getCreditsByEmail, updateCredits } from './db.js';
+import { 
+  getImageCount, 
+  uploadImageDataToDB,
+  markImageAsDownloaded,
+  markImageAsPurchased,
+  markCTAClicked,
+  createUserAccount,
+  updateIsEmailOk,
+  getCreditsByEmail,
+  updateCredits } from './db.js';
 import { ImageEngine } from './utils/ImageEngine.js';
 import { stripeWebHook } from './payments/stripeWebHook.js';
 import { googleProtect } from './middleware/googleAuth.js';

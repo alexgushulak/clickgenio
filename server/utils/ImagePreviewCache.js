@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import prisma, { getLastNImages, uploadImageDataToDB } from '../db.js';
+import { getLastNImages } from '../db.js';
 import { downloadFromS3 } from './s3Handler.js';
 
 
@@ -23,7 +23,6 @@ class ImagePreviewCacheJob {
   }
 
   async stop() {
-    // Stop the job (clear the interval)
     clearInterval(this.intervalId);
   }
 
@@ -45,10 +44,6 @@ class ImagePreviewCacheJob {
           const localFilePath = `image-cache/${item.imageId}.jpg`;
           const writeStream = fs.createWriteStream(localFilePath);
           stream.pipe(writeStream);
-          // const localFilePath = `image-cache/${item.imageId}.jpg`;
-          // const writeStream = fs.createWriteStream(localFilePath);
-          // fileStream.pipe(writeStream);
-          // add image info to local list
           this.userPromptsList.push(item.userPrompt);
           this.previewUrlsList.push(item.previewUrl);
           this.IDList.push(item.imageId);

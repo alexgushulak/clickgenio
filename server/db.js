@@ -165,7 +165,6 @@ export async function createUserAccount(emailAddress, fullName) {
     if (!account) {
       await prisma.userData.create({
         data: {
-          ipAddress: '12345',
           fullName: fullName,
           emailAddress: emailAddress,
           city: 'N/A',

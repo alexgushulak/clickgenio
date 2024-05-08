@@ -1,17 +1,14 @@
 import { v4 as uuidv4 } from 'uuid';
-import axios from 'axios';
 import sharp from 'sharp';
 import fs from 'fs';
-import { uploadToS3 } from './s3Handler.js';
+import { 
+  uploadToS3 
+} from './s3Handler.js';
 import OpenAI from "openai";
 import https from 'https';
 import 'dotenv/config'
 
 export class ImageEngine {
-    static API_HOST = "https://api.stability.ai";
-    static STABILITY_AI_API_KEY = process.env.STABILITY_AI_API_KEY
-    static ENGINE_ID = 'stable-diffusion-xl-1024-v1-0';
-    static YOUTUBE_THUMBNAIL = ' A Youtube thumbnail Of ';
 
     constructor(serverFolder, s3Folder, steps) {
         this.ID = uuidv4().toString()
@@ -19,7 +16,6 @@ export class ImageEngine {
         this.s3Folder = s3Folder
         this.steps = steps
         this.engineId = ImageEngine.ENGINE_ID
-        this.apiHost = ImageEngine.API_HOST
         this.apiKey = ImageEngine.STABILITY_AI_API_KEY
         this.height = 768
         this.width = 1344
@@ -61,49 +57,6 @@ export class ImageEngine {
       } catch (err) {
         console.log("fetchImageOpenAI Error: ", err)
       }
-    }
-
-    fetchImage = async (thumbnailDescription, promptEngine) => {
-        try {
-            this.userPrompt = thumbnailDescription
-            this.stableDiffusionPrompt = await promptEngine(this.userPrompt, this.YOUTUBE_THUMBNAIL)
-            console.log(this.stableDiffusionPrompt)
-
-            const headers = {
-                'Content-Type': 'application/json',
-                Accept: 'application/json',
-                Authorization: `Bearer ${this.apiKey}`,
-            }
-
-            const config = {
-                text_prompts: [{
-                    text: this.stableDiffusionPrompt
-                },],
-                cfg_scale: 6,
-                height: this.height,
-                width: this.width,
-                steps: this.steps,
-                samples: 1,
-            }
-
-            const apiUrl = `${this.apiHost}/v1/generation/${this.engineId}/text-to-image`
-
-            const stabilityAIResponse = await axios.post(
-                apiUrl, 
-                config,
-                {headers: headers}
-            );
-
-            const { base64, seed, finishReason } = stabilityAIResponse.data.artifacts[0]
-            this.base64 = base64
-            console.log("fetchImage Completed")
-        } catch (err) {
-            if (err.response)  {
-                console.error('Server responded with status code:', err.response.status);
-                console.error('Error response data:', err.response.data);
-                return err.response.data.message
-            }
-        }
     }
 
     _createFullResolutionJPG = async () => {
@@ -164,7 +117,7 @@ export class ImageEngine {
           const newWidth = Math.round(resizePercentage * this.width);
     
           const outputImageBuffer = await sharp(inputImageBuffer)
-            .resize({ width: newWidth, height: newHeight }) // Resize to 25% of the original dimensions
+            .resize({ width: newWidth, height: newHeight })
             .toFormat('jpg')
             .toBuffer();
 
@@ -178,7 +131,6 @@ export class ImageEngine {
 
     fetchImageAndReadToBuffer = async (imageLink) => {
       return new Promise((resolve, reject) => {
-        // Need to wait until the HTTPS request is finished before trying to read the image to a buffer
         const filepath = `generated-images/full/${this.ID}.png`
         fs.openSync(filepath, 'w')
         const file = fs.createWriteStream(filepath);
@@ -187,23 +139,17 @@ export class ImageEngine {
           res.pipe(file);
   
           res.on('end', () => {
-            // The file has been written, now read it to a buffer
             const imageBuffer = fs.readFileSync(filepath);
             this.base64 = imageBuffer.toString('base64');
-  
-            // Resolve the promise indicating that the operation is complete
             resolve();
           });
   
           res.on('error', (error) => {
-            // Reject the promise in case of an error
             reject(error);
           });
         });
   
-        // Handle possible errors with the request
         request.on('error', (error) => {
-          // Reject the promise in case of an error
           reject(error);
         });
       });
@@ -219,7 +165,6 @@ export class ImageEngine {
     saveImagesOnS3 = () => {
       uploadToS3(this.fullResolutionFileName, `./${this.serverFolder}/full/${this.fullResolutionFileName}`, 'full');
       uploadToS3(this.previewFileName, `./${this.serverFolder}/preview/${this.previewFileName}`, 'preview');
-      // uploadToS3(this.watermarkedFileName, `./${this.serverFolder}/watermark/${this.watermarkedFileName}`, 'watermark');
     }
 
     getImageId = () => {

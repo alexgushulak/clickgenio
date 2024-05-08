@@ -26,7 +26,6 @@ model Image {
 
 model UserData {
   userId        Int     @id @default(autoincrement())
-  ipAddress     String  @db.VarChar(255)
   fullName      String  @db.VarChar(255)
   emailAddress  String  @db.VarChar(255) @unique
   city          String  @db.VarChar(255)
