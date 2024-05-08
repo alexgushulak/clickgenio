@@ -39,7 +39,6 @@ const generateImage = async (thumbnailText: string, apiHost: string, engineId: s
       return response.data;
     }
 
-    // const image = decodeImage(response.data.imageBase64);
     setImageUrl(response.data.imageUrl);
     return response.data;
   } catch (error) {

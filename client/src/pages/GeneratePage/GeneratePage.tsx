@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
-import { generateImage, submitDownloadData, submitIPData, submitThumbnailData, submitBuyData, updateImageData, updateIsEmailOk, getCredits, deductCredits } from "../../services/apiLayer";
+import { generateImage, submitDownloadData, submitThumbnailData, updateImageData, updateIsEmailOk, } from "../../services/apiLayer";
 import ProductDisplay from "./ProductDisplay/ProductDisplay";
 import TipsAndTricks from "./TipsAndTricks/TipsAndTricks";
 import PromptInput from "./PromptInput/PromptInput";
@@ -10,10 +10,8 @@ import GalleryComponent from "../../components/GalleryComponent";
 import { useSearchParams } from 'react-router-dom'
 import toast, { Toaster } from 'react-hot-toast';
 import words from 'profane-words';
-import Button from '@mui/material/Button';
 import { useCookies } from 'react-cookie';
 import Container from '@mui/material/Container';
-import Box from '@mui/material/Box';
 import { useAuth } from '../../context/authContext';
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -36,7 +34,6 @@ export default function GeneratePage() {
     const [imageId, setImageId] = useState("");
     const [isIdLink, setIsIdLink] = useState(false);
     const [searchParams, setSearchParams] = useSearchParams();
-    const [myImageURL, setMyImageURL] = useState('');
     const [cookies, setCookie, removeCookie] = useCookies(['token', 'given_name', 'pictureURL', 'credits']);
     const auth = useAuth()
     
@@ -159,61 +156,6 @@ export default function GeneratePage() {
               onRefreshThumbnail={onRefreshThumbnail}
               onDownloadWatermark={onDownloadWatermark}
               onPurchase={onBuyImage} />
-          </Item>
-          <Item>
-            <Box>
-            <b style={{'fontSize': '20px', 'width': '500px', 'margin': '0 auto'}}>Create AI Thumbnails using your AI Avatar:</b>
-            <Button 
-              sx={{margin: '10px auto', width: '90%'}}
-              onClick={onEarlyAccess}
-              variant="contained" >
-            Register for Early Access
-            </Button>
-            </Box>
-            <Box
-              component="img"
-              sx={{
-                display: 'inline-block',
-                margin: '0 auto',
-                padding: '10px',
-                height: { xs: 172, sm: 215, md: 215 },
-                width: { xs: 301, sm: 377, md: 370 },
-              }}
-              src={`${import.meta.env.VITE_APISERVER}/assets/alligator.png`}
-            />
-            <Box
-              component="img"
-              sx={{
-                display: 'inline-block',
-                margin: '0 auto',
-                padding: '10px',
-                height: { xs: 172, sm: 215, md: 215 },
-                width: { xs: 301, sm: 377, md: 370 },
-              }}
-              src={`${import.meta.env.VITE_APISERVER}/assets/lol.png`}
-            />
-            <Box
-              component="img"
-              sx={{
-                display: 'inline-block',
-                margin: '0 auto',
-                padding: '10px',
-                height: { xs: 172, sm: 215, md: 215 },
-                width: { xs: 301, sm: 377, md: 370 },
-              }}
-              src={`${import.meta.env.VITE_APISERVER}/assets/shark.png`}
-            />
-            <Box
-              component="img"
-              sx={{
-                display: 'inline-block',
-                margin: '0 auto',
-                padding: '10px',
-                height: { xs: 172, sm: 215, md: 215 },
-                width: { xs: 301, sm: 377, md: 370 },
-              }}
-              src={`${import.meta.env.VITE_APISERVER}/assets/spaceman.png`}
-            />
           </Item>
           <Item>
             <GalleryComponent />

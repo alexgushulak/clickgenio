@@ -110,9 +110,9 @@ export default function Login() {
               >
                 Sign in
               </Button>
-              <Button variant="contained" className="btn-hover color-2" onClick={buyTokens} sx={buttonStyle2}>
+              {/* <Button variant="contained" className="btn-hover color-2" onClick={buyTokens} sx={buttonStyle2}>
                 Pricing
-              </Button>
+              </Button> */}
               <Box sx={{ display: cookies.isLoggedIn ? 'flex' : 'none' }}>
               {isLoading ? (
                 <> {/* Render nothing */}
