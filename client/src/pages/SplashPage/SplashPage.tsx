@@ -20,6 +20,7 @@ import { useCookies } from 'react-cookie';
 import { useAuth } from '../../context/authContext';
 import '../../style.css'
 import video from '../../assets/splashvid.mp4';
+import GitHubIcon from '@mui/icons-material/GitHub';
 
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -171,6 +172,9 @@ export default function SplashPage() {
                 </Grid>
                 <Grid item sm={12} md={7} sx={{margin: '0 auto'}}>
                     <Container sx={{width: '100%'}}>
+                    <Button href="https://github.com/alexgushulak/clickgenio_public" sx={{mb: '20px', fontSize: '20px'}} variant="outlined" color="success" endIcon={<GitHubIcon />}>
+                        View on GitHub
+                    </Button>
                         <CardMedia
                             sx={{mb: '40px'}}
                             component='video'
