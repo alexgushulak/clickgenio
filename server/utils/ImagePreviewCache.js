@@ -30,17 +30,21 @@ class ImagePreviewCacheJob {
   async fetchAndCacheImages(numberOfImages) {
     const data = await getLastNImages(numberOfImages);
 
+    // this took 6 months to do correctly lol
     for (const item of data) {
-        this.userPromptsList.push(item.userPrompt);
-        this.previewUrlsList.push(item.previewUrl);
-        this.IDList.push(item.imageId);
-    }
-
-    for (const file_name of this.IDList) {
-        let fileStream = await downloadFromS3(`preview/${file_name}.jpg`);
-        const localFilePath = `image-cache/${file_name}.jpg`;
-        const writeStream = fs.createWriteStream(localFilePath);
-        fileStream.pipe(writeStream);
+        try {
+          // download images
+          let fileStream = await downloadFromS3(`preview/${item.imageId}.jpg`);
+          const localFilePath = `image-cache/${item.imageId}.jpg`;
+          const writeStream = fs.createWriteStream(localFilePath);
+          fileStream.pipe(writeStream);
+          // add image info to local list
+          this.userPromptsList.push(item.userPrompt);
+          this.previewUrlsList.push(item.previewUrl);
+          this.IDList.push(item.imageId);
+        } catch (err) {
+          console.error('Error downloading image:', err);
+        }
     }
   }
 
